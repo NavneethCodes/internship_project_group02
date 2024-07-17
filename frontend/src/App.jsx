@@ -1,11 +1,12 @@
-import './App.css';
-import Login_form from './components/Login_form';
+import './App.css'
+import SignUp from './components/SignUp.jsx'
+
 
 function App() {
 
   return (
     <>
-      <Login_form />
+          <SignUp/>
     </>
   )
 }

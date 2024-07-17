@@ -1,0 +1,114 @@
+.sign_bg{
+  background:red;
+  height:850px;
+  width:500px;
+  border:2px solid rgba(255,255,255,.2);
+  box-shadow: 0 0 10px rgba(0,0,0,.2);
+  border-radius:40px;
+  padding:30px 30px 30px 30px;
+  background:transparent;
+  backdrop-filter: blur(10px);
+}
+
+.sign_bg h2{
+  font-size:36px;
+  text-align: center;
+}
+
+.sign_bg .name_input{
+  position:relative;
+  width:100%;
+  height:50px;
+  margin: 30px 0;
+}
+
+.input_box input{
+  width:100%;
+  height:100%;
+  background:transparent;
+  outline:none;
+  border:2px solid rgba(255,255,255,.2);
+  border-radius: 40px;
+  padding-left: 2cqb;
+  color: white;
+  padding: 20px 45px 20px 20px;
+  margin-top: 40px;
+}
+
+.input_box input::placeholder{
+  color:rgb(48, 45, 45);
+  font-size:14px;
+}
+
+.sign_bg .terms{
+  display:flex;
+  justify-content: space-between;
+  font-size:14.5px;
+  margin: 40px 10px 40px;
+}
+
+.terms label input{
+  accent-color: white;
+  margin-right: 4px;
+}
+
+.terms a{
+  color:white;
+  text-decoration: none;
+}
+
+.terms a:hover{
+  text-decoration: underline;
+  cursor:pointer;
+}
+
+.sign_btn button{
+  width:100%;
+  height:45px;
+  background-color: rgb(199, 74, 36);
+  border:none;
+  outline:none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0,0,0, .1);
+  cursor:pointer;
+  font-size:16px;
+  color:#ffffff;
+  font-weight:700;
+  transition: 0.1s;
+}
+
+.sign_btn button:hover{
+  background-color: rgb(255, 255, 255);
+  color:rgb(0, 0, 0);
+}
+
+.sign_btn button:active{
+  background-color: rgb(199, 74, 36);
+  color:rgb(255, 255, 255);
+}
+
+.sign_bg .already_acc{
+  display:flex;
+  justify-content: space-between;
+  font-size:14.5px;
+  margin-top:40px;
+  margin-left: 90px;
+  margin-right: 90px;
+}
+
+.already_acc label{
+  accent-color: white;
+  margin-right: 4px;
+}
+
+.already_acc a{
+  text-decoration: none ;
+  color:white;
+}
+
+.already_acc a:hover{
+  text-decoration: underline;
+  cursor:pointer;
+}
+
+
