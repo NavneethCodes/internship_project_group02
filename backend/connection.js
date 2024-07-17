@@ -21,4 +21,6 @@ mongoose.connect('mongodb+srv://navneetharun0402:navneetharun2004@cluster0.jztky
     console.log('eventdb is not connected!');
   });
 
+  console.log("check");
+
   console.log("Hi");
