@@ -1,22 +1,19 @@
 const mongoose = require('mongoose');
 
-let userDbConnection;
-let eventDbConnection;
+const userDbConnection = mongoose.createConnection('mongodb+srv://navneetharun0402:navneetharun2004@cluster0.jztkyk0.mongodb.net/userdb?retryWrites=true&w=majority&appName=cluster0');
 
-mongoose.connect('mongodb+srv://navneetharun0402:navneetharun2004@cluster0.jztkyk0.mongodb.net/userdb?retryWrites=true&w=majority&appName=cluster0')
-  .then((connection) => {
-    userDbConnection = connection;
-    console.log('userdb is connected!');
-  })
-  .catch((err) => {
-    console.log('userdb is not connected!');
-  });
+userDbConnection.once('open', () => {
+  console.log('userdb is connected!');
+}).on('error', (err) => {
+  console.error('userdb connection error:', err);
+});
 
-mongoose.connect('mongodb+srv://navneetharun0402:navneetharun2004@cluster0.jztkyk0.mongodb.net/eventdb?retryWrites=true&w=majority&appName=cluster0')
-  .then((connection) => {
-    eventDbConnection = connection;
-    console.log('eventdb is connected!');
-  })
-  .catch((err) => {
-    console.log('eventdb is not connected!');
-  });
+const eventDbConnection = mongoose.createConnection('mongodb+srv://navneetharun0402:navneetharun2004@cluster0.jztkyk0.mongodb.net/eventdb?retryWrites=true&w=majority&appName=cluster0');
+
+eventDbConnection.once('open', () => {
+  console.log('eventdb is connected!');
+}).on('error', (err) => {
+  console.error('eventdb connection error:', err);
+});
+
+module.exports = { userDbConnection, eventDbConnection };

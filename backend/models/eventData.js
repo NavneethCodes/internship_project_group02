@@ -1,7 +1,7 @@
-const { default: mongoose } = require('mongoose');
 const { eventDbConnection } = require('../connection');
+const db = require('mongoose');
 
-const eventSchema = new eventDbConnection.Schema({
+const eventSchema = new db.Schema({
     eventName: String,
     eventDate: Date,
     startTime: Date,
@@ -11,5 +11,5 @@ const eventSchema = new eventDbConnection.Schema({
     organizer: String
 })
 
-const eventData = mongoose.model('event', eventSchema);
+const eventData = eventDbConnection.model('event', eventSchema);
 module.exports = eventData;
