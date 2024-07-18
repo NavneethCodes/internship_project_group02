@@ -28,6 +28,26 @@ app.get('/events', async (req, res)=>{
     }
 })
 
+app.post('/usernew', async (req, res)=>{
+    try{
+        var data = req.body;
+        const datasave = new userModel(data);
+        const saveddata = await datasave.save();
+    } catch (error){
+        console.log(error);
+    }
+})
+
+app.post('/eventnew', async (req, res)=>{
+    try{
+        var data = req.body;
+        const datasave = new userModel(data);
+        const saveddata = await datasave.save();
+    } catch(error){
+        console.log(error);
+    }
+})
+
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);
 });
