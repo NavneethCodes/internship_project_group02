@@ -2,6 +2,7 @@ import React from 'react'
 import { AiOutlineUser } from "react-icons/ai";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { MdOutlineEmail } from "react-icons/md";
+import { FiPhone } from "react-icons/fi";
 import '../styles/Sign_up.css'
 
 const Sign_up = () => {
@@ -16,7 +17,7 @@ const Sign_up = () => {
                     <AiOutlineUser className='icon'/>
                 </div>
                 <div className='input_box'>
-                    <input type='text' placeholder='Email' required/>
+                    <input type='text' placeholder='Email ID' required/>
                     < MdOutlineEmail className='icon'/>
                 </div>
                 <div className='input_box'>
@@ -24,9 +25,9 @@ const Sign_up = () => {
                     <IoLockClosedOutline className='icon'/>
                 </div>
                 <div className='input_box'>
-                    <input type='password' placeholder='Re-Enter Password' required/>
-                    <IoLockClosedOutline className='icon'/>
-                    </div>
+                    <input type='tel' placeholder='Contact number' required/>
+                    <FiPhone className='icon'/>
+                </div>
                     <div className='terms'>
   <label>
     <input type='checkbox' required /> 
@@ -40,10 +41,11 @@ const Sign_up = () => {
                     <button type='submit'>Sign Up</button>
                 </div>
                 <div className='reg_link'>
-                    <p>Already have an account ?<a href='#'> Sign in</a></p>
+                    <p>Already have an account ?<a href='#'> Login</a></p>
                 </div>
             </form>
     </div>
+    
   )
 }
 
