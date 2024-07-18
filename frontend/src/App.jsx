@@ -1,14 +1,13 @@
-import './App.css'
-import SignUp from './components/SignUp.jsx'
+import React from 'react'
+import MainBar from './components/MainBar'
 
 
-function App() {
-
+const App = () => {
   return (
     <>
-          <SignUp/>
+    <MainBar/>
     </>
   )
 }
 
-export default App;
+export default App
