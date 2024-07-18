@@ -23,7 +23,7 @@
 }
 
 .input_box input{
-  width:100%;
+  width:80%;
   height:100%;
   background:transparent;
   outline:none;
@@ -31,7 +31,7 @@
   border-radius: 40px;
   padding-left: 2cqb;
   color: white;
-  padding: 20px 45px 20px 20px;
+  padding: 20px 0px 20px 20px;
   margin-top: 40px;
 }
 
