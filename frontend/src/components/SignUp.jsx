@@ -1,7 +1,37 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './SignUp.css'
 
 const SignUp = () => {
+  const [details, setDetails] = useState({
+    "userContact":"",
+    "userEmail":"",
+    "userName":"",
+    "userPassword":"",
+    "userStatus":"active"
+  })
+
+  const [rePass, setrePass] = useState("");
+
+  let Change = (e) =>{
+    let {name, value} = e.target;
+    if (name === 'userRePassword'){
+      setrePass(value);
+    } else {
+      setDetails({...details, [name]:value});
+    }
+  }
+
+  let submitter = (e) =>{
+    e.preventDefault();
+    if(details.userPassword !== rePass){
+      alert("Password doesn't match!");
+      setrePass("");
+    } else {
+      console.log(details);
+    }
+  
+  }
+
   return (
     <div className='sign_bg'>
       <form action=''>
@@ -9,25 +39,25 @@ const SignUp = () => {
             <h2>Sign Up</h2>
         </div>
         <div className="input_box">
-          <input type='text' placeholder='Full name' required ></input>
+          <input name='userName' type='text' placeholder='Full name' required value={details.userName} onChange={Change}></input>
         </div>
         <div className="input_box">
-          <input type='text' placeholder='Email' required ></input>
+          <input name='userEmail' type='text' placeholder='Email' required value={details.userEmail} onChange={Change}></input>
         </div>
         <div className="input_box">
-          <input type='text' placeholder='Contact' required ></input>
+          <input name='userContact' type='text' placeholder='Contact' required value={details.userContact} onChange={Change}></input>
         </div>
         <div className="input_box">
-          <input type='password' placeholder='Password' required ></input>
+          <input name='userPassword' type='password' placeholder='Password' required value={details.userPassword} onChange={Change}></input>
         </div>
         <div className="input_box">
-          <input type='password' placeholder='Re-Enter Password' required ></input>
+          <input name='userRePassword' type='password' placeholder='Re-Enter Password' required value={rePass} onChange={Change}></input>
         </div>
         <div className='terms'>
           <label><input type='checkbox'/> By signing up you accept the <a href='#'>Terms of service and Privacy Policy</a></label>
         </div>
         <div className='sign_btn'>
-            <button>
+            <button onClick={submitter}>
               Sign Up
             </button>
         </div>
