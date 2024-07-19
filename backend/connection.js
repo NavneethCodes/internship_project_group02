@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
-const userDbConnection = mongoose.createConnection('mongodb+srv://navneetharun0402:navneetharun2004@cluster0.jztkyk0.mongodb.net/userdb?retryWrites=true&w=majority&appName=cluster0',{
-  // tls: true,
-  // useNewUrlParser: true,
-  // useUnifiedTopology: true,
-});
+const userDbConnection = mongoose.createConnection('mongodb+srv://navneetharun0402:navneetharun2004@cluster0.jztkyk0.mongodb.net/userdb?retryWrites=true&w=majority&appName=cluster0');
 
 userDbConnection.once('open', () => {
   console.log('userdb is connected!');
@@ -12,11 +8,7 @@ userDbConnection.once('open', () => {
   console.error('userdb connection error:', err);
 });
 
-const eventDbConnection = mongoose.createConnection('mongodb+srv://navneetharun0402:navneetharun2004@cluster0.jztkyk0.mongodb.net/eventdb?retryWrites=true&w=majority&appName=cluster0', {
-  // tls: true,
-  // useNewUrlParser: true,
-  // useUnifiedTopology: true,
-});
+const eventDbConnection = mongoose.createConnection('mongodb+srv://navneetharun0402:navneetharun2004@cluster0.jztkyk0.mongodb.net/eventdb?retryWrites=true&w=majority&appName=cluster0');
 
 eventDbConnection.once('open', () => {
   console.log('eventdb is connected!');
