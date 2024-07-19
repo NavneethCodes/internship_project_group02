@@ -1,13 +1,13 @@
 import './App.css'
 import React from 'react'
-import MainBar from './components/MainBar'
+import LoginForm from './components/LoginForm'
 
 const App = () => {
   return (
     <>
       {/* <Eventdetail/> */}
       {/* <MainBar/> */}
-      <MainBar/>
+      <LoginForm/>
     </>
   )
 }
