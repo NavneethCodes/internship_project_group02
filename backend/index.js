@@ -38,6 +38,30 @@ app.post('/usernew', async (req, res)=>{
     }
 })
 
+app.post('/login', async (req, res) => {
+    const { userEmail, userPassword } = req.body;
+
+    try {
+        const user = await userModel.findOne({ userEmail });
+
+        if (!user) {
+            console.log("Email not found");
+            return res.status(400).send("Email not found!");
+        }
+
+        if (user.userPassword !== userPassword) {
+            console.log("Incorrect password");
+            return res.status(400).send("Incorrect password!");
+        } else {
+            console.log("Logged in successfully");
+            return res.send("Login Successful");
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Error during login');
+    }
+});
+
 app.post('/eventnew', async (req, res)=>{
     try{
         var data = req.body;
