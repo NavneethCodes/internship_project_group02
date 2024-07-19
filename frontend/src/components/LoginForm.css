@@ -56,13 +56,13 @@
     border: 2px solid rgba(255,255,255,.2);
     border-radius: 40px;
     padding-left: 2cqb;
-    color: white;
+    color: rgb(255, 255, 255);
     padding: 20px 45px 20px 20px;
     animation: fadeIn 1s ease-in-out;
 }
 
 .input_box input::placeholder {
-    color: white;
+    color: rgb(112, 109, 109);
     font-size: 14px;
 }
 
