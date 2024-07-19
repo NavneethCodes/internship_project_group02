@@ -3,7 +3,7 @@
 
 
 body {
-  background:url('./Images/3.png');
+  background:rgb(31, 30, 30);
   font-family: 'Poppins',sans-serif;
   display:flex;
   justify-content: center;

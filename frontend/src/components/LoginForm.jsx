@@ -11,7 +11,7 @@ const LoginForm = () => {
                     <h1>Login</h1>
                 </div>
                 <div className='input_box'>
-                    <input type='text' placeholder='Username' required/>
+                    <input type='text' placeholder='Email' required/>
                     <AiOutlineUser className='icon'/>
                 </div>
                 <div className='input_box'>
