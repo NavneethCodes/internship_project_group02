@@ -22,7 +22,7 @@ h1 {
     position: absolute;
     top: 0;
     left: 0;
-    padding: 2rem 3rem;
+    padding: 0rem 3rem;
     width: 15rem;
     height: 100vh;
     transition: 0.5s all;
@@ -43,8 +43,7 @@ h1 {
         content: "";
         background-color: $green;
         position: absolute;
-        right: (-35px / 2);
-        top: calc(9rem / 1.15);
+        right: calc(-35px / 2);
         width: 35px;
         height: 35px;
         border-radius: 2rem;
@@ -103,7 +102,7 @@ h1 {
         content: "";
         position: absolute;
         right: 35px;
-        top: (35px / 2);
+        top: calc(35px / 2);
         z-index: 0;
         width: calc(6rem + 15rem);
         background-color: $lightGrey;
