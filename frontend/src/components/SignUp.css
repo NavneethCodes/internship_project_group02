@@ -1,114 +1,154 @@
-.sign_bg{
-  background:red;
-  height:850px;
-  width:500px;
-  border:2px solid rgba(255,255,255,.2);
-  box-shadow: 0 0 10px rgba(0,0,0,.2);
-  border-radius:40px;
-  padding:30px 30px 30px 30px;
-  background:transparent;
+.sign_bg {
+  background: red;
+  height: auto;
+  max-width: 500px;
+  width: 100%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 40px;
+  padding: 30px 40px 40px 40px;
+  background: transparent;
   backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  animation: fadeIn 1s ease-in-out;
 }
 
-.sign_bg h2{
-  font-size:36px;
+.sign_bg h2 {
+  font-size: 36px;
   text-align: center;
+  color: rgb(255, 255, 255);
+  animation: slideDown 0.5s ease-in-out;
 }
 
-.sign_bg .name_input{
-  position:relative;
-  width:100%;
-  height:50px;
+.input_box {
+  position: relative;
+  width: 100%;
+  height: 60px;
   margin: 30px 0;
 }
 
-.input_box input{
-  width:95%;
-  height:100%;
-  background:transparent;
-  outline:none;
-  border:2px solid rgba(255,255,255,.2);
+.input_box input {
+  width: 90%;
+  height: 100%;
+  background: transparent;
+  outline: none;
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 40px;
-  padding-left: 2cqb;
+  padding: 0 20px;
   color: white;
-  padding: 20px 0px 20px 20px;
   margin-top: 40px;
+  transition: border 0.3s;
 }
 
-.input_box input::placeholder{
-  color:rgb(48, 45, 45);
-  font-size:14px;
+.input_box input::placeholder {
+  color:  rgb(119, 56, 36);
+  font-size: 14px;
 }
 
-.sign_bg .terms{
-  display:flex;
+.input_box input:focus {
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.terms{
+  padding-top: 30px;
+}
+
+
+.terms, .already_acc {
+  display: flex;
   justify-content: space-between;
-  font-size:14.5px;
-  margin: 40px 10px 40px;
+  font-size: 14.5px;
+  margin: 40px 10px;
+  width: 100%;
 }
 
-.terms label input{
+.terms label input, .already_acc label input {
   accent-color: white;
-  margin-right: 4px;
+  margin-right: 6px;
 }
 
-.terms a{
-  color:white;
+.already_acc{
+  justify-content: center;
+}
+
+.terms a, .already_acc a {
+  color: rgb(199, 74, 36);
   text-decoration: none;
 }
+.terms label ,.already_acc label{
+color:rgb(255, 255, 255);
 
-.terms a:hover{
+}
+.terms a:hover, .already_acc a:hover {
   text-decoration: underline;
-  cursor:pointer;
+  cursor: pointer;
 }
 
-.sign_btn button{
-  width:100%;
-  height:45px;
+.sign_btn button {
+  width: 100%;
+  height: 45px;
   background-color: rgb(199, 74, 36);
-  border:none;
-  outline:none;
+  border: none;
+  outline: none;
   border-radius: 40px;
-  box-shadow: 0 0 10px rgba(0,0,0, .1);
-  cursor:pointer;
-  font-size:16px;
-  color:#ffffff;
-  font-weight:700;
-  transition: 0.1s;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 700;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-.sign_btn button:hover{
+.sign_btn button:hover {
   background-color: rgb(255, 255, 255);
-  color:rgb(0, 0, 0);
+  color: rgb(0, 0, 0);
 }
 
-.sign_btn button:active{
+.sign_btn button:active {
   background-color: rgb(199, 74, 36);
-  color:rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
 }
 
-.sign_bg .already_acc{
-  display:flex;
-  justify-content: space-between;
-  font-size:14.5px;
-  margin-top:40px;
-  margin-left: 90px;
-  margin-right: 90px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-.already_acc label{
-  accent-color: white;
-  margin-right: 4px;
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
-.already_acc a{
-  text-decoration: none ;
-  color:white;
+@media (max-width: 768px) {
+  .sign_bg {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .input_box input {
+    margin-top: 20px;
+  }
+
+  .terms, .already_acc {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .terms label, .already_acc label {
+    margin-bottom: 10px;
+  }
 }
-
-.already_acc a:hover{
-  text-decoration: underline;
-  cursor:pointer;
-}
-
-
