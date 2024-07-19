@@ -48,6 +48,24 @@ app.post('/eventnew', async (req, res)=>{
     }
 })
 
+app.delete('/userdeletion/:id', async (req, res)=>{
+    try{
+        await userModel.findByIdAndDelete(req.params.id);
+        res.send("User deleted!");
+    }catch(error){
+        console.log(error);
+    }
+})
+
+app.put('/userupdate/:id', async (req, res)=>{
+    try{
+        await userModel.findByIdAndUpdate(req.params.id, req.body);
+        res.send("User updated!");
+    }catch(error){
+        console.log(error); 
+    }
+})
+
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);
 });
