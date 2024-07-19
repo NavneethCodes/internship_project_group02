@@ -1,13 +1,11 @@
 import './App.css'
 import React from 'react'
-import MainBar from './components/MainBar'
+import SignUp from './components/SignUp.jsx'
 
 const App = () => {
   return (
     <>
-      {/* <Eventdetail/> */}
-      {/* <MainBar/> */}
-      <MainBar/>
+      <SignUp />
     </>
   )
 }
