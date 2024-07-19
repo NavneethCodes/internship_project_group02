@@ -1,11 +1,11 @@
 import './App.css'
 import React from 'react'
-import SignUp from './components/SignUp.jsx'
+import LoginForm from './components/LoginForm'
 
 const App = () => {
   return (
     <>
-      <SignUp />
+      <LoginForm/>
     </>
   )
 }
