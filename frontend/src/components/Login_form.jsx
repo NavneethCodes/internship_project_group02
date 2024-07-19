@@ -7,6 +7,19 @@ import Button from '@mui/material/Button';
 import '../styles/Login_form.css';
 import axios from 'axios'
 
+const [form,setForm]=useState(
+  {
+    eventName:'',
+    eventDate:'',
+    startTime:'',
+    endTime:'',
+    location:'',
+    description:'',
+    organizer:''
+  }
+)
+
+
 const LoginForm = () => {
   const [details, setDetails] = useState({
     email_id: '',
@@ -25,6 +38,22 @@ const LoginForm = () => {
   function getData(e) {
     console.log(details);
   }
+
+  useEffect(() => {
+    if (location.state != null) {
+        setForm({
+            ...form,
+            eventName: location.state.event.eventName,
+            eventDate: location.state.event.eventDate,
+            startTime: location.state.event.startTime,
+            endTime: location.state.event.endTime,
+            location: location.state.event.location,
+            description: location.state.event.description,
+            organizer: location.state.event.organizer
+
+        })
+    }
+}, [])
 
   return (
     <div className="login-container">
