@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
-import './SignUp.css'
+import React, { useState } from 'react';
+import './SignUp.css';
+import axios from 'axios';
+import {useNavigate, useLocation} from 'react-router-dom';
 
 const SignUp = () => {
   const [details, setDetails] = useState({
@@ -11,6 +13,8 @@ const SignUp = () => {
   })
 
   const [rePass, setrePass] = useState("");
+  var location = useLocation();
+  var navigate = useNavigate()
 
   let Change = (e) =>{
     let {name, value} = e.target;
@@ -28,6 +32,11 @@ const SignUp = () => {
       setrePass("");
     } else {
       console.log(details);
+      axios.post('http://localhost:4000/usernew', details).then((res)=>{
+        alert("New user entered!");
+      }).catch((error)=>{
+        console.log(error);
+      })
     }
   
   }
