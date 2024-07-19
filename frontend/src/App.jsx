@@ -1,7 +1,6 @@
 import './App.css'
 import React from 'react'
-import MainBar from './components/MainBar';
-import SignUp from './components/SignUp'
+import LoginForm from './components/LoginForm'
 
 
 const App = () => {
@@ -9,7 +8,7 @@ const App = () => {
     <>
       {/* <Eventdetail/> */}
       {/* <MainBar/> */}
-      <SignUp />
+      <LoginForm/>
     </>
   )
 }
