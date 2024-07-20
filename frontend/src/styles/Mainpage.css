@@ -1,0 +1,60 @@
+ body {
+    font-family: Arial ;
+ }   
+  .main-page .MuiAppBar-root {
+    background-color: #0a0a0a;
+    width: 103.5%;
+  }
+ .hero {
+    height: 100vh; 
+    width: 99.5%; 
+    background: url(https://i.pinimg.com/564x/eb/b2/51/ebb2515c454fa4730200df1fa0834c83.jpg) no-repeat center center;
+    background-size: cover; 
+    color: #0f0f0f; 
+    text-align: center; 
+    padding: 100px 20px; 
+    position: relative; 
+  }
+  
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); 
+  }
+  
+  .hero h2 {
+    font-size: 48px; 
+    margin-bottom: 100x; 
+    position:relative;
+    top:60px
+
+  }
+  
+  .hero p {
+    font-size: 24px; 
+    line-height: 3.2; 
+    position:relative;
+    top:20px
+  }
+  
+  .basic-buttons-container {
+    display: flex;
+    justify-content: center; 
+    gap: 20px; 
+    margin-top: 30px; 
+  }
+  
+  .basic-buttons-container .MuiButton-root {
+    background-color: orangered; 
+    color: white; 
+    border: none; 
+    padding: 12px 24px; 
+    font-size: 16px; 
+    cursor: pointer; 
+    border-radius: 20px; 
+    transition: background-color 0.3s ease; 
+  }
