@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './SignUp.css';
 import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const SignUp = () => {
   const [details, setDetails] = useState({
@@ -110,7 +110,7 @@ const SignUp = () => {
         </div>
         <div className='already_acc'>
           <label>
-            Already have an account? <a href='#'>Sign In</a>
+            Already have an account? <Link to='/login'>Sign In</Link>
           </label>
         </div>
       </form>

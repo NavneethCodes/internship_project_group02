@@ -1,6 +1,7 @@
 import React from 'react'
 import { AiOutlineUser } from "react-icons/ai";
 import { IoLockClosedOutline } from "react-icons/io5";
+import { Link } from 'react-router-dom'
 import './LoginForm.css'
 
 const LoginForm = () => {
@@ -26,7 +27,7 @@ const LoginForm = () => {
                     <button type='submit'>Login</button>
                 </div>
                 <div className='reg_link'>
-                    <p>Don't have an account ?<a href='#'> Sign up</a></p>
+                    <p>Don't have an account ?<Link to='/signup'> Sign up</Link></p>
                 </div>
             </form>
     </div>
