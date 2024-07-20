@@ -36,15 +36,15 @@
 .bg h1 {
     font-size: 36px;
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     animation: slideIn 2s ease-in-out;
 }
 
 .bg .input_box {
     position: relative;
     width: 100%;
-    height: 30px;
-    margin-bottom: 90px;
+    height: 60px;
+    margin-bottom: 60px;
     animation: slideIn 0.5s ease-in-out;
 }
 
@@ -70,7 +70,7 @@
     position: absolute;
     right: 30px;
     top: 50%;
-    transform: translateY(80%);
+    transform: translateY(190%);
     font-size: 17px;
 }
 
@@ -78,7 +78,7 @@
     display: flex;
     justify-content: space-between;
     font-size: 14.5px;
-    margin: 40px 10px 40px;
+    margin: 90px 10px 40px;
 }
 
 .rem_me label input {
