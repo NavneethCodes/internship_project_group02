@@ -15,6 +15,10 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
+.head_txt{
+    font-weight: bolder;
+}
+
 .land_bg .top_bar{
     font-size:50px;
     color:white;
@@ -28,8 +32,8 @@
     background: transparent;
 }
 
-.top_bar h{
-    margin-left: 50px;
+.top_bar {
+    margin-left: 35px;
     margin-top: 50px;
 }
 
@@ -38,6 +42,7 @@
     background-color: rgb(190, 34, 34);
     border-radius: 40px;
     background: transparent;
+    justify-content: space-evenly;
 }
 
 .button {
@@ -45,7 +50,6 @@
     padding: 10px 20px;
     font-size: 16px;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     color:white;
@@ -78,3 +82,208 @@
 .button.raised {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
+.btn-31,
+.btn-31 *,
+.btn-31 :after,
+.btn-31 :before,
+.btn-31:after,
+.btn-31:before {
+  border: none;
+  box-sizing: border-box;
+}
+.btn-31 {
+  background-color: transparent;
+  background-image: none;
+  color: 
+#fff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 100px;
+  margin-left:630px;
+  padding: 0;
+}
+.btn-31:disabled {
+  cursor: default;
+}
+.btn-31:-moz-focusring {
+  outline: auto;
+}
+.btn-31 svg {
+  display: block;
+  vertical-align: middle;
+}
+.btn-31 [hidden] {
+  display: none;
+}
+.btn-31 {
+  border-width: 1px;
+  padding: 1rem 2rem;
+  position: relative;
+  text-transform: uppercase;
+}
+.btn-31:before {
+  --progress: 100%;
+  background: 
+#fff;
+  clip-path: polygon(
+    100% 0,
+    var(--progress) var(--progress),
+    0 100%,
+    100% 100%
+  );
+  content: "";
+  inset: 0;
+  position: absolute;
+  transition: -webkit-clip-path 0.2s ease;
+  transition: clip-path 0.2s ease;
+  transition: clip-path 0.2s ease, -webkit-clip-path 0.2s ease;
+}
+.btn-31:hover:before {
+  --progress: 0%;
+}
+.btn-31 .text-container {
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+.btn-31 .text {
+  display: block;
+  font-weight: 400;
+  mix-blend-mode: difference;
+  position: relative;
+}
+.btn-31:hover .text {
+  animation: move-up-alternate 0.3s ease forwards;
+}
+@-webkit-keyframes move-up-alternate {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(80%);
+  }
+  51% {
+    transform: translateY(-80%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes move-up-alternate {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(80%);
+  }
+  51% {
+    transform: translateY(-80%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.btn-32,
+.btn-32 *,
+.btn-32 :after,
+.btn-32 :before,
+.btn-32:after,
+.btn-32:before {
+  border: none;
+  box-sizing: border-box;
+}
+.btn-32 {
+  background-color: transparent;
+  background-image: none;
+  color: 
+#fff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 900;
+  line-height: 1.5;
+  padding: 0;
+}
+.btn-32:disabled {
+  cursor: default;
+}
+.btn-32:-moz-focusring {
+  outline: auto;
+}
+.btn-32 svg {
+  display: block;
+  vertical-align: middle;
+}
+.btn-32 [hidden] {
+  display: none;
+}
+.btn-32 {
+  border-width: 1px;
+  padding: 1rem 2rem;
+  position: relative;
+  text-transform: uppercase;
+}
+.btn-32:before {
+  --progress: 100%;
+  background: 
+#fff;
+  clip-path: polygon(
+    100% 0,
+    var(--progress) var(--progress),
+    0 100%,
+    100% 100%
+  );
+  content: "";
+  inset: 0;
+  position: absolute;
+  transition: -webkit-clip-path 0.2s ease;
+  transition: clip-path 0.2s ease;
+  transition: clip-path 0.2s ease, -webkit-clip-path 0.2s ease;
+}
+.btn-32:hover:before {
+  --progress: 0%;
+}
+.btn-32 .text-container {
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+.btn-32 .text {
+  display: block;
+  font-weight: 400;
+  mix-blend-mode: difference;
+  position: relative;
+}
+.btn-32:hover .text {
+  animation: move-up-alternate 0.3s ease forwards;
+}
+@-webkit-keyframes move-up-alternate {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(80%);
+  }
+  51% {
+    transform: translateY(-80%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes move-up-alternate {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(80%);
+  }
+  51% {
+    transform: translateY(-80%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
