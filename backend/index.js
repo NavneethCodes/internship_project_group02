@@ -54,7 +54,16 @@ app.post('/login', async (req, res) => {
             return res.status(400).send("Incorrect password!");
         } else {
             console.log("Logged in successfully");
-            return res.send("Login Successful");
+            return res.json({
+                message     : "Login Successful!",
+                userDetails : {
+                    userName    : user.userName,
+                    userEmail   : user.userEmail,
+                    userContact : user.userContact,
+                    userStatus  : user.userStatus
+                }
+                
+            })
         }
     } catch (error) {
         console.log(error);
