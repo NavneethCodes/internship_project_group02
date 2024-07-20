@@ -5,7 +5,9 @@ import MainBar from './components/MainBar.jsx'
 import LoginForm from './components/LoginForm'
 import SignUp from './components/SignUp'
 import LandingPage from './components/LandingPage.jsx';
-function App() {
+
+
+const App = () => {
   return (
     <>
       <Routes> 
@@ -16,8 +18,7 @@ function App() {
 
       </Routes>
     </>
-  );
+  )
 }
 
-export default App;
-
+export default App
