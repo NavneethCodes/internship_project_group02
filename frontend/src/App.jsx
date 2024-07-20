@@ -1,13 +1,18 @@
 import './App.css'
 import React from 'react'
 import {Routes, Route } from 'react-router-dom';
+import MainBar from './components/MainBar.jsx'
 import LoginForm from './components/LoginForm'
 import SignUp from './components/SignUp'
+import LandingPage from './components/LandingPage.jsx';
+
 
 const App = () => {
   return (
     <>
-      <Routes>
+      <Routes> 
+              <Route path='/' element={<LandingPage/>}></Route>
+              <Route path='/mainbar' element={<MainBar/>}></Route>
               <Route path='/login' element={<LoginForm/>}></Route>
               <Route path='/signup' element={<SignUp/>}></Route>
 
