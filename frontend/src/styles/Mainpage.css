@@ -28,12 +28,17 @@
   
   .hero h2 {
     font-size: 48px; 
-    margin-bottom: 20px; 
+    margin-bottom: 100x; 
+    position:relative;
+    top:60px
+
   }
   
   .hero p {
     font-size: 24px; 
-    line-height: 3.9; 
+    line-height: 3.2; 
+    position:relative;
+    top:20px
   }
   
   .basic-buttons-container {
@@ -53,12 +58,3 @@
     border-radius: 20px; 
     transition: background-color 0.3s ease; 
   }
-  
-  main-page .button-login {
-    background-color: #007bff; /* Blue color */
-    color: rgb(214, 63, 63);
-    border-radius: 20px; /* Adjust as needed */
-    text-transform: none; /* Prevent uppercase text transformation */
-    margin-right: 10px; /* Space between buttons */
-  }
-  

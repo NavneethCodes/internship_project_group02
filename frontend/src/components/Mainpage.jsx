@@ -40,7 +40,7 @@ const ButtonAppBar = () => {
       <AppBar position="static">
         <Toolbar>
           <Box sx={{ display: 'flex', flexGrow: 1 }}>
-            <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link to="/home" style={{ textDecoration: 'none', color: 'inherit' }}>
               <Button color="inherit">Home</Button>
             </Link>
             <Link to="/about" style={{ textDecoration: 'none', color: 'inherit' }}>
