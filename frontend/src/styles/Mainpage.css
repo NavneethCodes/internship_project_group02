@@ -3,11 +3,11 @@
  }   
   .main-page .MuiAppBar-root {
     background-color: #0a0a0a;
-    width: 100%;
+    width: 103.5%;
   }
  .hero {
     height: 100vh; 
-    width: 100%; 
+    width: 99.5%; 
     background: url(https://i.pinimg.com/564x/eb/b2/51/ebb2515c454fa4730200df1fa0834c83.jpg) no-repeat center center;
     background-size: cover; 
     color: #0f0f0f; 
