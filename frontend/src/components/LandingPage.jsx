@@ -1,5 +1,6 @@
 import React from 'react'
 import './LandingPage.css'
+import { Link } from 'react-router-dom'
 import FlexExpand from './FlexExpand'
 
 const LandingPage = () => {
@@ -10,10 +11,10 @@ const LandingPage = () => {
               <span className="head_txt">Event Manager</span>
                     <button class="btn-31">
                       <span class="text-container">
-                       <span class="text">Button</span>
+                       <span class="text"><Link to='/login'>Login</Link></span>
                      </span>
                     </button>
-                    <button class="btn-32">
+                    {/*<button class="btn-32">
                       <span class="text-container">
                        <span class="text">Button2</span>
                      </span>
@@ -27,8 +28,7 @@ const LandingPage = () => {
                       <span class="text-container">
                        <span class="text">Button4</span>
                      </span>
-                    </button>
-
+                    </button>*/}
             </div>
         </div>
         <div className="flex-expand">
