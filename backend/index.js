@@ -110,12 +110,19 @@ app.delete("/userdeletion/:id", async (req, res) => {
 
 //This would be used to update the user's status
 app.put("/userupdate/:id", async (req, res) => {
-  try {
-    await userModel.findByIdAndUpdate(req.params.id, req.body);
-    res.send("User updated!");
-  } catch (error) {
-    console.log(error);
-  }
+    const userId = req.params.id;
+    const data = await userModel.findById(userId);
+    var userStatus = data.userStatus;
+    console.log(data);
+    if (userStatus === 'active'){
+        data.userStatus = 'suspend';
+    } else {
+        data.userStatus = 'active';
+    }
+    console.log(userStatus);
+    await data.save();
+
+    res.json(data);
 });
 
 app.listen(PORT, () => {
