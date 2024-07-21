@@ -1,41 +1,49 @@
-import React from 'react'
-import './LandingPage.css'
-import { Link } from 'react-router-dom'
-import FlexExpand from './FlexExpand'
+import React from 'react';
+import './LandingPage.css';
+import FlexExpand from './FlexExpand';
+import { useNavigate } from 'react-router-dom';
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+
+  const handleButtonClick = () => {
+    navigate('/login');
+  };
+
   return (
     <div className="land_bg">
-        <div className="top_bar">
-          <div className="event_txt">
-              <span className="head_txt">Event Manager</span>
-                    <button class="btn-31">
-                      <span class="text-container">
-                       <span class="text"><Link to='/login'>Login</Link></span>
-                     </span>
-                    </button>
-                    {/*<button class="btn-32">
-                      <span class="text-container">
-                       <span class="text">Button2</span>
-                     </span>
-                    </button>
-                    <button class="btn-32">
-                      <span class="text-container">
-                       <span class="text">Button3</span>
-                     </span>
-                    </button>
-                    <button class="btn-32">
-                      <span class="text-container">
-                       <span class="text">Button4</span>
-                     </span>
-                    </button>*/}
-            </div>
+      <div className="top_bar">
+        <div className="event_txt">
+          <span className="head_txt">Event Manager</span>
+          <button className="btn-31" onClick={handleButtonClick}>
+            <span className="text-container">
+              <span className="text">Login</span>
+            </span>
+          </button>
+          {/* Uncomment if needed
+          <button className="btn-32">
+            <span className="text-container">
+              <span className="text">Button2</span>
+            </span>
+          </button>
+          <button className="btn-32">
+            <span className="text-container">
+              <span className="text">Button3</span>
+            </span>
+          </button>
+          <button className="btn-32">
+            <span className="text-container">
+              <span className="text">Button4</span>
+            </span>
+          </button>
+          */}
         </div>
-        <div className="flex-expand">
-          <FlexExpand/>
-        </div>
+      </div>
+      <div className="flex-expand">
+        <FlexExpand />
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default LandingPage
+export default LandingPage;
