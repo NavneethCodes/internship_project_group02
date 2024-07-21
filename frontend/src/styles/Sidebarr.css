@@ -1,0 +1,45 @@
+body{
+    background:url('https://img.freepik.com/free-vector/beautiful-decorative-soft-colorful-watercolor-texture-background_1055-14290.jpg')
+}
+
+
+.hamburger-icon {
+    transition: transform 0.3s ease;
+  }
+  
+  .hamburger-icon.open {
+    transform: rotate(180deg);
+  }
+  
+  .MuiDrawer-paper {
+    background: #333;
+    color: white;
+    transition: transform 0.3s ease;
+    z-index: 1200;
+  }
+  
+  .drawer-content {
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+    padding-top: 20px;
+  }
+  
+  .drawer-list {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .drawer-list .MuiListItem-root {
+    margin-bottom: 15px;
+  }
+  
+  .drawer-collapsed .MuiDrawer-paper {
+    padding-top: 20px;
+  }
+  
+  
+  
+  
