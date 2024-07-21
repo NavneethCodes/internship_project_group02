@@ -5,7 +5,6 @@ const PORT = 4000;
 require("./connection");
 const userModel = require("./models/userData");
 const eventModel = require("./models/eventData");
-const { send } = require("process");
 
 app.use(cors());
 app.use(express.json());
