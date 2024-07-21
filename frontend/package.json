@@ -10,10 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@coreui/coreui": "^5.1.0",
-    "@coreui/react": "^5.1.0",
-    "@emotion/react": "^11.12.0",
-    "@emotion/styled": "^11.12.0",
     "@headlessui/react": "^2.1.2",
     "@headlessui/tailwindcss": "^0.2.1",
     "@mui/icons-material": "^5.16.4",
