@@ -28,15 +28,35 @@ app.get('/events', async (req, res)=>{
     }
 })
 
-app.post('/usernew', async (req, res)=>{
-    try{
-        var data = req.body;
-        const datasave = new userModel(data);
-        const saveddata = await datasave.save();
-    } catch (error){
+app.post('/usernew', async (req, res) => {
+    try {
+
+        const {userEmail, userPassword} = req.body;
+        const userExists = await userModel.findOne({ userEmail });
+        if(userExists){
+            return res.status(400).send("Email already in use!");
+        }
+        if(userPassword.length < 6 && userPassword.length >16){
+            return res.status(400).send("Password must have the length between 6 and 16")
+        }
+        const data = req.body;
+        const newUser = new userModel(data);
+        const savedUser = await newUser.save();
+        
+        res.json({
+            message: "User created successfully!",
+            userDetails: {
+                userName: savedUser.userName,
+                userEmail: savedUser.userEmail,
+                userContact: savedUser.userContact,
+                userStatus: savedUser.userStatus
+            }
+        });
+    } catch (error) {
         console.log(error);
+        res.status(500).send('Error during user creation');
     }
-})
+});
 
 app.post('/login', async (req, res) => {
     const { userEmail, userPassword } = req.body;
@@ -54,7 +74,16 @@ app.post('/login', async (req, res) => {
             return res.status(400).send("Incorrect password!");
         } else {
             console.log("Logged in successfully");
-            return res.send("Login Successful");
+            return res.json({
+                message     : "Login Successful!",
+                userDetails : {
+                    userName    : user.userName,
+                    userEmail   : user.userEmail,
+                    userContact : user.userContact,
+                    userStatus  : user.userStatus
+                }
+                
+            })
         }
     } catch (error) {
         console.log(error);

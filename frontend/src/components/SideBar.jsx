@@ -1,119 +1,70 @@
-import React, { useState } from "react";
-import Icon from "../Images/Icon.svg";
-import Profile from "../Images/profile.png";
-import Dashboard from "../Images/dashboard.svg";
-import Transactions from "../Images/transactions.svg";
-import Performance from "../Images/performance.svg";
-import News from "../Images/news.svg";
-import Settings from "../Images/settings.svg";
-import Support from "../Images/support.svg";
-import { useLocation } from "react-router-dom";
+import React, { useState } from 'react';
+import {
+    FaTh,
+    FaBars,
+    FaUserAlt,
+    FaRegChartBar,
+    FaCommentAlt,
+    FaShoppingBag,
+    FaThList
+} from "react-icons/fa";
+import { NavLink } from 'react-router-dom';
+import '../components/SideBar.css';
 
-const SideBar = () => {
-    const location = useLocation();
+const SideBar = ({ children }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const toggle = () => setIsOpen(!isOpen);
 
-    const [closeMenu, setCloseMenu] = useState(false);
-
-    const handleCloseMenu = () => {
-        setCloseMenu(!closeMenu);
-    };
+    const menuItem = [
+        {
+            path: "/",
+            name: "Dashboard",
+            icon: <FaTh />
+        },
+        {
+            path: "/about",
+            name: "About",
+            icon: <FaUserAlt />
+        },
+        {
+            path: "/analytics",
+            name: "Analytics",
+            icon: <FaRegChartBar />
+        },
+        {
+            path: "/comment",
+            name: "Comment",
+            icon: <FaCommentAlt />
+        },
+        {
+            path: "/product",
+            name: "Product",
+            icon: <FaShoppingBag />
+        },
+        {
+            path: "/productList",
+            name: "Product List",
+            icon: <FaThList />
+        }
+    ];
 
     return (
-        <div className={closeMenu === false ? "sidebar" : "sidebar active"}>
-            <div
-                className={
-                    closeMenu === false
-                        ? "logoContainer"
-                        : "logoContainer active"
-                }
-            >
-                <img src={Icon} alt="icon" className="logo" />
-                <h2 className="title">evergreen. </h2>
-            </div>
-            <div
-                className={
-                    closeMenu === false
-                        ? "burgerContainer"
-                        : "burgerContainer active"
-                }
-            >
-                <div
-                    className="burgerTrigger"
-                    onClick={() => {
-                        handleCloseMenu();
-                    }}
-                ></div>
-                <div className="burgerMenu"></div>
-            </div>
-            <div
-                className={
-                    closeMenu === false
-                        ? "profileContainer"
-                        : "profileContainer active"
-                }
-            >
-                <img src={Profile} alt="profile" className="profile" />
-                <div className="profileContents">
-                    <p className="name">Hello, John👋</p>
-                    <p>johnsmith@gmail.com</p>
+        <div className="container1">
+            <div className={`sidebar ${isOpen ? 'expanded' : ''}`}>
+                <div className="top_section">
+                    <h1 className="logo" style={{ opacity: isOpen ? 1 : 0 }}>Logo</h1>
+                    <div className="bars" onClick={toggle}>
+                        <FaBars />
+                    </div>
                 </div>
+                {menuItem.map((item, index) => (
+                    <NavLink to={item.path} key={index} className="link" activeClassName="active">
+                        <div className="icon">{item.icon}</div>
+                        <div className="link_text">{item.name}</div>
+                    </NavLink>
+                ))}
             </div>
-            <div
-                className={
-                    closeMenu === false
-                        ? "contentsContainer"
-                        : "contentsContainer active"
-                }
-            >
-                <ul>
-                    <li className={location.pathname === "/" ? "active" : ""}>
-                        <img src={Dashboard} alt="dashboard" />
-                        <a href="/">dashboard</a>
-                    </li>
-                    <li
-                        className={
-                            location.pathname === "/transactions"
-                                ? "active"
-                                : ""
-                        }
-                    >
-                        <img src={Transactions} alt="transactions" />
-                        <a href="/transactions">transactions</a>
-                    </li>
-                    <li
-                        className={
-                            location.pathname === "/performance" ? "active" : ""
-                        }
-                    >
-                        <img src={Performance} alt="Performance" />
-                        <a href="/performance">performance</a>
-                    </li>
-                    <li
-                        className={
-                            location.pathname === "/news" ? "active" : ""
-                        }
-                    >
-                        <img src={News} alt="News" />
-                        <a href="/news">news</a>
-                    </li>
-                    <li
-                        className={
-                            location.pathname === "/settings" ? "active" : ""
-                        }
-                    >
-                        <img src={Settings} alt="Settings" />
-                        <a href="/settings">settings</a>
-                    </li>
-                    <li
-                        className={
-                            location.pathname === "/support" ? "active" : ""
-                        }
-                    >
-                        <img src={Support} alt="Support" />
-                        <a href="/support">support</a>
-                    </li>
-                </ul>
-            </div>
+            <main>{children}</main>
         </div>
     );
 };

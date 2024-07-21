@@ -1,22 +1,19 @@
 
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
-// import SignUp from './components/SignUp.jsx';
-// import Mainpage from './components/Mainpage';
-// import LoginForm from './components/LoginForm';
-import Sidebarr from './components/Sidebarr';
+import Sign_up from './components/Sign_up.jsx';
+import Mainpage from './components/Mainpage';
+import LoginForm from './components/LoginForm';
 function App() {
   return (
     <>
-       {/* <Routes>
+       <Routes>
          <Route path='/' element={<Mainpage />} />
          <Route path='/login' element={<LoginForm />} />
-        <Route path='/signup' element={<SignUp />} />
-       </Routes> */}
-       <Sidebarr/>
+        <Route path='/signup' element={<Sign_up />} />
+       </Routes>
     </>
-  );
+  )
 }
 
-export default App;
-
+export default App

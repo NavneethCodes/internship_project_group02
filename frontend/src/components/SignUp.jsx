@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './SignUp.css';
 import axios from 'axios';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 
 const SignUp = () => {
   const [details, setDetails] = useState({
@@ -13,8 +13,6 @@ const SignUp = () => {
   });
 
   const [rePass, setRePass] = useState('');
-  const location = useLocation();
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,12 +30,16 @@ const SignUp = () => {
       setRePass('');
     } else {
       console.log(details);
-      axios
-        .post('http://localhost:4000/usernew', details)
-        .then((res) => {
+      axios.post('http://localhost:4000/usernew', details).then((res) => {
           alert('New user registered!');
         })
         .catch((error) => {
+          if(error.response){
+            alert(error.response.data);
+          } else {
+            alert('Sign up failed, try again later!');
+
+          }
           console.log(error);
         });
     }

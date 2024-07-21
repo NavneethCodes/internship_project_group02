@@ -21,7 +21,7 @@ const LoginForm = () => {
     const submit = (e) => {
         e.preventDefault();
         axios.post('http://localhost:4000/login', credentials).then((res)=>{
-            alert(res.data);
+            alert(res.data.message);
         }).catch((error)=>{
             if(error.response){
                 alert(error.response.data);
