@@ -5,6 +5,7 @@ const PORT = 4000;
 require("./connection");
 const userModel = require("./models/userData");
 const eventModel = require("./models/eventData");
+const recordModel = require("./models/eventRecords");
 
 app.use(cors());
 app.use(express.json());
@@ -90,8 +91,20 @@ app.post("/login", async (req, res) => {
 app.post("/eventnew", async (req, res) => {
   try {
     var data = req.body;
-    const datasave = new userModel(data);
-    const saveddata = await datasave.save();
+    const datasave = new eventModel(data);
+    const saved_event = await datasave.save();
+    const recordsInit = new recordModel({
+      event_id  : saved_event._id,
+      likes     : [],
+      comments  : []
+    });
+    await recordsInit.save();
+
+    res.status(201).json({
+      message: "Event and event record created successfully!",
+      event: saved_event,
+      eventRecord: recordsInit,
+    });
   } catch (error) {
     console.log(error);
   }
