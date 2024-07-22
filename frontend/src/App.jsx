@@ -1,12 +1,11 @@
 
-import './App.css';
 import { Routes, Route } from 'react-router-dom';
-import Sidebarr from './components/Sidebarr'; 
+import Eventdetail from './components/Eventdetail'; 
 
 function App() {
   return (
     <>
-       <Sidebarr/> 
+       <Eventdetail/>
     </>
   );
 }
