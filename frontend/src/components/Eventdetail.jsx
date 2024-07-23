@@ -103,7 +103,7 @@ export default function Eventdetail() {
           key={index}
           variant="outlined"
           className={`card ${expandedCardIndex === index ? 'expanded' : ''}`}
-          sx={{background:'rgb(255, 255, 255,0.4)',backdropFilter:'blur(100px)',border:'2px solid rgba(255,255,255,.2)'}}
+          sx={{background:'rgb(255, 255, 255,0.4)',backdropFilter:'blur(100px)',border:'2px solid rgba(255,255,255,.2)',animation:'slideDown 0.5s ease-out'}}
           onClick={() => handleExpand(index)}
         >
           <AspectRatio

@@ -4,11 +4,6 @@
     gap: 16px;
 }
 
-.card-grid Card{
-    background-color: aqua;
-}
-
-
 @media (max-width: 1200px) {
     .card-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -31,4 +26,15 @@
 
 .card.expanded {
     transform: scale(1.05);
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
