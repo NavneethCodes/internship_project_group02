@@ -8,26 +8,6 @@ import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const [details, setDetails] = useState({
-    userContact: '',
-    userEmail: '',
-    userName: '',
-    userPassword: '',
-    userStatus: 'active',
-  });
-
-  const [rePass, setRePass] = useState('');
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name === 'userRePassword') {
-      setRePass(value);
-    } else {
-      setDetails({ ...details, [name]: value });
-    }
-  };
 
 const LoginForm = () => {
   const [credentials, setCredentials] = useState({
@@ -73,7 +53,7 @@ const LoginForm = () => {
           <label><input type='checkbox' />Remember Me</label>
           <a href='#'>Forgot Password?</a>
         </div>
-        <div className='sub_btn'>
+        <div className='sub_btn' onClick={submit}>
           <button type='submit'>Login</button>
         </div>
         <div className='reg_link'>

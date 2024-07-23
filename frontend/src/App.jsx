@@ -2,12 +2,12 @@ import './App.css'
 import React from 'react'
 
 import { Routes, Route } from 'react-router-dom';
-import Sidebarr from './components/Sidebarr'; 
+import LoginForm from './components/LoginForm'
 
 function App() {
   return (
     <>
-       <Sidebarr/> 
+       <LoginForm/> 
     </>
   );
 }
