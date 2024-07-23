@@ -3,6 +3,27 @@ import { AiOutlineUser } from "react-icons/ai";
 import { IoLockClosedOutline } from "react-icons/io5";
 import './LoginForm.css'
 
+const [details, setDetails] = useState({
+    userContact: '',
+    userEmail: '',
+    userName: '',
+    userPassword: '',
+    userStatus: 'active',
+  });
+
+  const [rePass, setRePass] = useState('');
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'userRePassword') {
+      setRePass(value);
+    } else {
+      setDetails({ ...details, [name]: value });
+    }
+  };
+
 const LoginForm = () => {
   return (
     <div className='bg'>
