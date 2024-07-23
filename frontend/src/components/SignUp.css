@@ -1,12 +1,12 @@
 .sign_bg {
   background: red;
-  height: auto;
+  height: 90vh;
   max-width: 500px;
   width: 100%;
   border: 2px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   border-radius: 40px;
-  padding: 30px 40px 40px 40px;
+  padding: 30px 30px 30px 30px;
   background: transparent;
   backdrop-filter: blur(10px);
   display: flex;

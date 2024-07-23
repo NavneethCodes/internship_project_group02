@@ -6,18 +6,15 @@ import Profile from './components/Profile'
 import Eventdetail from './components/Eventdetail'
 import LoginForm from './components/LoginForm'
 
-const App = () => {
+import { Routes, Route } from 'react-router-dom';
+import Sidebarr from './components/Sidebarr'; 
+
+function App() {
   return (
     <>
-
-            <Eventdetail/> 
-           
-    {/* <MainBar/> */}
-     {/* <Sign_up />  */}
-     {/* <Profile/> */}
-     {/* <LoginForm />  */}
+       <Sidebarr/> 
     </>
-  )
+  );
 }
 
-export default App
+export default App; 

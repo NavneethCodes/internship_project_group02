@@ -1,27 +1,28 @@
-import "../styles/main.scss";
-import { Routes, Route } from "react-router-dom";
-import Dashboard from "../pages/Dashboard";
-import News from "../pages/News";
-import Performance from "../pages/Performance";
-import Transactions from "../pages/Transactions";
-import Settings from "../pages/Settings";
-import Support from "../pages/Support";
-import SideBar from "./SideBar";
+import React from 'react';
+import './SideBar.css';
+import { Route, Routes } from 'react-router-dom';
+import SideBar from './SideBar.jsx';
+import Dashboard from '../pages/Dashboard.jsx';
+import About from '../pages/About.jsx';
+import Analytics from '../pages/Analytics.jsx';
+import Comment from '../pages/Comment.jsx';
+import Product from '../pages/Product.jsx';
+import ProductList from '../pages/ProductList.jsx';
 
-function MainBar() {
-    return (
-            <div className="App">
-                <SideBar/>
-                <Routes>
-                    <Route path="/" element={<Dashboard />} />
-                    <Route path="/news" element={<News/>} />
-                    <Route path="/performance" element={<Performance />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/support" element={<Support />} />
-                    <Route path="/transactions" element={<Transactions />} />
-                </Routes>
-            </div>
-    );
-}
+const App = () => {
+  return (
+      <SideBar>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/comment" element={<Comment />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/product" element={<Product />} />
+          <Route path="/productList" element={<ProductList />} />
+        </Routes>
+      </SideBar>
+  );
+};
 
-export default MainBar;
+export default App;
