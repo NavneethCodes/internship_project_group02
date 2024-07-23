@@ -28,7 +28,7 @@ export default function Sidebar() {
 
   const list = () => (
     <Box
-      sx={{ width: 250 }}
+      sx={{ width: 250  }}
       role="presentation"
       onClick={toggleDrawer} 
       onKeyDown={toggleDrawer}
@@ -47,7 +47,7 @@ export default function Sidebar() {
                  index === 5 ? <FavoriteIcon /> :
                  <LogoutIcon />}
               </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={text} sx={{transition: 'transform 1s ease, opacity 1s ease', transform:open? 'translateX(0)':'translateX(-100%)',opacity: open ? 1 : 0,}} />
             </ListItemButton>
           </ListItem>
         ))}
@@ -80,7 +80,7 @@ export default function Sidebar() {
           '& .MuiDrawer-paper': {
             width: 250,
             transition: 'transform 0.3s ease',
-            transform: open ? 'translateX(0)' : 'translateX(-100%)',
+            transform: open ? 'translateX(0%)' : 'translateX(-100%)',
             zIndex: 1200, 
           },
         }}

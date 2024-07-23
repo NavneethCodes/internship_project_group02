@@ -1,17 +1,11 @@
 
-import './App.css';
 import { Routes, Route } from 'react-router-dom';
-// import Sidebarr from './components/Sidebarr'; 
-// import SignUp from './components/SignUp';
-import LoginForm from './components/LoginForm';
+import Sidebarr from './components/Sidebarr'; 
 
 function App() {
   return (
     <>
-       {/* <Sidebarr/>  */}
-       {/* <SignUp/> */}
-       <LoginForm/>
-
+       <Sidebarr/> 
     </>
   );
 }

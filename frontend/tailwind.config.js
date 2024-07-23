@@ -1,7 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 import colors from 'tailwindcss/colors';
 
+
 export default {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./public/index.html",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+  
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",

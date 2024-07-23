@@ -10,5 +10,5 @@ const userSchema = new db.Schema({
   liked_events: [{ type: db.Schema.Types.ObjectId, ref: 'events' }]
 });
 
-const userData = userDbConnection.model('user', userSchema);
+const userData = userDbConnection.model('users', userSchema);
 module.exports = userData;
