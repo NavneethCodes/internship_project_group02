@@ -7,7 +7,7 @@
 
 
 body {
-  background-image: linear-gradient(to top, #bd3857, #962a4b, #701e3d, #4d132d, #2c091b);
+  background: black;
   font-family: 'Poppins',sans-serif;
   display:flex;
   justify-content: center;
