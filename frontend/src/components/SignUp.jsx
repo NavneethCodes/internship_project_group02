@@ -1,7 +1,10 @@
+
 import React, { useState } from 'react';
 import './SignUp.css';
 import axios from 'axios';
-import { Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SignUp = () => {
   const [details, setDetails] = useState({
@@ -26,27 +29,26 @@ const SignUp = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (details.userPassword !== rePass) {
-      alert("Passwords don't match!");
+      toast.error("Passwords don't match!");
       setRePass('');
     } else {
-      console.log(details);
-      axios.post('http://localhost:4000/usernew', details).then((res) => {
-          alert('New user registered!');
+      axios.post('http://localhost:4000/usernew', details)
+        .then((res) => {
+          toast.success(res.data.message);
         })
         .catch((error) => {
-          if(error.response){
-            alert(error.response.data);
+          if (error.response) {
+            toast.error(`Error: ${error.response.data}`);
           } else {
-            alert('Sign up failed, try again later!');
-
+            toast.error('Sign up failed, try again later!');
           }
-          console.log(error);
         });
     }
   };
 
   return (
     <div className='sign_bg'>
+      <ToastContainer />
       <form onSubmit={handleSubmit}>
         <div>
           <h2>Sign Up</h2>
