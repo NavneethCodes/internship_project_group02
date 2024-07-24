@@ -34,36 +34,7 @@ var navigate = useNavigate();
 
 const location = useLocation()
 
-//   let sendData=()=>{
-//     // console.log(form)
-//     if (location.state != null) {
-//       axios.put('http://localhost:4000/movieupdation/' + location.state.movie._id, form).then((res) => {
-//           alert('Data updated');
-//           navigate('/')
-//       }).catch((error) => {
-//           console.log(error);
-//       })
-//   }
-//     else {
-//       axios.post('http://localhost:4000/newmovie',form).then((res)=>{
-//         alert('Data added')
-//         navigate('/')
-//       }).catch((error)=>{
-//         console.log(error)
-//       })
-//     }
-//   }
-//   useEffect(() => {
-//     if (location.state != null) {
-//         setForm({
-//             ...form,
-//             name: location.state.movie.movieName,
-//             director: location.state.movie.movieDirector,
-//             category: location.state.movie.category,
-//             releaseYear: location.state.movie.release_year
-//         })
-//     }
-// }, [])
+
   return (
     <>
       <Box
@@ -75,15 +46,16 @@ const location = useLocation()
         autoComplete="off" 
       >
         <Stack spacing={2} direction="column">
+          <h1 style={{color:'green'}}>Profile</h1>
           <TextField id="FirstName-input" label="First Name" variant="standard" name="FirstName" value={form.FirstName} onChange={valueFetch}  />
           <br />
           <TextField id="LastName-input" label="Last Name" variant="standard"  name="LastName" value={form.LastName} onChange={valueFetch}/>
           <br />
           <TextField id="username-input" label="Username" variant="standard"  name="username" value={form.username} onChange={valueFetch}/>
           <br />
-          <TextField id="gender-input" label="Gender" variant="standard"  name="gender"  value={form.gender} onChange={valueFetch}/>
+          <TextField id="gender-input" label="Gender (Optional)" variant="standard"  name="gender"  value={form.gender} onChange={valueFetch}/>
           <br />
-          <TextField id="dOB-input" label="DOB" variant="standard"  name="dOB"  value={form.dOB} onChange={valueFetch}/>
+          <TextField id="dOB-input" label="DOB (Optional)" variant="standard"  name="dOB"  value={form.dOB} onChange={valueFetch}/>
           <br />
           <TextField id="email-input" label="Email" variant="standard"  name="email"  value={form.email} onChange={valueFetch}/>
           <br />
@@ -91,7 +63,7 @@ const location = useLocation()
           <br />
           <TextField id="password-input" label="Password" variant="standard"  name="password"  value={form.password} onChange={valueFetch}/>
           <br />
-          <Button variant="contained" color='success' onClick={{sendData}}>Submit</Button>
+          <Button variant="contained" color='success' onClick={{}}>Save</Button>
         </Stack>
       </Box>
     </>
