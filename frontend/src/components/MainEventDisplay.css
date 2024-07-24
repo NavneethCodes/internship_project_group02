@@ -53,7 +53,7 @@
 .btn-area Button {
     margin-left: 900px;
     border-radius: 7px;
-    background-color: rgb(190, 33, 33);
+    background-color:transparent;
     color: white;
     transition: all 0.3s ease;
     font-size: 14px;

@@ -67,11 +67,12 @@ export default function Sidebar() {
           top: 20,
           left: 20,
           zIndex: 1300,
+          background:'white',
         }}
       >
         <IoReorderThreeOutline
           className={`hamburger-icon ${open ? 'open' : ''}`}
-          style={{ fontSize: '2.5rem' }}
+          style={{ fontSize: '2.5rem',}}
         />
       </IconButton>
       <Drawer
