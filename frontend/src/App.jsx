@@ -1,4 +1,6 @@
-
+import './App.css'
+import React from 'react'
+import Profile from './components/Profile'
 import { Routes, Route } from 'react-router-dom';
 import SignUp from './components/SignUp.jsx'
 import LoginForm from './components/LoginForm.jsx';
