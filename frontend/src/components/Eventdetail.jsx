@@ -15,93 +15,32 @@ import axios from 'axios';
 import CommentIcon from '@mui/icons-material/ModeCommentOutlined';
 import './Eventdetail.css';
 
-const cardData = [
-  {
-    title: 'WEDDING PLANNER',
-    subtitle: 'Mark your calendars',
-    avatar: 'A',
-    avatarLabel: 'Welcome All',
-    description: 'Learn More',
-    imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
-    venue: 'Grand Ballroom',
-    time: '5:00 PM',
-    location: '123 Wedding Lane, City',
-    organizer: 'ABC Weddings',
-  },
-  {
-    title: 'EVENT ORGANIZER',
-    subtitle: 'Join our events',
-    avatar: 'E',
-    avatarLabel: 'Explore Now',
-    description: 'Learn More',
-    imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
-    venue: 'Convention Center',
-    time: '10:00 AM',
-    location: '456 Event Blvd, City',
-    organizer: 'XYZ Events',
-  },
-  {
-    title: 'CONCERT NIGHT',
-    subtitle: 'Live music experience',
-    avatar: 'C',
-    avatarLabel: 'Don’t miss it',
-    description: 'Learn More',
-    imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
-    venue: 'City Arena',
-    time: '8:00 PM',
-    location: '789 Music Ave, City',
-    organizer: 'Live Music Inc.',
-  },
-  {
-    title: 'ART EXHIBITION',
-    subtitle: 'Discover new artists',
-    avatar: 'A',
-    avatarLabel: 'Art for everyone',
-    description: 'Learn More',
-    imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
-    venue: 'Art Gallery',
-    time: '11:00 AM',
-    location: '101 Art St, City',
-    organizer: 'Creative Arts',
-  },
-  {
-    title: 'TECH CONFERENCE',
-    subtitle: 'Innovations and trends',
-    avatar: 'T',
-    avatarLabel: 'Join the future',
-    description: 'Learn More',
-    imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
-    venue: 'Tech Hub',
-    time: '9:00 AM',
-    location: '202 Tech Way, City',
-    organizer: 'Tech Innovators',
-  },
-  {
-    title: 'FOOD FESTIVAL',
-    subtitle: 'Taste the world',
-    avatar: 'F',
-    avatarLabel: 'Delicious moments',
-    description: 'Learn More',
-    imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
-    venue: 'Food Park',
-    time: '12:00 PM',
-    location: '303 Food Ln, City',
-    organizer: 'Gourmet Delights',
-  },
-];
-
 export default function Eventdetail() {
   const [liked, setLiked] = React.useState({});
   const [expandedCardIndex, setExpandedCardIndex] = React.useState(null);
   const [commentsVisible, setCommentsVisible] = React.useState(false);
   const [comments, setComments] = React.useState([]);
   const [newComment, setNewComment] = React.useState('');
+  const [cardData, setCardData] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/events');
+        setCardData(response.data);
+      } catch (error) {
+        console.error('Error fetching data', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleLike = async (index) => {
     setLiked((prevLiked) => ({ ...prevLiked, [index]: !prevLiked[index] }));
     const userId = 'user123';
     try {
-      await axios.post('/api/like', { userId });
+      await axios.post('http://localhost:4000/events/like', { userId });
     } catch (error) {
       console.error('Error liking post', error);
     }
@@ -140,8 +79,8 @@ export default function Eventdetail() {
                 }}
               >
                 <img
-                  src={card.imageUrl}
-                  alt={card.title}
+                  src="https://via.placeholder.com/2000"
+                  alt={card.eventName}
                   style={{
                     width: '100%',
                     height: '100%',
@@ -169,10 +108,10 @@ export default function Eventdetail() {
                           '&.Mui-focusVisible:after': { outlineOffset: '-4px' },
                         }}
                       >
-                        {card.title}
+                        {card.eventName}
                       </Link>
                     </Typography>
-                    <Typography level="body-sm">{card.subtitle}</Typography>
+                    <Typography level="body-sm">{card.eventDescription}</Typography>
                   </div>
                   <IconButton
                     size="small"
@@ -217,21 +156,22 @@ export default function Eventdetail() {
                 </Box>
                 <Box sx={{ display: 'flex', gap: 1.5, mt: 'auto' }}>
                   <Avatar variant="soft" color="neutral">
-                    {card.avatar}
+                    {card.eventName[0]} {/* Assuming avatar is the first letter of the event name */}
                   </Avatar>
                   <div>
-                    <Typography level="body-xs">{card.avatarLabel}</Typography>
-                    <Typography level="body-sm">{card.description}</Typography>
+                    <Typography level="body-xs">{card.eventOrganizer}</Typography>
+                    <Typography level="body-sm">Learn More</Typography>
                   </div>
                 </Box>
               </Box>
             </Box>
             <Box className="card-back">
-              <Typography level="title-lg">{card.title}</Typography>
-              <Typography level="body-sm">Venue: {card.venue}</Typography>
-              <Typography level="body-sm">Time: {card.time}</Typography>
-              <Typography level="body-sm">Location: {card.location}</Typography>
-              <Typography level="body-sm">Organizer: {card.organizer}</Typography>
+              <Typography level="title-lg">{card.eventName}</Typography>
+              <Typography level="body-sm">Date: {new Date(card.eventDate.$date).toLocaleDateString()}</Typography>
+              <Typography level="body-sm">Start Time: {new Date(card.eventStartTime.$date).toLocaleTimeString()}</Typography>
+              <Typography level="body-sm">End Time: {new Date(card.eventEndTime.$date).toLocaleTimeString()}</Typography>
+              <Typography level="body-sm">Location: {card.eventLocation}</Typography>
+              <Typography level="body-sm">Organizer: {card.eventOrganizer}</Typography>
             </Box>
           </Box>
         </Card>
@@ -282,3 +222,4 @@ export default function Eventdetail() {
     </Box>
   );
 }
+
