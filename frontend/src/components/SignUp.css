@@ -10,7 +10,6 @@
   background: transparent;
   backdrop-filter: blur(10px);
   display: flex;
-  flex-direction: column;
   align-items: center;
   margin: auto;
   animation: fadeIn 1s ease-in-out;

@@ -53,7 +53,7 @@ const LoginForm = () => {
           <a href='#'>Forgot Password?</a>
         </div>
         <div className='sub_btn'>
-          <button type='submit'>Login</button>
+          <Link to='/maineventdetails'><button type='submit'>Login</button></Link>
         </div>
         <div className='reg_link'>
           <p>Don't have an account?<Link to='/signup'> Sign up</Link></p>
