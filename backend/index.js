@@ -166,6 +166,62 @@ app.put("/userupdate/:id", async (req, res) => {
     res.json(data);
 });
 
+app.put("/action/:action", async (req, res) => {
+  console.log("inside");
+  const { user_id, event_id } = req.body;
+  const action = req.params.action;
+  try{
+    const record = await recordModel.findOne({ event_id });
+
+    if (!record) {
+      console.log("Event record not found");
+      return res.status(404).send("Event record not found");
+    }
+
+    if(action === 'like'){
+      if(!record.likes.includes(user_id)){
+        record.likes.push(user_id);
+      }
+    } else if (action === 'unlike') {
+      if(record.likes.includes(user_id)){
+          const index = record.likes.indexOf(user_id);
+          console.log("Index: ", index);
+          record.likes.splice(index, 1);
+      }
+    } else if (action === 'comment') {
+      const comment = req.body.comment;
+      if(comment){
+        record.comments.push({
+          user_id : user_id, 
+          comment : comment
+        }) 
+      } else {
+        return res.status(400).send("Comment text is required!")
+      }
+    } else if(action === 'uncomment') {
+        const comment = req.body.comment;
+        if(comment){
+          const index_comment = record.comments.findIndex(
+            (c) => c.user_id.toString() === user_id && c.comment === comment
+          );
+          if (index_comment !== -1) {
+            record.comments.splice(index_comment, 1); // Remove the comment at the found index
+          } else {
+            console.log("Comment not found");
+            return res.status(400).send("Comment not found!");
+          }
+        }
+    }else {
+      return res.status(400).send("Invalid action!");
+    }
+    await record.save();
+    res.status(201).json(record)
+    console.log(record);
+  }catch(error){
+    console.log(error);
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}/`);
 });
