@@ -1,17 +1,18 @@
 .Event-bg {
     display: flex;
     flex-direction: column;
-    height: 201.4vh; 
-    width: 201.4vh;
-    background-image: linear-gradient(to right bottom, #051937, #214f64, #5e898b, #abc3b6, #fbfff0);;
-    background-size: cover;
+    height: 100vh; /* Adjust to fit the full viewport height */
+    width: 100vw;  /* Adjust to fit the full viewport width */
+    background-image: url('../Images/eve_bg3.png');
+    background-size: cover;  /* Ensures the image covers the entire background */
+    background-position: center; /* Centers the background image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
     padding: 0px 20px 20px 20px;
+    box-sizing: border-box; /* Ensures padding is included in element's total width and height */
 }
 
-
 .Event-navbar {
-    background-color: transparent;
-    backdrop-filter:blur(10px);
+    background-color: rgba(0, 0, 0, 0.5); /* Add a semi-transparent background */
     border-radius: 30px;
     margin-top: 5px;
     outline: none;
@@ -23,58 +24,63 @@
     padding: 17px 20px 30px;
 }
 
-
 .Event-navbar input {
     flex-grow: 1; 
     margin-right: 20px; 
-    margin-left:280px;
+    margin-left: 280px;
     border-radius: 30px;
+    padding: 10px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Add border */
+    background-color: rgba(255, 255, 255, 0.8); /* Add background color */
+    transition: all 0.3s ease;
 }
 
-.Event-navbar input {
-    color: rgb(112, 109, 109);
-    font-size: 14px;
-    border-radius: 30px;
-
+.Event-navbar input:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7); /* Add focus effect */
 }
 
-.btn-area{
+.btn-area {
     background-color: transparent;
     align-items: right;
-    justify-content:right;
+    justify-content: right;
     display: flex;
     flex-grow: 1;
     flex-direction: row;
-    position:relative ;
+    position: relative;
 }
 
-.btn-area Button{
-    margin-left:900px;
+.btn-area Button {
+    margin-left: 900px;
     border-radius: 7px;
     background-color: rgb(190, 33, 33);
-    color:white;
-    transition:all 0.3s ease;
-    font-size: 10px;
+    color: white;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
 }
 
-.btn-area Button:hover{
-    color:black;
-    background-color:white;
+.btn-area Button:hover {
+    color: black;
+    background-color: white;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Enhance hover effect */
 }
 
-.btn-area Button:active{
-    color:rgb(255, 254, 254);
-    background-color:rgb(190, 33, 33);
+.btn-area Button:active {
+    color: rgb(255, 254, 254);
+    background-color: rgb(190, 33, 33);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add active effect */
 }
 
 .btn-area {
     flex-grow: 1;
 }
 
-
 .Event-display-container {
     background-color: transparent;
-    backdrop-filter:blur(10px);
     border-radius: 30px;
     margin-top: 20px;
     outline: none;
@@ -86,18 +92,24 @@
     align-items: center;
 }
 
-
 @media (max-width: 768px) {
     .Event-navbar {
         height: auto; 
         flex-direction: column;
+        align-items: center; /* Center align items */
+        padding: 10px; /* Reduce padding */
     }
-    .search-bar {
+    .Event-navbar input {
+        margin-left: 0;
         margin-right: 0;
-        margin-bottom: 10px; 
+        margin-bottom: 10px;
+        width: 80%; /* Adjust width */
+    }
+    .btn-area Button {
+        margin-left: 0;
+        width: 80%; /* Adjust width */
     }
 }
-
 
 @keyframes slideDown {
     from {
@@ -113,5 +125,4 @@
 .Event-navbar {
     animation: slideDown 0.5s ease-out;
 }
-
 

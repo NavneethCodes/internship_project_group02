@@ -23,9 +23,9 @@
 .bg {
     width: 480px;
     height: 550px;
-    background: transparent;
+    background:  rgb(240, 237, 237,0.2);
     border: 2px solid rgba(255,255,255,.2);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(50px);
     box-shadow: 0 0 10px rgba(0,0,0,.2);
     color: white;
     border-radius: 40px;
@@ -40,7 +40,7 @@
     animation: slideIn 0.5s ease-in-out;
 }
 
-.bg .input_box {
+.bg .login_input_box {
     position: relative;
     width: 100%;
     height: 60px;
@@ -48,24 +48,29 @@
     animation: slideIn 0.5s ease-in-out;
 }
 
-.input_box input {
+.login_input_box input {
     width: 90%;
     height: 50%;
-    background: transparent;
+  background: rgba(0, 0, 0, 0.2);
     outline: none;
-    border: 2px solid rgba(255,255,255,.2);
+    border: none;
     border-radius: 40px;
     padding-left: 2cqb;
     color: rgb(255, 255, 255);
     padding: 20px 20px 20px 20px;
     animation: fadeIn 0.5s ease-in-out;
     margin-top: 35px;
+    font-size:20px;
 }
 
-.input_box input::placeholder {
-    color: rgb(112, 109, 109);
+.login_input_box input::placeholder {
+    color: rgb(255, 255, 255,0.7);
     font-size: 14px;
 }
+
+.login_input_box input:focus {
+    border: 2px solid rgba(255, 255, 255, 0.5);
+  }
 
 .icon {
     position: absolute;
@@ -88,7 +93,7 @@
 }
 
 .rem_me a {
-    color: rgb(199, 74, 36);
+    color: rgb(2, 47, 77,0.8);
     text-decoration: none;
 }
 
@@ -97,10 +102,13 @@
     cursor: pointer;
 }
 
+
+
 .bg button {
-    width: 100%;
+    width: 50%;
     height: 45px;
-    background: rgb(199, 74, 36);
+    margin-left: 118px;
+    background: rgb(2, 47, 77,0.8);
     border: none;
     outline: none;
     border-radius: 40px;
@@ -119,7 +127,7 @@
 }
 
 .bg button:active {
-    background-color: rgb(199, 74, 36);
+    background-color: rgb(2, 47, 77,0.8);
     color: rgb(238, 235, 235);
 }
 
@@ -130,9 +138,9 @@
 }
 
 .reg_link p a {
-    color: rgb(199, 74, 36);
+    color: rgb(2, 47, 77,0.8);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .reg_link p a:hover {

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { AiOutlineUser } from "react-icons/ai";
 import { IoLockClosedOutline } from "react-icons/io5";
@@ -7,6 +6,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 const LoginForm = () => {
   const [credentials, setCredentials] = useState({
@@ -52,7 +52,7 @@ const LoginForm = () => {
           <label><input type='checkbox' />Remember Me</label>
           <a href='#'>Forgot Password?</a>
         </div>
-        <div className='sub_btn'>
+        <div className='sub_btn' onClick={submit}>
           <Link to='/maineventdetails'><button type='submit'>Login</button></Link>
         </div>
         <div className='reg_link'>

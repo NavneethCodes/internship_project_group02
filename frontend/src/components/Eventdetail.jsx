@@ -17,12 +17,16 @@ import './Eventdetail.css';
 
 const cardData = [
   {
-    title: 'WEDDING PLANAR',
+    title: 'WEDDING PLANNER',
     subtitle: 'Mark your calendars',
     avatar: 'A',
     avatarLabel: 'Welcome All',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
+    venue: 'Grand Ballroom',
+    time: '5:00 PM',
+    location: '123 Wedding Lane, City',
+    organizer: 'ABC Weddings',
   },
   {
     title: 'EVENT ORGANIZER',
@@ -31,6 +35,10 @@ const cardData = [
     avatarLabel: 'Explore Now',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
+    venue: 'Convention Center',
+    time: '10:00 AM',
+    location: '456 Event Blvd, City',
+    organizer: 'XYZ Events',
   },
   {
     title: 'CONCERT NIGHT',
@@ -39,6 +47,10 @@ const cardData = [
     avatarLabel: 'Don’t miss it',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
+    venue: 'City Arena',
+    time: '8:00 PM',
+    location: '789 Music Ave, City',
+    organizer: 'Live Music Inc.',
   },
   {
     title: 'ART EXHIBITION',
@@ -47,6 +59,10 @@ const cardData = [
     avatarLabel: 'Art for everyone',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
+    venue: 'Art Gallery',
+    time: '11:00 AM',
+    location: '101 Art St, City',
+    organizer: 'Creative Arts',
   },
   {
     title: 'TECH CONFERENCE',
@@ -55,6 +71,10 @@ const cardData = [
     avatarLabel: 'Join the future',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
+    venue: 'Tech Hub',
+    time: '9:00 AM',
+    location: '202 Tech Way, City',
+    organizer: 'Tech Innovators',
   },
   {
     title: 'FOOD FESTIVAL',
@@ -63,6 +83,10 @@ const cardData = [
     avatarLabel: 'Delicious moments',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
+    venue: 'Food Park',
+    time: '12:00 PM',
+    location: '303 Food Ln, City',
+    organizer: 'Gourmet Delights',
   },
 ];
 
@@ -102,102 +126,112 @@ export default function Eventdetail() {
         <Card
           key={index}
           variant="outlined"
-          className={`card ${expandedCardIndex === index ? 'expanded' : ''}`}
-          sx={{background:'rgb(255, 255, 255,0.4)',backdropFilter:'blur(100px)',border:'2px solid rgba(255,255,255,.2)',animation:'slideDown 0.5s ease-out'}}
+          className={`card ${expandedCardIndex === index ? 'flipped' : ''}`}
           onClick={() => handleExpand(index)}
         >
-          <AspectRatio
-            ratio="16/9"
-            sx={{
-              flexGrow: 1,
-              '--AspectRatio-paddingBottom': '56.25%',
-              overflow: 'hidden',
-            }}
-          >
-            <img
-              src={card.imageUrl}
-              alt={card.title}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-              }}
-            />
-          </AspectRatio>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 2,
-              padding: '16px',
-            }}
-          >
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <div>
-                <Typography level="title-lg">
-                  <Link
-                    href="#container-responsive"
-                    overlay
-                    underline="none"
+          <Box className="card-inner">
+            <Box className="card-front">
+              <AspectRatio
+                ratio="16/9"
+                sx={{
+                  flexGrow: 1,
+                  '--AspectRatio-paddingBottom': '56.25%',
+                  overflow: 'hidden',
+                }}
+              >
+                <img
+                  src={card.imageUrl}
+                  alt={card.title}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              </AspectRatio>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 2,
+                  padding: '16px',
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', }}>
+                  <div>
+                    <Typography level="title-lg">
+                      <Link
+                        href="#container-responsive"
+                        overlay
+                        underline="none"
+                        sx={{
+                          color: 'text.primary',
+                          '&.Mui-focusVisible:after': { outlineOffset: '-4px' },
+                        }}
+                      >
+                        {card.title}
+                      </Link>
+                    </Typography>
+                    <Typography level="body-sm">{card.subtitle}</Typography>
+                  </div>
+                  <IconButton
+                    size="small"
+                    variant="plain"
+                    color="neutral"
                     sx={{
-                      color: 'text.primary',
-                      '&.Mui-focusVisible:after': { outlineOffset: '-4px' },
+                      ml: 'auto',
+                      alignSelf: 'flex-start',
+                      padding: 0,
+                      borderRadius: '50%',
+                      ':hover': {
+                        backgroundColor: 'transparent'
+                      },
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleLike(index);
                     }}
                   >
-                    {card.title}
-                  </Link>
-                </Typography>
-                <Typography level="body-sm">{card.subtitle}</Typography>
-              </div>
-              <IconButton
-                size="small"
-                variant="plain"
-                color="neutral"
-                sx={{
-                  ml: 'auto',
-                  alignSelf: 'flex-start',
-                  padding: 0,
-                  borderRadius: '50%',
-                  ':hover': {
-                    backgroundColor: 'transparent'
-                  },
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleLike(index);
-                }}
-              >
-                {liked[index] ? <FavoriteIcon color="error" /> : <FavoriteBorderRoundedIcon />}
-              </IconButton>
-              <IconButton
-                size="small"
-                variant="plain"
-                color="neutral"
-                sx={{
-                  ml: 1,
-                  alignSelf: 'flex-start',
-                  padding: 0,
-                  borderRadius: '50%',
-                  ':hover': {
-                    backgroundColor: 'transparent'
-                  },
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleCommentToggle();
-                }}
-              >
-                <CommentIcon />
-              </IconButton>
+                    {liked[index] ? <FavoriteIcon color="error" /> : <FavoriteBorderRoundedIcon />}
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    variant="plain"
+                    color="neutral"
+                    sx={{
+                      ml: 1,
+                      alignSelf: 'flex-start',
+                      padding: 0,
+                      borderRadius: '50%',
+                      ':hover': {
+                        backgroundColor: 'transparent'
+                      },
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCommentToggle();
+                    }}
+                  >
+                    <CommentIcon />
+                  </IconButton>
+                </Box>
+                <Box sx={{ display: 'flex', gap: 1.5, mt: 'auto' }}>
+                  <Avatar variant="soft" color="neutral">
+                    {card.avatar}
+                  </Avatar>
+                  <div>
+                    <Typography level="body-xs">{card.avatarLabel}</Typography>
+                    <Typography level="body-sm">{card.description}</Typography>
+                  </div>
+                </Box>
+              </Box>
             </Box>
-            <Box sx={{ display: 'flex', gap: 1.5, mt: 'auto' }}>
-              <Avatar variant="soft" color="neutral">
-                {card.avatar}
-              </Avatar>
-              <div>
-                <Typography level="body-xs">{card.avatarLabel}</Typography>
-                <Typography level="body-sm">{card.description}</Typography>
-              </div>
+            <Box className="card-back">
+              <Typography level="title-lg">{card.title}</Typography>
+              <Typography level="body-sm">Venue: {card.venue}</Typography>
+              <Typography level="body-sm">Time: {card.time}</Typography>
+              <Typography level="body-sm">Location: {card.location}</Typography>
+              <Typography level="body-sm">Organizer: {card.organizer}</Typography>
             </Box>
           </Box>
         </Card>

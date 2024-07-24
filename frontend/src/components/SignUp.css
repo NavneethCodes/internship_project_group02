@@ -1,5 +1,4 @@
 .sign_bg {
-  background: red;
   height: 90vh;
   max-width: 500px;
   width: 100%;
@@ -7,8 +6,10 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   border-radius: 40px;
   padding: 30px 30px 30px 30px;
-  background: transparent;
-  backdrop-filter: blur(10px);
+  /* background: transparent; */
+  background: rgb(240, 237, 237,0.2);
+
+  backdrop-filter: blur(50px);
   display: flex;
   align-items: center;
   margin: auto;
@@ -32,18 +33,19 @@
 .input_box input {
   width: 90%;
   height: 100%;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.2);
   outline: none;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: none;
   border-radius: 40px;
   padding: 0 20px;
-  color: white;
+  color: rgb(255, 255, 255);
   margin-top: 40px;
   transition: border 0.3s;
+  font-size: 20px;
 }
 
 .input_box input::placeholder {
-  color:  rgb(119, 56, 36);
+  color:rgb(255, 255, 255,0.7);
   font-size: 14px;
 }
 
@@ -74,7 +76,7 @@
 }
 
 .terms a, .already_acc a {
-  color: rgb(199, 74, 36);
+  color: rgb(2, 47, 77,0.8);
   text-decoration: none;
 }
 .terms label ,.already_acc label{
@@ -87,9 +89,10 @@ color:rgb(255, 255, 255);
 }
 
 .sign_btn button {
-  width: 100%;
+  width: 50%;
   height: 45px;
-  background-color: rgb(199, 74, 36);
+  margin-left: 118px;
+  background-color: rgb(2, 47, 77,0.8);
   border: none;
   outline: none;
   border-radius: 40px;
@@ -107,7 +110,7 @@ color:rgb(255, 255, 255);
 }
 
 .sign_btn button:active {
-  background-color: rgb(199, 74, 36);
+  background-color: rgb(2, 47, 77,0.8);
   color: rgb(255, 255, 255);
 }
 
