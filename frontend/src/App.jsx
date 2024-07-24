@@ -1,12 +1,8 @@
 import './App.css'
 import React from 'react'
-import MainBar from './components/MainBar';
-import Profile from './components/Profile'
-import Eventdetail from './components/Eventdetail'
-import LoginForm from './components/LoginForm'
 
 import { Routes, Route } from 'react-router-dom';
-import Sidebarr from './components/Sidebarr'; 
+import LoginForm from './components/LoginForm'
 
 function App() {
   return (
@@ -14,6 +10,7 @@ function App() {
        {/* <Sidebarr/>  */}
        
     <Profile/>
+       <LoginForm/> 
     </>
   );
 }
