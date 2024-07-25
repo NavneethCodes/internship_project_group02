@@ -23,7 +23,6 @@ const cardData = [
     avatarLabel: 'Welcome All',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
-    likeCount: 0,
   },
   {
     title: 'EVENT ORGANIZER',
@@ -32,7 +31,6 @@ const cardData = [
     avatarLabel: 'Explore Now',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
-    likeCount: 0,
   },
   {
     title: 'CONCERT NIGHT',
@@ -41,7 +39,6 @@ const cardData = [
     avatarLabel: 'Don’t miss it',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
-    likeCount: 0,
   },
   {
     title: 'ART EXHIBITION',
@@ -50,7 +47,6 @@ const cardData = [
     avatarLabel: 'Art for everyone',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
-    likeCount: 0,
   },
   {
     title: 'TECH CONFERENCE',
@@ -59,7 +55,6 @@ const cardData = [
     avatarLabel: 'Join the future',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
-    likeCount: 0,
   },
   {
     title: 'FOOD FESTIVAL',
@@ -68,7 +63,6 @@ const cardData = [
     avatarLabel: 'Delicious moments',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
-    likeCount: 0,
   },
 ];
 
@@ -79,7 +73,6 @@ export default function Eventdetail() {
   const [currentCardIndex, setCurrentCardIndex] = React.useState(null);
   const [comments, setComments] = React.useState({});
   const [newComment, setNewComment] = React.useState('');
-  const [commentsVisibleIndex, setCommentsVisibleIndex] = React.useState(null);
 
   const handleLike = async (index) => {
     setLiked((prevLiked) => {
@@ -91,7 +84,7 @@ export default function Eventdetail() {
 
     const userId = 'user123';
     try {
-      await axios.post('/api/like', { userId });
+      await axios.post('http://localhost:4000/events/like', { userId });
     } catch (error) {
       console.error('Error liking post', error);
     }
@@ -121,12 +114,7 @@ export default function Eventdetail() {
           key={index}
           variant="outlined"
           className={`card ${expandedCardIndex === index ? 'expanded' : ''}`}
-          sx={{
-            background: 'rgb(255, 255, 255,0.4)',
-            backdropFilter: 'blur(100px)',
-            border: '2px solid rgba(255,255,255,.2)',
-            animation: 'slideDown 0.5s ease-out'
-          }}
+          sx={{background:'rgb(255, 255, 255,0.4)',backdropFilter:'blur(100px)',border:'2px solid rgba(255,255,255,.2)',animation:'slideDown 0.5s ease-out'}}
           onClick={() => handleExpand(index)}
         >
           <AspectRatio
@@ -192,9 +180,6 @@ export default function Eventdetail() {
               >
                 {liked[index] ? <FavoriteIcon color="error" /> : <FavoriteBorderRoundedIcon />}
               </IconButton>
-              <Typography variant="body2" sx={{ ml: 1, mt: 0.5 }}>
-                {card.likeCount}
-              </Typography>
               <IconButton
                 size="small"
                 variant="plain"
@@ -210,7 +195,7 @@ export default function Eventdetail() {
                 }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleCommentToggle(index);
+                  handleCommentToggle();
                 }}
               >
                 <CommentIcon />
@@ -274,5 +259,3 @@ export default function Eventdetail() {
     </Box>
   );
 }
-
-

@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 const LoginForm = () => {
   const [credentials, setCredentials] = useState({
     'userEmail': "",
@@ -51,8 +52,8 @@ const LoginForm = () => {
           <label><input type='checkbox' />Remember Me</label>
           <a href='#'>Forgot Password?</a>
         </div>
-        <div className='sub_btn'>
-          <button type='submit'>Login</button>
+        <div className='sub_btn' onClick={submit}>
+          <Link to='/maineventdetails'><button type='submit'>Login</button></Link>
         </div>
         <div className='reg_link'>
           <p>Don't have an account?<Link to='/signup'> Sign up</Link></p>

@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -17,7 +16,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { IoReorderThreeOutline } from 'react-icons/io5';
-import '../styles/Sidebarr.css'; 
+import { Link } from 'react-router-dom';  // Import Link from react-router-dom
+import '../styles/Sidebarr.css';
 
 export default function Sidebar() {
   const [open, setOpen] = React.useState(false);
@@ -28,27 +28,29 @@ export default function Sidebar() {
 
   const list = () => (
     <Box
-      sx={{ width: 250  }}
+      sx={{ width: 250 }}
       role="presentation"
-      onClick={toggleDrawer} 
+      onClick={toggleDrawer}
       onKeyDown={toggleDrawer}
       className={`drawer-content ${open ? 'drawer-expanded' : 'drawer-collapsed'}`}
     >
       <List className="drawer-list">
         {['Home', 'Events', 'Dashboard', 'Profile', 'Notifications', 'Likes', 'Logout'].map((text, index) => (
           <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index === 0 ? <HomeIcon /> :
-                 index === 1 ? <EventIcon /> :
-                 index === 2 ? <DashboardIcon /> :
-                 index === 3 ? <PersonIcon /> :
-                 index === 4 ? <NotificationsIcon /> :
-                 index === 5 ? <FavoriteIcon /> :
-                 <LogoutIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} sx={{transition: 'transform 1s ease, opacity 1s ease', transform:open? 'translateX(0)':'translateX(-100%)',opacity: open ? 1 : 0,}} />
-            </ListItemButton>
+            <Link to={`/${text.toLowerCase()}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <ListItemButton>
+                <ListItemIcon>
+                  {index === 0 ? <HomeIcon /> :
+                   index === 1 ? <EventIcon /> :
+                   index === 2 ? <DashboardIcon /> :
+                   index === 3 ? <PersonIcon /> :
+                   index === 4 ? <NotificationsIcon /> :
+                   index === 5 ? <FavoriteIcon /> :
+                   <LogoutIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ transition: 'transform 1s ease, opacity 1s ease', transform: open ? 'translateX(0)' : 'translateX(-100%)', opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </Link>
           </ListItem>
         ))}
       </List>
@@ -64,24 +66,25 @@ export default function Sidebar() {
           position: 'fixed',
           top: 20,
           left: 20,
-          zIndex: 1300, 
+          zIndex: 1300,
+          background:'white',
         }}
       >
         <IoReorderThreeOutline
           className={`hamburger-icon ${open ? 'open' : ''}`}
-          style={{ fontSize: '2.5rem' }}
+          style={{ fontSize: '2.5rem',}}
         />
       </IconButton>
       <Drawer
         anchor='left'
         open={open}
-        onClose={toggleDrawer} 
+        onClose={toggleDrawer}
         sx={{
           '& .MuiDrawer-paper': {
             width: 250,
             transition: 'transform 0.3s ease',
             transform: open ? 'translateX(0%)' : 'translateX(-100%)',
-            zIndex: 1200, 
+            zIndex: 1200,
           },
         }}
       >
