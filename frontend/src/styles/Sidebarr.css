@@ -4,7 +4,7 @@ body{
 
 
 .hamburger-icon {
-    transition: transform 0.2s ease;
+    transition: transform 0.9s ease;
   }
   
   .hamburger-icon.open {
@@ -14,7 +14,7 @@ body{
   .MuiDrawer-paper {
     background: #333;
     color: white;
-    transition: transform 0.3s ease;
+    transition: transform 0.9s ease;
     z-index: 1200;
   }
   

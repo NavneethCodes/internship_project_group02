@@ -10,9 +10,9 @@ import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import TextField from '@mui/joy/TextField';
 import Button from '@mui/joy/Button';
-import Modal from '@mui/material/Modal';
 import axios from 'axios';
 import CommentIcon from '@mui/icons-material/ModeCommentOutlined';
+import Modal from '@mui/material/Modal';
 import './Eventdetail.css';
 
 const cardData = [
@@ -23,6 +23,7 @@ const cardData = [
     avatarLabel: 'Welcome All',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
+    likeCount: 0,
   },
   {
     title: 'EVENT ORGANIZER',
@@ -31,6 +32,7 @@ const cardData = [
     avatarLabel: 'Explore Now',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
+    likeCount: 0,
   },
   {
     title: 'CONCERT NIGHT',
@@ -39,6 +41,7 @@ const cardData = [
     avatarLabel: 'Don’t miss it',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
+    likeCount: 0,
   },
   {
     title: 'ART EXHIBITION',
@@ -47,6 +50,7 @@ const cardData = [
     avatarLabel: 'Art for everyone',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
+    likeCount: 0,
   },
   {
     title: 'TECH CONFERENCE',
@@ -55,6 +59,7 @@ const cardData = [
     avatarLabel: 'Join the future',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
+    likeCount: 0,
   },
   {
     title: 'FOOD FESTIVAL',
@@ -63,6 +68,7 @@ const cardData = [
     avatarLabel: 'Delicious moments',
     description: 'Learn More',
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
+    likeCount: 0,
   },
 ];
 
@@ -70,11 +76,19 @@ export default function Eventdetail() {
   const [liked, setLiked] = React.useState({});
   const [expandedCardIndex, setExpandedCardIndex] = React.useState(null);
   const [commentsVisible, setCommentsVisible] = React.useState(false);
-  const [comments, setComments] = React.useState([]);
+  const [currentCardIndex, setCurrentCardIndex] = React.useState(null);
+  const [comments, setComments] = React.useState({});
   const [newComment, setNewComment] = React.useState('');
+  const [commentsVisibleIndex, setCommentsVisibleIndex] = React.useState(null);
 
   const handleLike = async (index) => {
-    setLiked((prevLiked) => ({ ...prevLiked, [index]: !prevLiked[index] }));
+    setLiked((prevLiked) => {
+      const newLiked = { ...prevLiked, [index]: !prevLiked[index] };
+      return newLiked;
+    });
+
+    cardData[index].likeCount += liked[index] ? -1 : 1;
+
     const userId = 'user123';
     try {
       await axios.post('/api/like', { userId });
@@ -87,12 +101,16 @@ export default function Eventdetail() {
     setExpandedCardIndex(index === expandedCardIndex ? null : index);
   };
 
-  const handleCommentToggle = () => {
-    setCommentsVisible(!commentsVisible);
-  };
-
+  const handleCommentToggle = (index) => {
+  setCurrentCardIndex(index);
+  setCommentsVisibleIndex(index === commentsVisibleIndex ? null : index);
+};
   const handleAddComment = () => {
-    setComments([...comments, newComment]);
+    const updatedComments = {
+      ...comments,
+      [currentCardIndex]: [...(comments[currentCardIndex] || []), newComment],
+    };
+    setComments(updatedComments);
     setNewComment('');
   };
 
@@ -103,7 +121,12 @@ export default function Eventdetail() {
           key={index}
           variant="outlined"
           className={`card ${expandedCardIndex === index ? 'expanded' : ''}`}
-          sx={{background:'rgb(255, 255, 255,0.4)',backdropFilter:'blur(100px)',border:'2px solid rgba(255,255,255,.2)',animation:'slideDown 0.5s ease-out'}}
+          sx={{
+            background: 'rgb(255, 255, 255,0.4)',
+            backdropFilter: 'blur(100px)',
+            border: '2px solid rgba(255,255,255,.2)',
+            animation: 'slideDown 0.5s ease-out'
+          }}
           onClick={() => handleExpand(index)}
         >
           <AspectRatio
@@ -169,6 +192,9 @@ export default function Eventdetail() {
               >
                 {liked[index] ? <FavoriteIcon color="error" /> : <FavoriteBorderRoundedIcon />}
               </IconButton>
+              <Typography variant="body2" sx={{ ml: 1, mt: 0.5 }}>
+                {card.likeCount}
+              </Typography>
               <IconButton
                 size="small"
                 variant="plain"
@@ -184,7 +210,7 @@ export default function Eventdetail() {
                 }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleCommentToggle();
+                  handleCommentToggle(index);
                 }}
               >
                 <CommentIcon />
@@ -225,7 +251,7 @@ export default function Eventdetail() {
             Comments
           </Typography>
           <Box sx={{ maxHeight: 300, overflowY: 'auto', mt: 2 }}>
-            {comments.length > 0 ? comments.map((comment, index) => (
+            {comments[currentCardIndex]?.length > 0 ? comments[currentCardIndex].map((comment, index) => (
               <Typography key={index} sx={{ mt: 1 }}>
                 {comment}
               </Typography>
@@ -248,3 +274,5 @@ export default function Eventdetail() {
     </Box>
   );
 }
+
+
