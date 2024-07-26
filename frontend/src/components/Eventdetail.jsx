@@ -12,8 +12,19 @@ import TextField from '@mui/joy/TextField';
 import Button from '@mui/joy/Button';
 import axios from 'axios';
 import CommentIcon from '@mui/icons-material/ModeCommentOutlined';
-import Modal from '@mui/material/Modal';
 import './Eventdetail.css';
+import Modal from '@mui/material/Modal';
+
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Textarea from '@mui/joy/Textarea';
+import Menu from '@mui/joy/Menu';
+import MenuItem from '@mui/joy/MenuItem';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import FormatBold from '@mui/icons-material/FormatBold';
+import FormatItalic from '@mui/icons-material/FormatItalic';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import Check from '@mui/icons-material/Check';
 
 const cardData = [
   {
@@ -70,6 +81,7 @@ const cardData = [
     imageUrl: 'https://images.unsplash.com/photo-1492305175278-3b3afaa2f31f?auto=format&fit=crop&w=2000',
     likeCount: 0,
   },
+
 ];
 
 export default function Eventdetail() {
@@ -102,9 +114,10 @@ export default function Eventdetail() {
   };
 
   const handleCommentToggle = (index) => {
-  setCurrentCardIndex(index);
-  setCommentsVisibleIndex(index === commentsVisibleIndex ? null : index);
-};
+    setCurrentCardIndex(index);
+    setCommentsVisibleIndex(index === commentsVisibleIndex ? null : index);
+  };
+
   const handleAddComment = () => {
     const updatedComments = {
       ...comments,
@@ -120,12 +133,12 @@ export default function Eventdetail() {
         <Card
           key={index}
           variant="outlined"
-          className={`card ${expandedCardIndex === index ? 'expanded' : ''}`}
+          className={expandedCardIndex === index ? 'expanded' : ''}
           sx={{
             background: 'rgb(255, 255, 255,0.4)',
             backdropFilter: 'blur(100px)',
             border: '2px solid rgba(255,255,255,.2)',
-            animation: 'slideDown 0.5s ease-out'
+            animation: 'slideDown 0.5s ease-out',
           }}
           onClick={() => handleExpand(index)}
         >
@@ -182,7 +195,7 @@ export default function Eventdetail() {
                   padding: 0,
                   borderRadius: '50%',
                   ':hover': {
-                    backgroundColor: 'transparent'
+                    backgroundColor: 'transparent',
                   },
                 }}
                 onClick={(e) => {
@@ -205,12 +218,13 @@ export default function Eventdetail() {
                   padding: 0,
                   borderRadius: '50%',
                   ':hover': {
-                    backgroundColor: 'transparent'
+                    backgroundColor: 'transparent',
                   },
                 }}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleCommentToggle(index);
+                  setCommentsVisible(true);
                 }}
               >
                 <CommentIcon />
@@ -230,7 +244,7 @@ export default function Eventdetail() {
       ))}
       <Modal
         open={commentsVisible}
-        onClose={handleCommentToggle}
+        onClose={() => setCommentsVisible(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -245,6 +259,7 @@ export default function Eventdetail() {
             border: '2px solid #000',
             boxShadow: 24,
             p: 4,
+            backgroundColor: 'lightblue',
           }}
         >
           <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -259,19 +274,94 @@ export default function Eventdetail() {
               <Typography sx={{ mt: 1 }}>No comments yet</Typography>
             )}
           </Box>
-          <TextField
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Add a comment"
-            fullWidth
-            sx={{ mt: 2 }}
+          <ExampleTextareaComment 
+            newComment={newComment} 
+            setNewComment={setNewComment} 
+            handleAddComment={handleAddComment}
           />
-          <Button onClick={handleAddComment} sx={{ mt: 1 }}>
-            Comment
-          </Button>
         </Box>
       </Modal>
     </Box>
+  );
+}
+
+function ExampleTextareaComment({ newComment, setNewComment, handleAddComment }) {
+  const [italic, setItalic] = React.useState(false);
+  const [fontWeight, setFontWeight] = React.useState('normal');
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  return (
+    <FormControl>
+      <FormLabel>Your comment</FormLabel>
+      <Textarea
+        placeholder="Type something here…"
+        minRows={3}
+        value={newComment}
+        onChange={(e) => setNewComment(e.target.value)}
+        endDecorator={
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 'var(--Textarea-paddingBlock)',
+              pt: 'var(--Textarea-paddingBlock)',
+              borderTop: '1px solid',
+              borderColor: 'divider',
+              flex: 'auto',
+            }}
+          >
+            <IconButton
+              variant="plain"
+              color="neutral"
+              onClick={(event) => setAnchorEl(event.currentTarget)}
+            >
+              <FormatBold />
+              <KeyboardArrowDown fontSize="md" />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={() => setAnchorEl(null)}
+              size="sm"
+              placement="bottom-start"
+              sx={{ '--ListItemDecorator-size': '24px' }}
+            >
+              {['200', 'normal', 'bold'].map((weight) => (
+                <MenuItem
+                  key={weight}
+                  selected={fontWeight === weight}
+                  onClick={() => {
+                    setFontWeight(weight);
+                    setAnchorEl(null);
+                  }}
+                  sx={{ fontWeight: weight }}
+                >
+                  <ListItemDecorator>
+                    {fontWeight === weight && <Check fontSize="sm" />}
+                  </ListItemDecorator>
+                  {weight === '200' ? 'lighter' : weight}
+                </MenuItem>
+              ))}
+            </Menu>
+            <IconButton
+              variant={italic ? 'soft' : 'plain'}
+              color={italic ? 'primary' : 'neutral'}
+              aria-pressed={italic}
+              onClick={() => setItalic((bool) => !bool)}
+            >
+              <FormatItalic />
+            </IconButton>
+            <Button sx={{ ml: 'auto' }} onClick={handleAddComment}>
+              Send
+            </Button>
+          </Box>
+        }
+        sx={{
+          minWidth: 300,
+          fontWeight,
+          fontStyle: italic ? 'italic' : 'initial',
+        }}
+      />
+    </FormControl>
   );
 }
 
