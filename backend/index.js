@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const session = require("express-session");
 const app = express();
 const PORT = 4000;
 require("./connection");
@@ -8,20 +9,18 @@ const eventModel = require("./models/eventData");
 const recordModel = require("./models/eventRecords");
 
 app.use(cors());
+
 app.use(express.json());
 
-//sends data back to the frontend for placing data in the frontend
-const sendUserDetails = (res, message, user) => {
-  res.json({
-    message: message,
-    userDetails: {
-      userName: user.userName,
-      userEmail: user.userEmail,
-      userContact: user.userContact,
-      userStatus: user.userStatus,
-    },
-  });
-};
+app.use(session({
+  secret: 'ignitusWorkingOnWheels',
+  resave: false,
+  saveUninitialized: false,
+  cookie:{
+    secure: false
+  }
+}))
+
 //This would return all the existing users from the db.
 app.get("/users", async (req, res) => {
   try {
@@ -69,7 +68,6 @@ app.get("/events", async (req, res) => {
     }
   });
   
-
 //This would add a new user to the db, if the user has the credentials valid
 app.post("/usernew", async (req, res) => {
   try {
@@ -107,13 +105,41 @@ app.post("/login", async (req, res) => {
       return res.status(400).send("Incorrect password!");
     } else {
       console.log("Logged in successfully");
-      sendUserDetails(res, "Logged in successfully!", user);
+      req.session.userId = user._id;
+      res.status(200).json({message: "Logged in successfully!"})
     }
   } catch (error) {
     console.log(error);
     res.status(500).send("Error during login");
   }
 });
+
+app.get('/profile', async (req, res) => {
+  if (req.session.userId) {
+    try {
+      const user = await userModel.findById(req.session.userId);
+      if (user) {
+        res.status(200).json({user});
+      } else {
+        res.status(400).json({message: 'User not found'});
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({message:"Data fetching user details took more time!"});
+    }
+  } else {
+    res.status(401).json({message: "Unauthorized"});
+  }
+})
+
+app.post('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({message: 'Error logging out'})
+    }
+    res.status(200).json({message: 'Logout success!'})
+  })
+})
 
 //This would be used when a new event is being created
 app.post("/eventnew", async (req, res) => {
@@ -147,7 +173,6 @@ app.delete("/userdeletion/:id", async (req, res) => {
     console.log(error);
   }
 });
-
 
 //This would be used to update the user's status
 app.put("/userupdate/:id", async (req, res) => {
@@ -205,7 +230,7 @@ app.put("/action/:action", async (req, res) => {
             (c) => c.user_id.toString() === user_id && c.comment === comment
           );
           if (index_comment !== -1) {
-            record.comments.splice(index_comment, 1); // Remove the comment at the found index
+            record.comments.splice(index_comment, 1);
           } else {
             console.log("Comment not found");
             return res.status(400).send("Comment not found!");
