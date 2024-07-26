@@ -1,43 +1,187 @@
-.Event-bg {
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* Adjust to fit the full viewport height */
-    width: 100vw;  /* Adjust to fit the full viewport width */
-    background-image: url('../Images/eve_bg3.png');
-    background-size: cover;  /* Ensures the image covers the entire background */
-    background-position: center; /* Centers the background image */
-    background-repeat: no-repeat; /* Prevents the image from repeating */
-    padding: 0px 20px 20px 20px;
-    box-sizing: border-box; /* Ensures padding is included in element's total width and height */
-}
-
 .Event-navbar {
-    background-color: rgba(0, 0, 0, 0.5); /* Add a semi-transparent background */
-    border-radius: 30px;
-    margin-top: 5px;
+    background-color: rgba(255, 255, 255, 0.996); /* Add a semi-transparent background */
+    margin-top: 0px;
     outline: none;
     display: flex;
     align-items: center;
     width: 100%; 
-    height: 100px;
+    height: 90px;
     box-sizing: border-box; 
     padding: 17px 20px 30px;
+    position:fixed;
+    z-index:30;
+}
+
+.Event-navbar .nav-logo{
+    position:absolute;
+    width:50px;
+    height:40px;
+    margin-left:150px;
+    margin-top:17px;
+
+}
+
+.Event-navbar p{
+    margin-left:205px;
+    margin-top:26px;
+}
+
+.itd-1{
+
+    width:100%;
+    height:250px;
+    background-color:transparent;
+    margin-top: 200px;
+    margin-left: 30px;
+    border-radius:20px ;
+    position:relative;
+}
+
+.itd-2{
+
+    width:100%;
+    height:250px;
+    background-color:transparent;
+    margin-top: 200px;
+    margin-left: 30px;
+    border-radius:20px ;
+    position:relative;
+}
+
+.itd-2 .top-2-img{
+    position:absolute;
+    width:279.5px;
+    margin-left: 380px;
+    height:100%;
+    border-radius: 20px;
+}
+
+.itd-2 .top2-txt{
+    position:absolute;
+    margin-left: 30px;
+    font-size: 20px;
+    margin-top:85px;
+    margin-right:300px;
+}
+
+.itd-1 .top-1-img{
+    position:absolute;
+    width:40%;
+    height:100%;
+    border-radius: 20px;
+}
+
+/* .itd-1 .top-1-img:hover{
+    position:absolute;
+    width:279.5px;
+    margin-left: 380px;
+    height:100%;
+    border-radius: 20px;
+} */
+
+.itd-1 .top1-txt{
+    position:absolute;
+    margin-left: 320px;
+    font-size: 20px;
+    margin-top:85px;
+    margin-right:30px;
+}
+
+.top-design .para{
+    padding-left:30px;
+    position:relative;
+    
+}
+
+.top-design .inside-top-design{
+    width: 47.8%;
+    height:91.5%;
+    background-color: rgb(240, 237, 237,0.2);
+    backdrop-filter: blur(40px);
+
+    display:flex;
+    flex-wrap: wrap;
+    outline:none;
+    margin-right:0px;
+    padding: 40px 40px 40px 40px;
+}
+
+.top-design .inside-top-design-2{
+    width: 30%;
+    height:30%;
+    background-color: rgb(240, 237, 237,0.2);
+    backdrop-filter: blur(40px);
+    position:absolute;
+    display:flex;
+    flex-wrap: wrap;
+    outline:none;
+    margin-top:600px;
+    margin-right:0px;
+    margin-left:100px;
+    padding: 40px 40px 40px 40px;
+    border-radius:15px;;
+}
+
+.top-design .td-txt{
+
+    color:rgb(255, 255, 255);
+    font-weight:90px;
+    font-size: 65px;
+    margin-left:45px;
+    margin-top:250px;
+}
+
+
+.top-design{
+
+    background-image:url('../Images/planet.png');
+    
+    display:flex;
+    width:99vw;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    margin:0px;
+    padding: 0px;
+    
+
+}
+
+.Event-bg {
+    display: flex;
+    flex-direction: column;
+    height: 400vh; /* Adjust to fit the full viewport height */
+    width: 99.1vw;  /* Adjust to fit the full viewport width */
+    background:rgb(28, 28, 28);
+    background-size: cover;  /* Ensures the image covers the entire background */
+    background-position: center; /* Centers the background image */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    box-sizing: border-box; /* Ensures padding is included in element's total width and height */
+    padding:0px;
+    margin: 0px;
 }
 
 .Event-navbar input {
     flex-grow: 1; 
+    margin-top:10px;
     margin-right: 20px; 
     margin-left: 280px;
-    border-radius: 30px;
+    border-radius: 10px;
     padding: 10px 20px;
-    border: 1px solid rgba(255, 255, 255, 0.3); /* Add border */
-    background-color: rgba(255, 255, 255, 0.8); /* Add background color */
+    outline:none;
+    border:none;
+    color: rgb(0, 0, 0);
+    font-size: 20px;
+    background-color: rgba(133, 131, 131, 0.2); /* Add background color */
     transition: all 0.3s ease;
+    height:50%;
 }
 
 .Event-navbar input:focus {
     outline: none;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7); /* Add focus effect */
+    box-shadow: 0 0 10px rgba(161, 240, 252, 0.7); /* Add focus effect */
+    border:1px solid rgba(161, 240, 252, 0.7)l;
+    
 }
 
 .btn-area {
@@ -48,30 +192,32 @@
     flex-grow: 1;
     flex-direction: row;
     position: relative;
+    margin-top: 10px;
+    margin-right: 100px;
 }
 
-.btn-area Button {
-    margin-left: 900px;
+.btn-area button {
+    margin-left: 700px;
     border-radius: 7px;
-    background-color:transparent;
-    color: white;
+    background-color: transparent;
+    color: rgb(0, 0, 0);
     transition: all 0.3s ease;
-    font-size: 14px;
+    font-size: 17px;
     padding: 10px 20px;
     border: none;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add shadow */
+    font-weight: 50px;
 }
 
-.btn-area Button:hover {
-    color: black;
-    background-color: white;
+.btn-area button:hover {
+    color: rgb(255, 255, 255);
+    background-color: rgb(0, 0, 0);
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Enhance hover effect */
 }
 
-.btn-area Button:active {
-    color: rgb(255, 254, 254);
-    background-color: rgb(190, 33, 33);
+.btn-area button:active {
+    color: rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add active effect */
 }
 
@@ -81,11 +227,8 @@
 
 .Event-display-container {
     background-color: transparent;
-    border-radius: 30px;
-    margin-top: 20px;
     outline: none;
-    border-radius: 40px;
-    margin-top: 20px;
+    margin-top: 0px;
     flex-grow: 1; 
     display: flex;
     justify-content: center;
@@ -125,4 +268,5 @@
 .Event-navbar {
     animation: slideDown 0.5s ease-out;
 }
+
 

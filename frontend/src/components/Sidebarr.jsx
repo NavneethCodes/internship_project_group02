@@ -8,7 +8,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import HomeIcon from '@mui/icons-material/Home';
+import HomeSharpIcon from '@mui/icons-material/HomeSharp';
 import EventIcon from '@mui/icons-material/Event';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonIcon from '@mui/icons-material/Person';
@@ -28,19 +28,19 @@ export default function Sidebar() {
 
   const list = () => (
     <Box
-      sx={{ width: 250 }}
+      sx={{ width: 250,height:'100%',padding:'0px',margin:'0px' }}
       role="presentation"
       onClick={toggleDrawer}
       onKeyDown={toggleDrawer}
       className={`drawer-content ${open ? 'drawer-expanded' : 'drawer-collapsed'}`}
     >
-      <List className="drawer-list">
+      <List className="drawer-list" sx={{backgroundColor:'rgba(255, 255, 255, 0.996)',height:'100%'}}>
         {['Home', 'Events', 'Dashboard', 'Profile', 'Notifications', 'Likes', 'Logout'].map((text, index) => (
           <ListItem key={text} disablePadding>
-            <Link to={`/${text.toLowerCase()}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link to={`/${text.toLowerCase()}`} style={{ textDecoration: 'none', color: 'black' }}>
               <ListItemButton>
                 <ListItemIcon>
-                  {index === 0 ? <HomeIcon /> :
+                  {index === 0 ? <HomeSharpIcon/> :
                    index === 1 ? <EventIcon /> :
                    index === 2 ? <DashboardIcon /> :
                    index === 3 ? <PersonIcon /> :
@@ -67,7 +67,8 @@ export default function Sidebar() {
           top: 20,
           left: 20,
           zIndex: 1300,
-          background:'white',
+          background:'rgba(255, 255, 255, 0.996)',
+          color:'black',
         }}
       >
         <IoReorderThreeOutline

@@ -20,6 +20,21 @@
     }
 }
 
+.login-main-bg{
+    background-image: url('../Images/loginbg.png');
+    font-family: 'Poppins',sans-serif;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    width:203.2vh;
+    margin:0px;
+    padding: 0px;
+    z-index:40px;
+}
+
 .bg {
     width: 480px;
     height: 550px;

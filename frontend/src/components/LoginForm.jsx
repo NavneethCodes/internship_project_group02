@@ -9,6 +9,16 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 const LoginForm = () => {
+
+  const handleClick = () => {
+    window.location.href = '/maineventdetails';
+  };
+
+  const handleButtonClick = () => {
+    handleClick();
+    submit();
+  };
+
   const [credentials, setCredentials] = useState({
     'userEmail': "",
     'userPassword': ""
@@ -34,6 +44,7 @@ const LoginForm = () => {
   };
 
   return (
+    <div className='login-main-bg'>
     <div className='bg'>
       <ToastContainer />
       <form onSubmit={submit}>
@@ -52,13 +63,14 @@ const LoginForm = () => {
           <label><input type='checkbox' />Remember Me</label>
           <a href='#'>Forgot Password?</a>
         </div>
-        <div className='sub_btn' onClick={submit}>
-          <Link to='/maineventdetails'><button type='submit'>Login</button></Link>
+        <div className='sub_btn'>
+          <button type='submit' onClick={handleButtonClick}>Login</button>
         </div>
         <div className='reg_link'>
           <p>Don't have an account?<Link to='/signup'> Sign up</Link></p>
         </div>
       </form>
+    </div>
     </div>
   );
 };

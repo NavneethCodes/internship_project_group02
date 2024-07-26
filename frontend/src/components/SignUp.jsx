@@ -47,6 +47,7 @@ const SignUp = () => {
   };
 
   return (
+    <div className='sign-main-bg'>
     <div className='sign_bg'>
       <ToastContainer />
       <form onSubmit={handleSubmit}>
@@ -118,6 +119,7 @@ const SignUp = () => {
           </label>
         </div>
       </form>
+    </div>
     </div>
   );
 };

@@ -28,7 +28,7 @@ const Card = ({ img, title, isActive, onClick, profileImage }) => (
   </div>
 );
 
-const App = () => {
+const FlexExpand = () => {
   const [activeIndex, setActiveIndex] = useState(null);
 
   const handleCardClick = (index) => {
@@ -51,6 +51,6 @@ const App = () => {
   );
 };
 
-export default App;
+export default FlexExpand;
 
 
