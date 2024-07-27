@@ -25,13 +25,25 @@ export default function Eventdetail({ events }) {
   };
 
   const handleLike = async (index) => {
-    setLiked((prevLiked) => ({ ...prevLiked, [index]: !prevLiked[index] }));
+    const isLiked = liked[index];
     const userId = 'user123';
+    setLiked((prevLiked) => ({ ...prevLiked, [index]: !isLiked }));
+
     try {
-      await axios.post('http://localhost:4000/events/like', { userId, eventId: events[index]._id });
-      // Update the events state after liking
-      const response = await axios.get('http://localhost:4000/events');
-      setEvents(response.data);
+      const eventId = cardData[index]._id.$oid;
+      const url = `http://localhost:4000/events/${eventId}/likes`;
+      await axios.post(url, { userId, action: isLiked ? 'unlike' : 'like' });
+
+      // Update the cardData state directly
+      setCardData((prevCardData) => {
+        const newCardData = [...prevCardData];
+        const likesCount = newCardData[index].likes.length;
+        newCardData[index].likes = isLiked
+          ? newCardData[index].likes.filter((like) => like !== userId)
+          : [...newCardData[index].likes, userId];
+        return newCardData;
+      });
+
     } catch (error) {
       console.error('Error liking post', error);
     }
@@ -48,7 +60,7 @@ export default function Eventdetail({ events }) {
       setCommentSectionIndex(index);
       if (!comments[index]) {
         try {
-          const response = await axios.get(`http://localhost:4000/events/${events[index]._id}/comments`);
+          const response = await axios.get(`http://localhost:4000/events/${cardData[index]._id.$oid}/comments`);
           setComments((prevComments) => ({ ...prevComments, [index]: response.data }));
         } catch (error) {
           console.error('Error fetching comments', error);
