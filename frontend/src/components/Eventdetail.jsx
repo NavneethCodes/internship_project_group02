@@ -22,10 +22,10 @@ export default function Eventdetail() {
   const [newComment, setNewComment] = React.useState('');
   const [cardData, setCardData] = React.useState([]);
 
-  const handleChange=()=>{
-    window.location.href='/details'
+  const handleChange = () => {
+    window.location.href = '/details'
   }
-  
+
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -40,14 +40,27 @@ export default function Eventdetail() {
   }, []);
 
   const handleLike = async (index) => {
-    setLiked((prevLiked) => ({ ...prevLiked, [index]: !prevLiked[index] }));
+    const isLiked = liked[index];
     const userId = 'user123';
+    setLiked((prevLiked) => ({ ...prevLiked, [index]: !isLiked }));
+
     try {
-      await axios.post('http://localhost:4000/events/like', { userId, eventId: cardData[index]._id });
-      const response = await axios.get('http://localhost:4000/events');
-      setCardData(response.data);
+      const eventId = cardData[index]._id.$oid;
+      const url = `http://localhost:4000/events/${eventId}/likes`;
+      await axios.post(url, { userId, action: isLiked ? 'unlike' : 'like' });
+
+      // Update the cardData state directly
+      setCardData((prevCardData) => {
+        const newCardData = [...prevCardData];
+        const likesCount = newCardData[index].likes.length;
+        newCardData[index].likes = isLiked
+          ? newCardData[index].likes.filter((like) => like !== userId)
+          : [...newCardData[index].likes, userId];
+        return newCardData;
+      });
+
     } catch (error) {
-      console.error('Error liking post', error);
+      console.error('Error updating like status', error);
     }
   };
 
@@ -62,7 +75,7 @@ export default function Eventdetail() {
       setCommentSectionIndex(index);
       if (!comments[index]) {
         try {
-          const response = await axios.get(`http://localhost:4000/events/${cardData[index]._id}/comments`);
+          const response = await axios.get(`http://localhost:4000/events/${cardData[index]._id.$oid}/comments`);
           setComments((prevComments) => ({ ...prevComments, [index]: response.data }));
         } catch (error) {
           console.error('Error fetching comments', error);
@@ -73,7 +86,8 @@ export default function Eventdetail() {
 
   const handleAddComment = async (index) => {
     try {
-      await axios.post(`http://localhost:4000/events/${cardData[index]._id}/comments`, { comment: newComment });
+      const eventId = cardData[index]._id.$oid;
+      await axios.post(`http://localhost:4000/events/${eventId}/comments`, { comment: newComment });
       setComments((prevComments) => ({
         ...prevComments,
         [index]: [...(prevComments[index] || []), newComment],
@@ -92,6 +106,7 @@ export default function Eventdetail() {
           variant="outlined"
           className={`card ${expandedCardIndex === index ? 'flipped' : ''}`}
           onClick={() => handleExpand(index)}
+          sx={{ borderRadius: '40px', background: 'rgb(246, 237, 237)', backdropFilter: 'blur(40px)', border: 'none' }}
         >
           <Box className="card-inner">
             <Box className="card-front">
@@ -123,7 +138,7 @@ export default function Eventdetail() {
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', }}>
                   <div>
-                    <Typography level="title-lg">
+                    <Typography level="title-lg" >
                       <Link
                         href="#container-responsive"
                         overlay
@@ -136,69 +151,68 @@ export default function Eventdetail() {
                         {card.eventName}
                       </Link>
                     </Typography>
-                    <Typography level="body-sm">{card.eventDescription}</Typography>
+                    <Typography level="body-sm" sx={{ color: 'black', marginTop: '20px' }}>{card.eventDescription}</Typography>
                   </div>
-                  <IconButton
-                    size="small"
-                    variant="plain"
-                    color="neutral"
-                    sx={{
-                      ml: 'auto',
-                      alignSelf: 'flex-start',
-                      padding: 0,
-                      borderRadius: '50%',
-                      ':hover': {
-                        backgroundColor: 'transparent'
-                      },
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleLike(index);
-                    }}
-                  >
-                    {liked[index] ? <FavoriteIcon color="error" /> : <FavoriteBorderRoundedIcon />}
-                  </IconButton>
-                  <Typography level="body-xs" sx={{ ml: 1 }}>{card.likes}</Typography>
-                  <IconButton
-                    size="small"
-                    variant="plain"
-                    color="neutral"
-                    sx={{
-                      ml: 1,
-                      alignSelf: 'flex-start',
-                      padding: 0,
-                      borderRadius: '50%',
-                      ':hover': {
-                        backgroundColor: 'transparent'
-                      },
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCommentToggle(index);
-                    }}
-                  >
-                    <CommentIcon />
-                  </IconButton>
                 </Box>
-                <Box sx={{ display: 'flex', gap: 1.5, mt: 'auto',marginTop:'10px' }}>
-                  <Avatar variant="soft" color="neutral">
+                <Box sx={{ display: 'flex', gap: 1.5, mt: 'auto' }}>
+                  <Avatar variant="soft" color="black">
                     {card.eventName[0]} {/* Assuming avatar is the first letter of the event name */}
                   </Avatar>
                   <div>
-                    <Typography level="body-xs">{card.eventOrganizer}</Typography>
-                    <Typography level="body-sm">Learn More</Typography>
+                    <Typography level="body-xs" sx={{ color: 'black', marginTop: '10px' }}>{card.eventOrganizer}</Typography>
                   </div>
                 </Box>
               </Box>
+              <Box sx={{ position: 'absolute', bottom: -20, right: 16, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <IconButton
+                  size="small"
+                  variant="plain"
+                  color="neutral"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleLike(index);
+                  }}
+                  sx={{
+                    transition: 'all 0.3s ease-in-out',
+                    ':hover': {
+                      backgroundColor: 'transparent',
+                      transform: 'scale(1.7)'
+                    }
+                  }}
+                >
+                  {liked[index] ? <FavoriteIcon color="error" /> : <FavoriteBorderRoundedIcon />}
+                </IconButton>
+                <Typography level="body-xs" sx={{ ml: 1 }}>{card.likes.length}</Typography>
+                <IconButton
+                  size="small"
+                  variant="plain"
+                  color="neutral"
+                  sx={{
+                    ml: 1,
+                    alignSelf: 'flex-start',
+                    padding: 0,
+                    borderRadius: '50%',
+                    ':hover': {
+                      backgroundColor: 'transparent'
+                    },
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCommentToggle(index);
+                  }}
+                >
+                  <CommentIcon />
+                </IconButton>
+              </Box>
             </Box>
             <Box className="card-back">
-              <Typography level="title-lg" sx={{ fontSize:'30px', fontWeight: 'bold',marginBottom:'20px',color:'white' }}>{card.eventName}</Typography>
-              <Typography level="body-sm" sx={{ fontSize:'17px', fontWeight: 'normal',marginTop:'5px',color:'white'  }}><span>Date: </span> {new Date(card.eventDate.$date).toLocaleDateString()}</Typography>
-              <Typography level="body-sm" sx={{ fontSize:'17px', fontWeight: 'normal' ,marginTop:'5px',color:'white' }}><span>Start Time: </span> {new Date(card.eventStartTime.$date).toLocaleTimeString()}</Typography>
-              <Typography level="body-sm" sx={{ fontSize:'17px', fontWeight: 'normal' ,marginTop:'5px',color:'white' }}><span>End Time: </span> {new Date(card.eventEndTime.$date).toLocaleTimeString()}</Typography>
-              <Typography level="body-sm" sx={{ fontSize:'17px', fontWeight: 'normal',marginTop:'5px',color:'white'  }}><span>Location: </span>{card.eventLocation}</Typography>
-              <Typography level="body-sm" sx={{ fontSize:'17px', fontWeight: 'normal' ,marginTop:'5px',color:'white' }}><span>Organizer: </span>{card.eventOrganizer}</Typography>
-              <Typography level="body-sm" sx={{ fontSize:'17px', fontWeight: 'normal' ,marginTop:'40px',color:'white' }}><button onClick={handleChange}><span>Know more..</span></button></Typography>
+              <Typography level="title-lg" sx={{ fontSize: '30px', fontWeight: 'bold', marginBottom: '20px', color: 'white' }}>{card.eventName}</Typography>
+              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>Date: </span> {new Date(card.eventDate.$date).toLocaleDateString()}</Typography>
+              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>Start Time: </span> {new Date(card.eventStartTime.$date).toLocaleTimeString()}</Typography>
+              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>End Time: </span> {new Date(card.eventEndTime.$date).toLocaleTimeString()}</Typography>
+              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>Location: </span>{card.eventLocation}</Typography>
+              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>Organizer: </span>{card.eventOrganizer}</Typography>
+              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '40px', color: 'white' }}><button onClick={handleChange}><span>Know more..</span></button></Typography>
             </Box>
             {commentSectionIndex === index && (
               <Box className="comments-section">

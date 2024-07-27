@@ -35,7 +35,19 @@
     margin-left: 30px;
     border-radius:20px ;
     position:relative;
+    transition: all 0.3s ease-in-out;
 }
+
+.itd-1:hover{
+
+    transform:translateY(-10px) scale(1.1);
+}
+
+.itd-2:hover{
+
+    transform:translateY(-10px) scale(1.1);
+}
+
 
 .itd-2{
 
@@ -43,9 +55,9 @@
     height:250px;
     background-color:transparent;
     margin-top: 200px;
-    margin-left: 30px;
     border-radius:20px ;
     position:relative;
+    transition: all 0.3s ease-in-out;
 }
 
 .itd-2 .top-2-img{
@@ -107,19 +119,29 @@
 }
 
 .top-design .inside-top-design-2{
-    width: 30%;
-    height:30%;
-    background-color: rgb(240, 237, 237,0.2);
+    width: 40%;
+    height:20%;
+    background-color: transparent;
     backdrop-filter: blur(40px);
     position:absolute;
     display:flex;
     flex-wrap: wrap;
     outline:none;
-    margin-top:600px;
+    margin-top:500px;
     margin-right:0px;
     margin-left:100px;
     padding: 40px 40px 40px 40px;
-    border-radius:15px;;
+    border-radius:15px;
+    transition: all 0.3s ease-in-out;
+}
+
+.top-design .inside-top-design-2:hover{
+    transform:translateY(10px) scale(1.2);
+}
+
+.inside-top-design-2 .td-txt-description{
+    font-size: 20px;
+    color: white;
 }
 
 .top-design .td-txt{
@@ -128,8 +150,10 @@
     font-weight:90px;
     font-size: 65px;
     margin-left:45px;
-    margin-top:250px;
+    margin-right:10px;
+    margin-top:160px;
 }
+
 
 
 .top-design{

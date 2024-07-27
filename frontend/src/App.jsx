@@ -7,6 +7,7 @@ import LoginForm from './components/LoginForm.jsx';
 import MainEventDisplay from './components/MainEventDisplay.jsx';
 import About from './pages/About.jsx'
 import Sidebarr from './components/Sidebarr.jsx'
+import LandingPage from './components/LandingPage.jsx'
 
 
 

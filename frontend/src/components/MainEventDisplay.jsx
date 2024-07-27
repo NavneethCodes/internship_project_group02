@@ -27,8 +27,7 @@ const MainEventDisplay = () => {
       <div className="top-design">
         <div className="para"><p className="td-txt">Discover,Track , and Experience Global Events.</p></div>
       <div className="inside-top-design-2">
-
-
+        <p className="td-txt-description">"Stay informed and engaged with the world's most exciting events. Explore upcoming concerts, festivals, conferences, and sports matches happening globally. Track your favorite events, receive real-time updates, and immerse yourself in unforgettable experiences. Join us to connect with a vibrant community of event enthusiasts and never miss out on the action!"</p>
       </div>
       <div className='inside-top-design'>
         <div className='itd-1'>
