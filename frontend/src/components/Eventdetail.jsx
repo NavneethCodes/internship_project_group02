@@ -8,7 +8,7 @@ import Typography from '@mui/joy/Typography';
 import Link from '@mui/joy/Link';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import TextField from '@mui/joy/TextField';
+import Input from '@mui/joy/Input';
 import Button from '@mui/joy/Button';
 import axios from 'axios';
 import CommentIcon from '@mui/icons-material/ModeCommentOutlined';
@@ -41,7 +41,7 @@ export default function Eventdetail() {
 
   const handleLike = async (index) => {
     const isLiked = liked[index];
-    const userId = 'user123';
+    const userId = await axios.get('http://localhost:4000/profile');
     setLiked((prevLiked) => ({ ...prevLiked, [index]: !isLiked }));
 
     try {
@@ -52,7 +52,6 @@ export default function Eventdetail() {
       // Update the cardData state directly
       setCardData((prevCardData) => {
         const newCardData = [...prevCardData];
-        const likesCount = newCardData[index].likes.length;
         newCardData[index].likes = isLiked
           ? newCardData[index].likes.filter((like) => like !== userId)
           : [...newCardData[index].likes, userId];
@@ -75,14 +74,17 @@ export default function Eventdetail() {
       setCommentSectionIndex(index);
       if (!comments[index]) {
         try {
-          const response = await axios.get(`http://localhost:4000/events/${cardData[index]._id.$oid}/comments`);
-          setComments((prevComments) => ({ ...prevComments, [index]: response.data }));
+          const response = await axios.get(`http://localhost:4000/events`);
+          const fetchedComments = response.data[index].comments;
+          console.log(fetchedComments);  // Log the comments to ensure they are fetched
+          setComments((prevComments) => ({ ...prevComments, [index]: fetchedComments }));
         } catch (error) {
           console.error('Error fetching comments', error);
         }
       }
     }
   };
+  
 
   const handleAddComment = async (index) => {
     try {
@@ -212,33 +214,63 @@ export default function Eventdetail() {
               <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>End Time: </span> {new Date(card.eventEndTime.$date).toLocaleTimeString()}</Typography>
               <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>Location: </span>{card.eventLocation}</Typography>
               <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>Organizer: </span>{card.eventOrganizer}</Typography>
-              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '40px', color: 'white' }}><button onClick={handleChange}><span>Know more..</span></button></Typography>
+              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '40px', color: 'white' }}><span>Event Details: </span>{card.eventDetails}</Typography>
+              <Button
+                variant="solid"
+                color="primary"
+                onClick={handleChange}
+                sx={{
+                  mt: 2,
+                  alignSelf: 'center',
+                }}
+              >
+                Join Event
+              </Button>
             </Box>
-            {commentSectionIndex === index && (
-              <Box className="comments-section">
-                <Typography level="title-lg">Comments</Typography>
-                <Box sx={{ maxHeight: 300, overflowY: 'auto', mt: 2 }}>
-                  {comments[index]?.length > 0 ? comments[index].map((comment, i) => (
-                    <Typography key={i} sx={{ mt: 1 }}>
-                      {comment}
-                    </Typography>
-                  )) : (
-                    <Typography sx={{ mt: 1 }}>No comments yet</Typography>
-                  )}
+          </Box>
+          {commentSectionIndex === index && (
+            <Box
+              className="comment-section"
+              sx={{
+                mt: 2,
+                padding: '16px',
+                borderTop: '1px solid #ccc',
+                backgroundColor: '#f6f7f8',
+              }}
+            >
+              <Typography level="body-xs" sx={{ mb: 1 }}>Comments:</Typography>
+              {comments[index]?.map((comment, commentIndex) => (
+                <Box
+                  key={commentIndex}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    mt: 1,
+                    padding: '8px',
+                    borderRadius: '8px',
+                    backgroundColor: '#ffffff',
+                  }}
+                >
+                  <Avatar variant="soft" sx={{ mr: 1 }}>
+                    {comment[0]}
+                  </Avatar>
+                  <Typography level="body-sm">{comment}</Typography>
                 </Box>
-                <TextField
+              ))}
+              <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Input
+                  placeholder="Add a comment"
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Add a comment"
-                  fullWidth
-                  sx={{ mt: 2 }}
+                  sx={{
+                    flexGrow: 1,
+                    backgroundColor: 'white',
+                  }}
                 />
-                <Button onClick={() => handleAddComment(index)} sx={{ mt: 1 }}>
-                  Comment
-                </Button>
+                <Button onClick={() => handleAddComment(index)}>Post</Button>
               </Box>
-            )}
-          </Box>
+            </Box>
+          )}
         </Card>
       ))}
     </Box>
