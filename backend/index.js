@@ -31,6 +31,15 @@ app.get("/users", async (req, res) => {
   }
 });
 
+app.get('/id/:id', async (req, res) => {
+  try{
+    const user = await userModel.findById(req.params.id);
+    return res.status(201).json({userName : user.userName});
+  } catch {
+    return res.status(400).send({ message: "No user found!"});
+  }
+})
+
 //This would return all the existing events from the db.
 app.get("/events", async (req, res) => {
     try {
@@ -86,8 +95,8 @@ app.post("/usernew", async (req, res) => {
     const savedUser = await newUser.save();
     sendUserDetails(res, "User created successfully!", savedUser);
   } catch (error) {
-    console.log(error);
-    res.status(500).send("Error during user creation");
+      console.log(error);
+      res.status(500).send("Error during user creation");
   }
 });
 
@@ -114,6 +123,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
+//function to get the current user information
 app.get('/profile', async (req, res) => {
   if (req.session.userId) {
     try {
@@ -132,6 +142,7 @@ app.get('/profile', async (req, res) => {
   }
 })
 
+//This would be used when a user requests a logout
 app.post('/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) {
@@ -244,6 +255,31 @@ app.put("/action/:action", async (req, res) => {
     console.log(record);
   }catch(error){
     console.log(error);
+  }
+})
+
+//Returns all the categories of the entered events
+app.get('/all-categories', async (req, res) => {
+  try {
+    const events = await eventModel.find();
+    let set_categories = new Set();
+    set_categories.add("All")
+    for (let i = 0; i < events.length; i++){
+      if(events[i].eventCategory)
+        set_categories.add(events[i].eventCategory);
+    }
+    const categories = Array.from(set_categories);
+    console.log("All categories:- " + categories);
+    res.json({
+      message: "Categories fetched successfully",
+      categories: categories
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "An error occured while fetching categories",
+      error: error.message
+    });
   }
 })
 
