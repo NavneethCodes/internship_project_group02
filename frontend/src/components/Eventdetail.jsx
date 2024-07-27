@@ -41,7 +41,7 @@ export default function Eventdetail() {
 
   const handleLike = async (index) => {
     const isLiked = liked[index];
-    const userId = 'user123';
+    const userId = axios.get('http://localhost:4000/profile');
     setLiked((prevLiked) => ({ ...prevLiked, [index]: !isLiked }));
 
     try {
@@ -75,7 +75,8 @@ export default function Eventdetail() {
       setCommentSectionIndex(index);
       if (!comments[index]) {
         try {
-          const response = await axios.get(`http://localhost:4000/events/${cardData[index]._id.$oid}/comments`);
+          const response = await axios.get(`http://localhost:4000/events`);
+          console.log(response.data[index].comments);
           setComments((prevComments) => ({ ...prevComments, [index]: response.data }));
         } catch (error) {
           console.error('Error fetching comments', error);
