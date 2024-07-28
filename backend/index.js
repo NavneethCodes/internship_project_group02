@@ -8,7 +8,9 @@ const userModel = require("./models/userData");
 const eventModel = require("./models/eventData");
 const recordModel = require("./models/eventRecords");
 
-app.use(cors());
+app.use(cors({
+  credentials: true
+}));
 
 app.use(express.json());
 

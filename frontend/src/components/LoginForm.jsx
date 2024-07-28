@@ -9,7 +9,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const LoginForm = () => {
-  console.log('LoginForm component rendered'); // Add this line
   const navigate = useNavigate(); 
   const [credentials, setCredentials] = useState({
     'userEmail': "",
@@ -23,12 +22,10 @@ const LoginForm = () => {
 
   const submit = (e) => {
     e.preventDefault();
-    console.log('Submit function called'); // Add this line
-    axios.post('http://localhost:4000/login', credentials)
+    axios.post('http://localhost:4000/login', credentials, {withCredentials: true})
      .then((res) => {
-        console.log('Login successful:', res.data); // Add this line
+        console.log('Login successful:', res.data);
         toast.success(res.data.message);
-        localStorage.setItem('sessionToken', res.data.sessionToken);
         navigate('/maineventdetails');
       })
      .catch((error) => {
