@@ -8,7 +8,6 @@ const EventComments = () => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [error, setError] = useState('');
-
   const [eventDetails, setEventDetails] = useState(null);
   const [userNames, setUserNames] = useState({});
 
@@ -89,9 +88,30 @@ const EventComments = () => {
             <img src={eventDetails.imgsrc || 'default-image-url'} alt="Event" className="event-image" />
             <div className="event-details">
               <h3>{eventDetails.eventName || 'Event Title'}</h3>
-              <p>{eventDetails.eventDescription || 'Event Description'}</p>
-              <p><strong>Date:</strong> {eventDetails.eventDate || 'Event Date'}</p>
-              <p><strong>Location:</strong> {eventDetails.eventLocation || 'Event Location'}</p>
+              <div className="event-detail-item">
+                <span className="event-detail-icon">📍 Location :</span>
+                <span>{eventDetails.eventLocation || 'Event Location'}</span>
+              </div>
+              <div className="event-detail-item">
+                <span className="event-detail-icon">📅 Date :</span>
+                <span>{eventDetails.eventDate || 'Event Date'}</span>
+              </div>
+              <div className="event-detail-item">
+                <span className="event-detail-icon">🕙 Starting Time :</span>
+                <span>{eventDetails.eventStartTime || 'Event Starting Time'}</span>
+              </div>
+              <div className="event-detail-item">
+                <span className="event-detail-icon">🕗 Ending Time :</span>
+                <span>{eventDetails.eventEndTime || 'Event Ending Time'}</span>
+              </div>
+              <div className="event-detail-item">
+                <span className="event-detail-icon">👤 Organizer :</span>
+                <span>{eventDetails.eventOrganizer || 'Event Organizer'}</span>
+              </div>
+              <div className="event-detail-item">
+                <span className="event-detail-icon">📝 Description :</span>
+                <span>{eventDetails.eventDescription || 'Event Description'}</span>
+              </div>
             </div>
           </>
         )}
@@ -137,3 +157,4 @@ const EventComments = () => {
 };
 
 export default EventComments;
+
