@@ -12,6 +12,8 @@ const MainEventDisplay = () => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -52,13 +54,29 @@ const MainEventDisplay = () => {
     }
   }, [selectedCategory, events]);
 
+  useEffect(() => {
+    const user = sessionStorage.getItem('userName');
+    const username = sessionStorage.getItem('userName');
+    if (user && username) {
+      setLoggedIn(true);
+      setUserName(username);
+    }
+  }, []);
+
   const handleCategoryClick = (category) => {
     console.log('Selected Category:', category);
     setSelectedCategory(category);
   };
 
-  const handleClick = () => {
+  const handleLoginClick = () => {
     window.location.href = '/login';
+  };
+
+  const handleLogoutClick = () => {
+    sessionStorage.removeItem('userName');
+    sessionStorage.removeItem('userName');
+    setLoggedIn(false);
+    setUserName('');
   };
 
   return (
@@ -71,7 +89,14 @@ const MainEventDisplay = () => {
         </label>
         <input type='text' placeholder="search" name="eventName" />
         <div className="btn-area">
-          <button onClick={handleClick}>Login</button>
+          {loggedIn ? (
+            <>
+              <div className='user-name-container'><span className="user-name">{userName}</span></div>
+              <button onClick={handleLogoutClick}>Logout</button>
+            </>
+          ) : (
+            <button onClick={handleLoginClick}>Login</button>
+          )}
         </div>
       </div>
       <div className="top-design">

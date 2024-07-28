@@ -21,6 +21,15 @@
 
 }
 
+.user-name-container{
+    padding-left:10px;
+    padding-top:10px;
+    padding-bottom:10px;
+    background-color: rgba(45, 45, 45, 0.185);
+    border-radius: 20px;
+    border: 3px solid rgb(85, 160, 85);
+}
+
 .Event-navbar p{
     margin-left:205px;
     margin-top:26px;
@@ -188,7 +197,7 @@
 .Event-navbar input {
     flex-grow: 1; 
     margin-top:10px;
-    margin-right: 20px; 
+    margin-right: 300px; 
     margin-left: 280px;
     border-radius: 10px;
     padding: 10px 20px;
@@ -208,20 +217,26 @@
     
 }
 
+.Event-navbar p {
+    margin-left: 205px;
+    margin-top: 26px;
+}
+
 .btn-area {
-    background-color: transparent;
-    align-items: right;
-    justify-content: right;
     display: flex;
-    flex-grow: 1;
-    flex-direction: row;
-    position: relative;
-    margin-top: 10px;
+    align-items: center;
+    margin-left: auto;
     margin-right: 100px;
+    gap:100px;
+    background-color: transparent;
+}
+
+.user-name {
+    margin-right: 70px;
+    font-weight: bold;
 }
 
 .btn-area button {
-    margin-left: 700px;
     border-radius: 7px;
     background-color: transparent;
     color: rgb(0, 0, 0);
@@ -245,9 +260,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add active effect */
 }
 
-.btn-area {
-    flex-grow: 1;
-}
 
 .Event-display-container {
     background-color: transparent;
@@ -274,6 +286,10 @@
     .btn-area Button {
         margin-left: 0;
         width: 80%; /* Adjust width */
+        justify-content: center;
+    }
+    .btn-area button {
+        width: 100%; /* Adjust width */
     }
 }
 
@@ -373,5 +389,11 @@
     color: white;
     font-size: 70px;
 }
+
+.user-name {
+    margin-right:10px;
+    font-weight: bold;
+  }
+  
 
   
