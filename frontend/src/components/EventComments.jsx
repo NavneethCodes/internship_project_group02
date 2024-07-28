@@ -62,13 +62,13 @@ const EventComments = () => {
     }
 
     try {
-      const userId = '669936773820a89acb123df3';
+      const userId = sessionStorage.getItem('user_id');
       console.log(userId, eventId, newComment);
-      // await axios.post(`http://localhost:4000/action/comment`, { 
-      //     user_id: userId,
-      //     event_id: eventId,
-      //     comment: newComment 
-      // });
+      await axios.put(`http://localhost:4000/action/comment`, { 
+          "user_id": userId,
+          "event_id": eventId,
+          "comment": newComment 
+      });
 
       const response = await axios.get(`http://localhost:4000/id/${userId}`);
       setComments([...comments, { user_id: userId, comment: newComment }]);

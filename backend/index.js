@@ -115,32 +115,13 @@ app.post("/login", async (req, res) => {
     } else {
       console.log("Logged in successfully");
       req.session.userId = user._id;
-      res.status(200).json({message: "Logged in successfully!"})
+      res.status(200).json({message: "Logged in successfully!", user})
     }
   } catch (error) {
     console.log(error);
     res.status(500).send("Error during login");
   }
 });
-
-//function to get the current user information
-app.get('/profile', async (req, res) => {
-  if (req.session.userId) {
-    try {
-      const user = await userModel.findById(req.session.userId);
-      if (user) {
-        res.status(200).json({user});
-      } else {
-        res.status(400).json({message: 'User not found'});
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({message:"Data fetching user details took more time!"});
-    }
-  } else {
-    res.status(401).json({message: "Unauthorized"});
-  }
-})
 
 //This would be used when a user requests a logout
 app.post('/logout', (req, res) => {
@@ -205,6 +186,7 @@ app.put("/userupdate/:id", async (req, res) => {
 app.put("/action/:action", async (req, res) => {
   console.log("inside");
   const { user_id, event_id } = req.body;
+  console.log(user_id,"\n", event_id);
   const action = req.params.action;
   try{
     const record = await recordModel.findOne({ event_id });
