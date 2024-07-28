@@ -36,20 +36,21 @@ export default function Eventdetail() {
 
     fetchData();
   }, []);
-
   const handleLike = async (index) => {
     const isLiked = liked[index];
-    const userId = axios.get('http://localhost:4000/profile');
+    console.log(isLiked);
     setLiked((prevLiked) => ({ ...prevLiked, [index]: !isLiked }));
 
     try {
-      const eventId = cardData[index]._id.$oid;
-      const userId = await axios.get('http://localhost:4000/profile').then(res => res.data.user._id);
-      await axios.post(`http://localhost:4000/action/${isLiked ? 'unlike' : 'like'}`, { user_id:userId, event_id:eventId});
+      const eventId = cardData[index]._id;
+      const all_likes = cardData[index].likes;
+      console.log("Liked people:- ", all_likes);
+      const userId = sessionStorage.getItem("user_id");
+      console.log("user_id:- ", userId, "\nevent_id:- ", eventId);
+      await axios.put(`http://localhost:4000/action/${isLiked ? 'unlike' : 'like'}`, { user_id:userId, event_id:eventId});
 
       setCardData((prevCardData) => {
         const newCardData = [...prevCardData];
-        const likesCount = newCardData[index].likes.length;
         newCardData[index].likes = isLiked
           ? newCardData[index].likes.filter((like) => like !== userId)
           : [...newCardData[index].likes, userId];
@@ -74,23 +75,9 @@ export default function Eventdetail() {
     }
   };
 
-  const handleAddComment = async (index) => {
-    try {
-      const eventId = cardData[index]._id.$oid;
-      await axios.post(`http://localhost:4000/events/${eventId}/comments`, { comment: newComment });
-      setComments((prevComments) => ({
-        ...prevComments,
-        [index]: [...(prevComments[index] || []), newComment],
-      }));
-      setNewComment('');
-    } catch (error) {
-      console.error('Error adding comment', error);
-    }
-  };
-
   const handleNavigateToDetails = (index) => {
     if (cardData[index] && cardData[index]._id && cardData[index]._id) {
-      const eventId = cardData[index]._id; // Extract the event ID
+      const eventId = cardData[index]._id;
       navigate(`/comments/${eventId}`);
     } else {
       console.error('Event ID not found or invalid:', cardData[index]);
