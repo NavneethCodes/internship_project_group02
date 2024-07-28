@@ -28,7 +28,9 @@ const LoginForm = () => {
      .then((res) => {
         console.log('Login successful:', res.data);
         toast.success(res.data.message);
-        localStorage.setItem('sessionToken', res.data.sessionToken);
+        console.log(res.data);
+        sessionStorage.setItem('user_id', res.data.user._id);
+        sessionStorage.setItem('userName', res.data.user.userName);
         navigate('/maineventdetails');
       })
      .catch((error) => {
