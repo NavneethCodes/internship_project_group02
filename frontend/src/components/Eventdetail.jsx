@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import AspectRatio from '@mui/joy/AspectRatio';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
@@ -8,7 +9,7 @@ import Typography from '@mui/joy/Typography';
 import Link from '@mui/joy/Link';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import TextField from '@mui/joy/TextField';
+import Input from '@mui/joy/Input';
 import Button from '@mui/joy/Button';
 import axios from 'axios';
 import CommentIcon from '@mui/icons-material/ModeCommentOutlined';
@@ -21,6 +22,7 @@ export default function Eventdetail() {
   const [comments, setComments] = React.useState({});
   const [newComment, setNewComment] = React.useState('');
   const [cardData, setCardData] = React.useState([]);
+  const navigate = useNavigate();
 
   const handleChange = () => {
     window.location.href = '/details'
@@ -49,7 +51,6 @@ export default function Eventdetail() {
       const url = `http://localhost:4000/events/${eventId}/likes`;
       await axios.post(url, { userId, action: isLiked ? 'unlike' : 'like' });
 
-      // Update the cardData state directly
       setCardData((prevCardData) => {
         const newCardData = [...prevCardData];
         const likesCount = newCardData[index].likes.length;
@@ -68,21 +69,9 @@ export default function Eventdetail() {
     setExpandedCardIndex(index === expandedCardIndex ? null : index);
   };
 
-  const handleCommentToggle = async (index) => {
-    if (commentSectionIndex === index) {
-      setCommentSectionIndex(null);
-    } else {
-      setCommentSectionIndex(index);
-      if (!comments[index]) {
-        try {
-          const response = await axios.get(`http://localhost:4000/events`);
-          console.log(response.data[index].comments);
-          setComments((prevComments) => ({ ...prevComments, [index]: response.data }));
-        } catch (error) {
-          console.error('Error fetching comments', error);
-        }
-      }
-    }
+  const handleCommentToggle = (index) => {
+    const eventId = cardData[index]._id.$oid; // Extract the event ID
+    navigate(`/comments/${eventId}`);
   };
 
   const handleAddComment = async (index) => {
@@ -221,13 +210,13 @@ export default function Eventdetail() {
                 <Box sx={{ maxHeight: 300, overflowY: 'auto', mt: 2 }}>
                   {comments[index]?.length > 0 ? comments[index].map((comment, i) => (
                     <Typography key={i} sx={{ mt: 1 }}>
-                      {comment}
+                      {comment.comment}
                     </Typography>
                   )) : (
                     <Typography sx={{ mt: 1 }}>No comments yet</Typography>
                   )}
                 </Box>
-                <TextField
+                <Input
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Add a comment"
