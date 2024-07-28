@@ -64,7 +64,7 @@ const EventComments = () => {
 
     try {
       const userId = '669936773820a89acb123df3';
-      console.log(userId,eventId, newComment);
+      console.log(userId, eventId, newComment);
       // await axios.post(`http://localhost:4000/action/comment`, { 
       //     user_id: userId,
       //     event_id: eventId,
@@ -95,6 +95,7 @@ const EventComments = () => {
             </div>
           </>
         )}
+        <button className="register-button">Register Now</button>
       </div>
       <div className="right-section comment-bg">
         <div className="comment-area">
@@ -136,4 +137,3 @@ const EventComments = () => {
 };
 
 export default EventComments;
-
