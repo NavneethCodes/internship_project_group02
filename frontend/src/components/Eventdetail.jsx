@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate } from 'react-router-dom';
 import AspectRatio from '@mui/joy/AspectRatio';
 import Avatar from '@mui/joy/Avatar';
 import Box from '@mui/joy/Box';
@@ -23,10 +23,6 @@ export default function Eventdetail() {
   const [newComment, setNewComment] = React.useState('');
   const [cardData, setCardData] = React.useState([]);
   const navigate = useNavigate();
-
-  const handleChange = () => {
-    window.location.href = '/details'
-  }
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -89,6 +85,15 @@ export default function Eventdetail() {
       setNewComment('');
     } catch (error) {
       console.error('Error adding comment', error);
+    }
+  };
+
+  const handleNavigateToDetails = (index) => {
+    if (cardData[index] && cardData[index]._id && cardData[index]._id) {
+      const eventId = cardData[index]._id; // Extract the event ID
+      navigate(`/comments/${eventId}`);
+    } else {
+      console.error('Event ID not found or invalid:', cardData[index]);
     }
   };
 
@@ -206,7 +211,14 @@ export default function Eventdetail() {
               <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>End Time: </span> {new Date(card.eventEndTime.$date).toLocaleTimeString()}</Typography>
               <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>Location: </span>{card.eventLocation}</Typography>
               <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>Organizer: </span>{card.eventOrganizer}</Typography>
-              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '40px', color: 'white' }}><button onClick={handleChange}><span>Know more..</span></button></Typography>
+              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '40px', color: 'white' }}>
+                <button onClick={(e) => {
+                  e.stopPropagation();
+                  handleNavigateToDetails(index);
+                }}>
+                  <span>Know more..</span>
+                </button>
+              </Typography>
             </Box>
             {commentSectionIndex === index && (
               <Box className="comments-section">
