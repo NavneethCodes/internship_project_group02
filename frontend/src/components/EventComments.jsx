@@ -8,6 +8,7 @@ const EventComments = () => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [error, setError] = useState('');
+  const [userNames, setUserNames] = useState({});
 
   useEffect(() => {
     if (!eventId) {
@@ -22,6 +23,7 @@ const EventComments = () => {
         const event = response.data.find(event => event._id === eventId);
         if (event) {
           setComments(event.comments || []);
+          fetchUserNames(event.comments);
         } else {
           console.error('Event not found:', eventId);
           setError('Event not found.');
@@ -33,6 +35,23 @@ const EventComments = () => {
       });
   }, [eventId]);
 
+  const fetchUserNames = async (comments) => {
+    const userIds = [...new Set(comments.map(comment => comment.user_id))];
+    const userNamesTemp = {};
+
+    await Promise.all(userIds.map(async userId => {
+      try {
+        const response = await axios.get(`http://localhost:4000/id/${userId}`);
+        userNamesTemp[userId] = response.data.userName;
+      } catch (error) {
+        console.log('Error fetching username', error);
+        userNamesTemp[userId] = 'Unknown User';
+      }
+    }));
+
+    setUserNames(userNamesTemp);
+  };
+
   const handleAddComment = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) {
@@ -41,12 +60,16 @@ const EventComments = () => {
     }
 
     try {
-      await axios.post(`http://localhost:4000/events/${eventId}/comments`, { 
-        userId: 'user123', // Replace with actual user ID
+      const userId = 'user123'; // Replace with actual user ID
+      await axios.post(`http://localhost:4000/action/comment`, { 
+        userId,
+        event_id: eventId,
         comment: newComment 
       });
 
-      setComments([...comments, { userId: 'user123', comment: newComment }]);
+      const response = await axios.get(`http://localhost:4000/id/${userId}`);
+      setComments([...comments, { user_id: userId, comment: newComment }]);
+      setUserNames({ ...userNames, [userId]: response.data.userName });
       setNewComment('');
     } catch (error) {
       console.error('Error adding comment', error);
@@ -79,7 +102,7 @@ const EventComments = () => {
                 <div className="avatar"></div>
                 <div className="comment-content">
                   <div className="comment-header">
-                    <span className="username">Dolapathy</span>
+                    <span className="username">{userNames[comment.user_id] || 'Unknown User'}</span>
                     <span className="time">1h ago</span>
                   </div>
                   <div className="comment-text">{comment.comment}</div>
