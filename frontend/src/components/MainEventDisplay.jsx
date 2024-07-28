@@ -15,9 +15,10 @@ import axios from 'axios';
 
 const MainEventDisplay = () => {
   const [categories, setCategories] = useState([]);
-   const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -63,30 +64,31 @@ const MainEventDisplay = () => {
 
   return (
     <div className="Event-bg">
-      <Sidebarr/>
+      <Sidebarr />
       <div className="Event-navbar">
         <label><img src={logo} alt="cannot be displayed" className="nav-logo"></img><p>Gleve</p></label>
-      <input type='text' placeholder="search" name="eventName"></input>
+        <input type='text' placeholder="search" name="eventName"></input>
         <div className="btn-area">
           <button onClick={handleClick}>Login</button>
         </div>
       </div>
       <div className="top-design">
-        <div className="para"><p className="td-txt">Discover,Track , and Experience Global Events.</p></div>
-      <div className="inside-top-design-2">
-        <p className="td-txt-description">"Stay informed and engaged with the world's most exciting events. Explore upcoming concerts, festivals, conferences, and sports matches happening globally. Track your favorite events, receive real-time updates, and immerse yourself in unforgettable experiences. Join us to connect with a vibrant community of event enthusiasts and never miss out on the action!"</p>
-      </div>
-      <div className='inside-top-design'>
-        <div className='itd-1'>
-        <img src={top1} alt="cannot be load" className="top-1-img"></img>
-        <label className="top1-txt">Events all over from globe at one place.</label>
+        <div className="para"><p className="td-txt">Discover, Track, and Experience Global Events.</p></div>
+        <div className="inside-top-design-2">
+          <p className="td-txt-description">"Stay informed and engaged with the world's most exciting events. Explore upcoming concerts, festivals, conferences, and sports matches happening globally. Track your favorite events, receive real-time updates, and immerse yourself in unforgettable experiences. Join us to connect with a vibrant community of event enthusiasts and never miss out on the action!"</p>
         </div>
-        <div className='itd-2'>
-        <img src={top2} alt="cannot be load" className="top-2-img"></img>
-        <label className="top2-txt">World's no:1 Event Manager platform that stands out everywhere.</label>
+        <div className='inside-top-design'>
+          <div className='itd-1'>
+            <img src={top1} alt="cannot be load" className="top-1-img"></img>
+            <label className="top1-txt">Events all over from globe at one place.</label>
+          </div>
+          <div className='itd-2'>
+            <img src={top2} alt="cannot be load" className="top-2-img"></img>
+            <label className="top2-txt">World's no:1 Event Manager platform that stands out everywhere.</label>
+          </div>
         </div>
       </div>
-      </div>
+      <h2 className="event-details-heading">Event Details</h2>
       <div className="Event-categories">
         <h2>Categories</h2>
         {categories.map((category, index) => (
@@ -99,8 +101,9 @@ const MainEventDisplay = () => {
           </button>
         ))}
       </div>
+      
       <div className="Event-display-container">
-      <Eventdetail events={filteredEvents} />
+        <Eventdetail events={filteredEvents} />
       </div>
     </div>
   );

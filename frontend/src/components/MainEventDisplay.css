@@ -366,3 +366,11 @@
 .Event-display-container {
     margin-top:20px;
 }
+
+.event-details-heading {
+    margin-top: 100px;
+    text-align: center;
+    color: white;
+    font-size: 70px;
+}
+  
