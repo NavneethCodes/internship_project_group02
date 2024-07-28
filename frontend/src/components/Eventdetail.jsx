@@ -113,7 +113,7 @@ export default function Eventdetail() {
                 }}
               >
                 <img
-                  src="https://via.placeholder.com/2000"
+                  src={card.imgsrc}
                   alt={card.eventName}
                   style={{
                     width: '100%',
