@@ -22,6 +22,8 @@ function App() {
         <Route path='/comments/:eventId' element={<EventComments/>}></Route> {/* New route for comments */}
         {/* Add more routes here if needed */}
       </Routes>
+
+      
     </>
   );
 }

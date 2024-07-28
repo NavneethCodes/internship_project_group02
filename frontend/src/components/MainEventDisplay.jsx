@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import Eventdetail from './Eventdetail';
 import Sidebarr from './Sidebarr'
@@ -7,9 +7,56 @@ import { Button } from '@mui/material';
 import top1 from '../Images/top-5.jpeg';
 import logo from '../Images/p-logo.png';
 import top2 from '../Images/top-4.jpeg'
-
+import Dropdown from '@mui/joy/Dropdown';
+import Menu from '@mui/joy/Menu';
+import MenuButton from '@mui/joy/MenuButton';
+import MenuItem from '@mui/joy/MenuItem';
+import axios from 'axios';
 
 const MainEventDisplay = () => {
+  const [categories, setCategories] = useState([]);
+   const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/all-categories');
+        setCategories(response.data.categories || []);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/events');
+        setEvents(response.data);
+        setFilteredEvents(response.data);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCategory === 'All') {
+      setFilteredEvents(events);
+    } else {
+      setFilteredEvents(events.filter(event => event.eventCategory === selectedCategory));
+    }
+  }, [selectedCategory, events]);
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+  };
+
   const handleClick = () => {
     window.location.href = '/login';
   };
@@ -22,6 +69,16 @@ const MainEventDisplay = () => {
       <input type='text' placeholder="search" name="eventName"></input>
         <div className="btn-area">
           <button onClick={handleClick}>Login</button>
+          <Dropdown>
+            <MenuButton>Categories</MenuButton>
+            <Menu>
+              {categories.map((category, index) => (
+                <MenuItem key={index} onClick={() => handleCategoryClick(category)}>
+                  {category}
+                </MenuItem>
+              ))}
+            </Menu>
+          </Dropdown>
         </div>
       </div>
       <div className="top-design">
@@ -41,7 +98,7 @@ const MainEventDisplay = () => {
       </div>
       </div>
       <div className="Event-display-container">
-        <Eventdetail />
+      <Eventdetail events={filteredEvents} />
       </div>
     </div>
   );
