@@ -60,12 +60,13 @@ const EventComments = () => {
     }
 
     try {
-      const userId = 'user123'; // Replace with actual user ID
-      await axios.post(`http://localhost:4000/action/comment`, { 
-        userId,
-        event_id: eventId,
-        comment: newComment 
-      });
+      const userId = await axios.get(`http://localhost:4000/profile`);
+      console.log(userId,eventId, newComment);
+      // await axios.post(`http://localhost:4000/action/comment`, { 
+      //   userId,
+      //   event_id: eventId,
+      //   comment: newComment 
+      // });
 
       const response = await axios.get(`http://localhost:4000/id/${userId}`);
       setComments([...comments, { user_id: userId, comment: newComment }]);
