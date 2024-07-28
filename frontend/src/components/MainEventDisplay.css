@@ -252,7 +252,6 @@
 .Event-display-container {
     background-color: transparent;
     outline: none;
-    margin-top: 0px;
     flex-grow: 1; 
     display: flex;
     justify-content: center;
@@ -289,10 +288,15 @@
     }
 }
 
+
 .Event-navbar {
     animation: slideDown 0.5s ease-out;
 }
+/* MainEventDisplay.css */
 
+.Event-navbar {
+    animation: slideDown 0.5s ease-out;
+}
 
 .btn-area {
     display: flex;
@@ -300,36 +304,65 @@
     margin-left: auto;
 }
 
-.btn-area .MuiMenuButton-root {
-    margin-left: 20px;
-    /* Optional styling for the dropdown button */
-    background-color: transparent;
-    color: rgb(0, 0, 0);
+.Event-categories {
+    display: flex;
+    justify-content: center;
+    margin: 100px;
+    color: white;
+    font-size: 25px;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.category-button {
+    background-color: #fff;
+    color: #000;
     border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    width:200px;
-}
-
-.btn-area .MuiMenuButton-root:hover {
-    color: rgb(255, 255, 255);
-    background-color: rgb(0, 0, 0);
-}
-
-.MuiMenu-root {
-    margin-top: 10px; /* Adjust if necessary */
-    width: 300px;
-    font-size:200px;
-    transform: translateY(-10px);
-   
-}
-
-.MuiMenuItem-root {
+    transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
     font-size: 16px;
-    color: rgb(0, 0, 0);
-    font-size: 180px;
+    width: 200px;
+    height: 100px;
+    border-radius: 20px;
+    display: inline-block;
 }
 
-.MuiMenuItem-root:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+.category-button:hover {
+    background-color: #000;
+    color: #fff;
+    transform: scale(1.05);
+    animation: hoverEffect 0.3s ease-out;
+}
+
+.category-button.selected {
+    background-color: #fff;
+    color: #000;
+}
+
+.category-button.selected:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+.Event-categories h2 {
+    margin-right: 20px;
+    color: #fff;
+}
+
+@keyframes hoverEffect {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.Event-display-container {
+    margin-top: 20px;
 }

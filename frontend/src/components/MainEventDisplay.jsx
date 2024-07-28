@@ -69,16 +69,6 @@ const MainEventDisplay = () => {
       <input type='text' placeholder="search" name="eventName"></input>
         <div className="btn-area">
           <button onClick={handleClick}>Login</button>
-          <Dropdown>
-            <MenuButton>Categories</MenuButton>
-            <Menu>
-              {categories.map((category, index) => (
-                <MenuItem key={index} onClick={() => handleCategoryClick(category)}>
-                  {category}
-                </MenuItem>
-              ))}
-            </Menu>
-          </Dropdown>
         </div>
       </div>
       <div className="top-design">
@@ -96,6 +86,18 @@ const MainEventDisplay = () => {
         <label className="top2-txt">World's no:1 Event Manager platform that stands out everywhere.</label>
         </div>
       </div>
+      </div>
+      <div className="Event-categories">
+        <h2>Categories</h2>
+        {categories.map((category, index) => (
+          <button
+            key={index}
+            className={`category-button ${selectedCategory === category ? 'selected' : ''}`}
+            onClick={() => handleCategoryClick(category)}
+          >
+            {category}
+          </button>
+        ))}
       </div>
       <div className="Event-display-container">
       <Eventdetail events={filteredEvents} />
