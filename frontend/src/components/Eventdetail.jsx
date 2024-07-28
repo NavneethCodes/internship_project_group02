@@ -44,8 +44,8 @@ export default function Eventdetail() {
 
     try {
       const eventId = cardData[index]._id.$oid;
-      const url = `http://localhost:4000/events/${eventId}/likes`;
-      await axios.post(url, { userId, action: isLiked ? 'unlike' : 'like' });
+      const userId = await axios.get('http://localhost:4000/profile').then(res => res.data.user._id);
+      await axios.post(`http://localhost:4000/action/${isLiked ? 'unlike' : 'like'}`, { user_id:userId, event_id:eventId});
 
       setCardData((prevCardData) => {
         const newCardData = [...prevCardData];

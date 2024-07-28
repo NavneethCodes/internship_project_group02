@@ -63,12 +63,12 @@ const EventComments = () => {
     }
 
     try {
-      const userId = await axios.get(`http://localhost:4000/profile`);
+      const userId = '669936773820a89acb123df3';
       console.log(userId,eventId, newComment);
       // await axios.post(`http://localhost:4000/action/comment`, { 
-      //   userId,
-      //   event_id: eventId,
-      //   comment: newComment 
+      //     user_id: userId,
+      //     event_id: eventId,
+      //     comment: newComment 
       // });
 
       const response = await axios.get(`http://localhost:4000/id/${userId}`);
