@@ -74,9 +74,10 @@ const MainEventDisplay = () => {
 
   const handleLogoutClick = () => {
     sessionStorage.removeItem('userName');
-    sessionStorage.removeItem('userName');
+    sessionStorage.removeItem('user_id');
     setLoggedIn(false);
     setUserName('');
+    window.location.reload();
   };
 
   return (
