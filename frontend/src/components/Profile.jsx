@@ -25,7 +25,7 @@ const location = useLocation();
 const navigation = useNavigate();
 
 useEffect(() => {
-  axios.get('http://localhost:4000/user-info/6696a1b3fcb930e9f8ab5f07')
+  axios.get(`http://localhost:4000/user-info/${sessionStorage.getItem("user_id")}`)
     .then(response => {
       setForm({
         userName: response.data.userName || "",
