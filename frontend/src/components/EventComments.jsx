@@ -94,15 +94,15 @@ const EventComments = () => {
               </div>
               <div className="event-detail-item">
                 <span className="event-detail-icon">📅 Date :</span>
-                <span>{eventDetails.eventDate || 'Event Date'}</span>
+                <span>{new Date(eventDetails.eventStartTime).toLocaleDateString() || 'Event Date'}</span>
               </div>
               <div className="event-detail-item">
                 <span className="event-detail-icon">🕙 Starting Time :</span>
-                <span>{eventDetails.eventStartTime || 'Event Starting Time'}</span>
+                <span>{new Date(eventDetails.eventStartTime).toLocaleTimeString() || 'Event Starting Time'}</span>
               </div>
               <div className="event-detail-item">
                 <span className="event-detail-icon">🕗 Ending Time :</span>
-                <span>{eventDetails.eventEndTime || 'Event Ending Time'}</span>
+                <span>{new Date(eventDetails.eventEndTime).toLocaleTimeString() || 'Event Ending Time'}</span>
               </div>
               <div className="event-detail-item">
                 <span className="event-detail-icon">👤 Organizer :</span>
