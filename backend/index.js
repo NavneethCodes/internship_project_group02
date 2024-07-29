@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const session = require("express-session");
 const app = express();
 const PORT = 4000;
 require("./connection");
@@ -12,15 +11,6 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use(session({
-  secret: 'ignitusWorkingOnWheels',
-  resave: false,
-  saveUninitialized: false,
-  cookie:{
-    secure: false
-  }
-}))
-
 //This would return all the existing users from the db.
 app.get("/users", async (req, res) => {
   try {
@@ -28,6 +18,15 @@ app.get("/users", async (req, res) => {
     res.send(data);
   } catch (error) {
     console.log(error);
+  }
+});
+
+app.get("/user-info/:id", async (req, res) => {
+  try{
+    const user = await userModel.findById(req.params.id);
+    return res.status(200).json({user});
+  }catch(error){
+    return res.status(400).send({ message: "No such user!"});
   }
 });
 
