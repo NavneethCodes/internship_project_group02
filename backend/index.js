@@ -81,8 +81,10 @@ app.get("/events", async (req, res) => {
 app.post("/usernew", async (req, res) => {
   try {
     const { userEmail, userPassword } = req.body;
+    console.log("Email:-", userEmail);
     const userExists = await userModel.findOne({ userEmail });
     if (userExists) {
+      // console.log("userExists\n", userExists);
       return res.status(400).send("Email already in use!");
     }
     if (userPassword.length < 6 && userPassword.length > 16) {
@@ -93,7 +95,7 @@ app.post("/usernew", async (req, res) => {
     const data = req.body;
     const newUser = new userModel(data);
     const savedUser = await newUser.save();
-    sendUserDetails(res, "User created successfully!", savedUser);
+    return res.status(200).json({savedUser, message:"User Created Successfully!"})
   } catch (error) {
       console.log(error);
       res.status(500).send("Error during user creation");
@@ -233,8 +235,7 @@ app.put("/action/:action", async (req, res) => {
       return res.status(400).send("Invalid action!");
     }
     await record.save();
-    res.status(201).json(record)
-    console.log(record);
+    res.status(201).json(record);
   }catch(error){
     console.log(error);
   }
@@ -251,7 +252,6 @@ app.get('/all-categories', async (req, res) => {
         set_categories.add(events[i].eventCategory);
     }
     const categories = Array.from(set_categories);
-    console.log("All categories:- " + categories);
     res.json({
       message: "Categories fetched successfully",
       categories: categories
