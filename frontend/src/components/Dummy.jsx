@@ -6,6 +6,9 @@ import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 const Dummy = () => {
   const [items, setItems] = useState([]);
+  const routing = () =>{
+    window.location.href='/maineventdetails'
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,7 +58,7 @@ const Dummy = () => {
               <div className="unique-content">
                 <div className="unique-name">{item.name}</div>
                 <div className="unique-des">{item.description}</div>
-                <button>See More</button>
+                <button onClick={routing}>See More</button>
               </div>
             )}
           </div>

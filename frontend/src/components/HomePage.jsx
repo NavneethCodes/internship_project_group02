@@ -10,6 +10,9 @@ import { FaDiscord } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
 import Dummy from './Dummy.jsx'
 import landbg from '../Images/land-bg2.png'
+
+
+
 const routing = ()=>{
   window.location.href='/maineventdetails';
 }
