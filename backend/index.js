@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const session = require("express-session");
 const app = express();
 const PORT = 4000;
 require("./connection");
@@ -12,15 +11,6 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use(session({
-  secret: 'ignitusWorkingOnWheels',
-  resave: false,
-  saveUninitialized: false,
-  cookie:{
-    secure: false
-  }
-}))
-
 //This would return all the existing users from the db.
 app.get("/users", async (req, res) => {
   try {
@@ -28,6 +18,15 @@ app.get("/users", async (req, res) => {
     res.send(data);
   } catch (error) {
     console.log(error);
+  }
+});
+
+app.get("/user-info/:id", async (req, res) => {
+  try{
+    const user = await userModel.findById(req.params.id);
+    return res.status(200).json(user);
+  }catch(error){
+    return res.status(400).send({ message: "No such user!"});
   }
 });
 
@@ -81,8 +80,10 @@ app.get("/events", async (req, res) => {
 app.post("/usernew", async (req, res) => {
   try {
     const { userEmail, userPassword } = req.body;
+    console.log("Email:-", userEmail);
     const userExists = await userModel.findOne({ userEmail });
     if (userExists) {
+      // console.log("userExists\n", userExists);
       return res.status(400).send("Email already in use!");
     }
     if (userPassword.length < 6 && userPassword.length > 16) {
@@ -93,7 +94,7 @@ app.post("/usernew", async (req, res) => {
     const data = req.body;
     const newUser = new userModel(data);
     const savedUser = await newUser.save();
-    sendUserDetails(res, "User created successfully!", savedUser);
+    return res.status(200).json({savedUser, message:"User Created Successfully!"})
   } catch (error) {
       console.log(error);
       res.status(500).send("Error during user creation");
@@ -114,7 +115,6 @@ app.post("/login", async (req, res) => {
       return res.status(400).send("Incorrect password!");
     } else {
       console.log("Logged in successfully");
-      req.session.userId = user._id;
       res.status(200).json({message: "Logged in successfully!", user})
     }
   } catch (error) {
@@ -233,8 +233,7 @@ app.put("/action/:action", async (req, res) => {
       return res.status(400).send("Invalid action!");
     }
     await record.save();
-    res.status(201).json(record)
-    console.log(record);
+    res.status(201).json(record);
   }catch(error){
     console.log(error);
   }
@@ -251,7 +250,6 @@ app.get('/all-categories', async (req, res) => {
         set_categories.add(events[i].eventCategory);
     }
     const categories = Array.from(set_categories);
-    console.log("All categories:- " + categories);
     res.json({
       message: "Categories fetched successfully",
       categories: categories

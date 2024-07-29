@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Profile from './components/Profile';
+import Profile from './components/Profile.jsx';
 import SignUp from './components/SignUp.jsx';
 import LoginForm from './components/LoginForm.jsx';
 import MainEventDisplay from './components/MainEventDisplay.jsx';
@@ -13,6 +13,9 @@ import HomePage from './components/HomePage.jsx';
 import UserProfile from './components/UserProfile.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
 import Dummy from './components/Dummy.jsx';
+import EventComments from './components/EventComments';
+import Adminevent from './components/Adminevent.jsx';
+ // Import EventComments
 
 function App() {
   return (
@@ -27,6 +30,10 @@ function App() {
         <Route path='/dashboard' element={<AdminDashboard/>}></Route>
         
         <Route path='/comments/:eventId' element={<EventComments/>}></Route> {/* New route for comments */}
+        <Route path='/home' element={<About/>}></Route>
+        <Route path='/comments/:eventId' element={<EventComments/>}></Route>
+        <Route path='/adminevent' element={<Adminevent/>}></Route>
+        <Route path='/profile' element={<Profile/>}></Route> {/* New route for comments */}
         {/* Add more routes here if needed */}
       </Routes>
 

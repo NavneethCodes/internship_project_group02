@@ -8,32 +8,36 @@ import axios from 'axios';
 import {useNavigate,useLocation} from 'react-router-dom'
 
 const Profile = () => {
-  /*  const [count,setCount]=useState(0);
-  let valueAdd=()=>{
-    setCount(count+1)
-  } */
-const [form,setForm]=useState(
-  {
-    FirstName:'',
-    LastName:'',
-    username:'',
-    gender:'',
-    dOB:'',
-    email:'',
-    contact:'',
-    password:''
+  const [form,setForm]=useState({
+    userName: "",
+    userPassword: "",
+    newPassword: "",
+    conPassword: "",
+    userEmail: "",
+    userContact: ""
+  })
 
-  }
-)
-var navigate = useNavigate();
-
-  function valueFetch (e){
-     // console.log(e)
-     setForm({...form,[e.target.name]:e.target.value})
+function valueFetch (e){
+   setForm({...form,[e.target.name]:e.target.value});
 }
 
-const location = useLocation()
+const location = useLocation();
+const navigation = useNavigate();
 
+useEffect(() => {
+  axios.get(`http://localhost:4000/user-info/${sessionStorage.getItem("user_id")}`)
+    .then(response => {
+      setForm({
+        userName: response.data.userName || "",
+        userPassword: response.data.userPassword || "",
+        userEmail: response.data.userEmail || "",
+        userContact: response.data.userContact || ""
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching user data:', error);
+    });
+}, []);
 
   return (
     <>
@@ -46,24 +50,18 @@ const location = useLocation()
         autoComplete="off" 
       >
         <Stack spacing={2} direction="column">
-          <h1 style={{color:'green'}}>Profile</h1>
-          <TextField id="FirstName-input" label="First Name" variant="standard" name="FirstName" value={form.FirstName} onChange={valueFetch}  />
+          <h1 style={{color:'green'}}>Edit Profile</h1>
+          <TextField id="Name-input" label="Name" variant="standard" name="userName" value={form.userName} onChange={valueFetch}  />
           <br />
-          <TextField id="LastName-input" label="Last Name" variant="standard"  name="LastName" value={form.LastName} onChange={valueFetch}/>
+          <TextField id="email-input" label="Email" variant="standard"  name="userEmail"  value={form.userEmail} onChange={valueFetch}/>
           <br />
-          <TextField id="username-input" label="Username" variant="standard"  name="username" value={form.username} onChange={valueFetch}/>
+          <TextField id="contact-input" label="Contact" variant="standard"  name="userContact"  value={form.userContact} onChange={valueFetch}/>
           <br />
-          <TextField id="gender-input" label="Gender (Optional)" variant="standard"  name="gender"  value={form.gender} onChange={valueFetch}/>
+          <TextField id="new-password-input" label="New Password" variant="standard"  name="newPassword"  value={form.newPassword} onChange={valueFetch}/>
           <br />
-          <TextField id="dOB-input" label="DOB (Optional)" variant="standard"  name="dOB"  value={form.dOB} onChange={valueFetch}/>
+          <TextField id="con-password-input" label="Re enter Password" variant="standard"  name="conPassword"  value={form.conPassword} onChange={valueFetch}/>
           <br />
-          <TextField id="email-input" label="Email" variant="standard"  name="email"  value={form.email} onChange={valueFetch}/>
-          <br />
-          <TextField id="contact-input" label="Contact" variant="standard"  name="contact"  value={form.contact} onChange={valueFetch}/>
-          <br />
-          <TextField id="password-input" label="Password" variant="standard"  name="password"  value={form.password} onChange={valueFetch}/>
-          <br />
-          <Button variant="contained" color='success' onClick={{}}>Save</Button>
+          <Button variant="contained" color='success' >Save</Button>
         </Stack>
       </Box>
     </>
@@ -71,5 +69,4 @@ const location = useLocation()
   
 }
 
-
-export default Profile
+export default Profile;
