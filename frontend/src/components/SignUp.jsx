@@ -32,6 +32,7 @@ const SignUp = () => {
       toast.error("Passwords don't match!");
       setRePass('');
     } else {
+      console.log(details);
       axios.post('http://localhost:4000/usernew', details)
         .then((res) => {
           toast.success(res.data.message);
