@@ -8,7 +8,7 @@ import MainEventDisplay from './components/MainEventDisplay.jsx';
 import About from './pages/About.jsx';
 import Sidebarr from './components/Sidebarr.jsx';
 import LandingPage from './components/LandingPage.jsx';
-import EventComments from './components/EventComments'; // Import EventComments
+import EventComments from './components/EventComments';
 
 function App() {
   return (

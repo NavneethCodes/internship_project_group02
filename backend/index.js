@@ -24,7 +24,7 @@ app.get("/users", async (req, res) => {
 app.get("/user-info/:id", async (req, res) => {
   try{
     const user = await userModel.findById(req.params.id);
-    return res.status(200).json({user});
+    return res.status(200).json(user);
   }catch(error){
     return res.status(400).send({ message: "No such user!"});
   }
@@ -115,7 +115,6 @@ app.post("/login", async (req, res) => {
       return res.status(400).send("Incorrect password!");
     } else {
       console.log("Logged in successfully");
-      req.session.userId = user._id;
       res.status(200).json({message: "Logged in successfully!", user})
     }
   } catch (error) {
