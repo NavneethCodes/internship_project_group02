@@ -35,6 +35,9 @@ const SignUp = () => {
       axios.post('http://localhost:4000/usernew', details)
         .then((res) => {
           toast.success(res.data.message);
+          sessionStorage.setItem('user_id', res.data.user._id);
+          sessionStorage.setItem('userName', res.data.user.userName);
+          navigate('/loginform');
         })
         .catch((error) => {
           if (error.response) {
