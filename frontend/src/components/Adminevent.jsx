@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import axios from 'axios';
-import {useNavigate,useLocation} from 'react-router-dom'
+import {useNavigate,useLocation} from 'react-router-dom';
 
 const Adminevent = () => {
   /*  const [count,setCount]=useState(0);
@@ -44,7 +44,7 @@ const location = useLocation()
         autoComplete="off" 
       >
         <Stack spacing={2} direction="column">
-          <h1 style={{color:'green'}}>Add Events </h1>
+          <h1 style={{color:'green'}}>Add Events</h1>
           <TextField id="Eventname-input" label="Event Name" variant="standard" name="Eventname" value={form.Eventname} onChange={valueFetch}  />
           <br />
           <TextField id="Title-input" label="Title" variant="standard"  name="Title" value={form.Title} onChange={valueFetch}/>
