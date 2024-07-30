@@ -203,7 +203,6 @@ app.put("/action/:action", async (req, res) => {
     } else if (action === 'unlike') {
       if(record.likes.includes(user_id)){
           const index = record.likes.indexOf(user_id);
-          console.log("Index: ", index);
           record.likes.splice(index, 1);
       }
     } else if (action === 'comment') {
@@ -262,6 +261,34 @@ app.get('/all-categories', async (req, res) => {
     });
   }
 })
+
+app.put('/:choice/:id/:event', async (req, res) => {
+  try{
+    const { choice, id, event } = req.params;
+    user = await userModel.findById(id);
+    if (choice === "0") {
+      //logic for add event to registered ...
+      if (! user.registered_events.includes(event)) {
+        user.registered_events.push(event);
+      } else {
+        return res.status(400).json({user, message: "Event already in the registered events of this user!"});
+      }
+    } else if (choice === "1") {
+      //logic for removing an event that is registered...
+      if(user.registered_events.includes(event)) {
+        const index_of_event = user.registered_events.indexOf(event);
+        user.registered_events.splice(index_of_event, 1);
+      } else {
+        return res.status(400).json({user, message: "Event already in the registered events of this user!"})
+      }
+    }
+    await user.save();
+    return res.status(400).json({user, message:"Operation done successfully!"});
+  } catch (error) {
+    console.log("An error occured!\n", error);
+  }
+  
+});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}/`);
