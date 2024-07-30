@@ -1,0 +1,17 @@
+ @media (max-width: 768px) {
+    h1 {
+      font-size: 2.5rem;
+    }
+    p {
+      font-size: 1rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  .get-started{
+    font-weight:bold;
+  
+  }
+  

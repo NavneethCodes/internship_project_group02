@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
 import './FlexExpand.css';
-import img1 from '../assets/01.webp';
-import img2 from '../assets/02.jpg';
-import img3 from '../assets/03.jpg';
-import img4 from '../assets/04.jpg';
-import img5 from '../assets/05.jpg';
-import img6 from '../assets/02.jpg'; // Replace with your profile image path
+// import img1 from '../assets/01.webp';
+// import img2 from '../assets/02.jpg';
+// import img3 from '../assets/03.jpg';
+// import img4 from '../assets/04.jpg';
+// import img5 from '../assets/05.jpg';
+
+let img6="https://wallpapers.com/images/hd/4k-minimalist-black-forest-ma3c57wla5k493zj.jpg"
 
 const cards = [
-  { img: img1, title: 'GTA 6' },
-  { img: img2, title: 'Spider-Man PS5' },
-  { img: img3, title: 'God Of War' },
-  { img: img4, title: 'The Last of Us' },
-  { img: img5, title: 'Elden Ring' }
+  { img: "https://wallpapers.com/images/featured/minimalist-7xpryajznty61ra3.jpg", title: 'Cross Roads' },
+  { img: "https://i.pinimg.com/originals/b6/38/38/b63838fde6a7fc5b1df6d2834ebf60eb.jpg", title: 'Codex' },
+  { img: "https://c4.wallpaperflare.com/wallpaper/855/331/738/minimalism-mountains-artwork-landscape-hd-wallpaper-preview.jpg", title: 'Artofolio' },
+  { img: "https://c4.wallpaperflare.com/wallpaper/285/172/9/sunset-8k-forest-4k-wallpaper-preview.jpg", title: 'United' },
+  { img: "https://images8.alphacoders.com/135/1355049.png", title: 'Raagam' }
 ];
 
 const Card = ({ img, title, isActive, onClick, profileImage }) => (
-  <div className={`card ${isActive ? 'active' : ''}`} onClick={onClick}>
+  <div className={`fe-card ${isActive ? 'active' : ''}`} onClick={onClick}>
     <img className="background" src={img} alt={title} />
     <div className="card-content">
       <div className="profile-image">
@@ -36,7 +37,7 @@ const FlexExpand = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container100">
       {cards.map((card, index) => (
         <Card
           key={index}
@@ -52,5 +53,3 @@ const FlexExpand = () => {
 };
 
 export default FlexExpand;
-
-

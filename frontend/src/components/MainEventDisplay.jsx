@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Eventdetail from './Eventdetail';
 import Sidebarr from './Sidebarr';
+import Sidebarr from './Sidebarr';
 import './MainEventDisplay.css';
 import { Button } from '@mui/material';
 import top1 from '../Images/top-5.jpeg';
@@ -18,11 +19,14 @@ const MainEventDisplay = () => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get('http://localhost:4000/all-categories');
+        console.log('Fetched Categories:', response.data.categories);
         console.log('Categories fetched:', response.data.categories);
         setCategories(response.data.categories || []);
       } catch (error) {
@@ -37,6 +41,7 @@ const MainEventDisplay = () => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get('http://localhost:4000/events');
+        console.log('Fetched Events:', response.data);
         console.log('Events fetched:', response.data);
         setEvents(response.data);
         setFilteredEvents(response.data);
@@ -53,18 +58,39 @@ const MainEventDisplay = () => {
       setFilteredEvents(events);
     } else {
       const filtered = events.filter(event => event.eventCategory === selectedCategory);
+      console.log(`Filtered Events (${selectedCategory}):`, filtered);
+      setFilteredEvents(filtered);
+      const filtered = events.filter(event => event.eventCategory === selectedCategory);
       console.log(`Filtered events for category "${selectedCategory}":`, filtered);
       setFilteredEvents(filtered);
     }
   }, [selectedCategory, events]);
 
+  useEffect(() => {
+    const user = sessionStorage.getItem('userName');
+    const username = sessionStorage.getItem('userName');
+    if (user && username) {
+      setLoggedIn(true);
+      setUserName(username);
+    }
+  }, []);
+
   const handleCategoryClick = (category) => {
+    console.log('Selected Category:', category);
     setSelectedCategory(category);
     console.log('Selected category:', category);
   };
 
-  const handleClick = () => {
+  const handleLoginClick = () => {
     window.location.href = '/login';
+  };
+
+  const handleLogoutClick = () => {
+    sessionStorage.removeItem('userName');
+    sessionStorage.removeItem('user_id');
+    setLoggedIn(false);
+    setUserName('');
+    window.location.reload();
   };
 
   return (
@@ -75,16 +101,34 @@ const MainEventDisplay = () => {
           <img src={logo} alt="cannot be displayed" className="nav-logo" />
           <p>Gleve</p>
         </label>
+        <input type='text' placeholder="search" name="eventName" />
+        <label>
+          <img src={logo} alt="cannot be displayed" className="nav-logo" />
+          <p>Gleve</p>
+        </label>
         <input type="text" placeholder="search" name="eventName" />
         <div className="btn-area">
-          <button onClick={handleClick}>Login</button>
+          {loggedIn ? (
+            <>
+              <div className='user-name-container'><span className="user-name">{userName}</span></div>
+              <button onClick={handleLogoutClick}>Logout</button>
+            </>
+          ) : (
+            <button onClick={handleLoginClick}>Login</button>
+          )}
         </div>
       </div>
       <div className="top-design">
         <div className="para">
           <p className="td-txt">Discover, Track, and Experience Global Events.</p>
         </div>
+        <div className="para">
+          <p className="td-txt">Discover, Track, and Experience Global Events.</p>
+        </div>
         <div className="inside-top-design-2">
+          <p className="td-txt-description">
+            "Stay informed and engaged with the world's most exciting events. Explore upcoming concerts, festivals, conferences, and sports matches happening globally. Track your favorite events, receive real-time updates, and immerse yourself in unforgettable experiences. Join us to connect with a vibrant community of event enthusiasts and never miss out on the action!"
+          </p>
           <p className="td-txt-description">
             "Stay informed and engaged with the world's most exciting events. Explore upcoming concerts, festivals, conferences, and sports matches happening globally. Track your favorite events, receive real-time updates, and immerse yourself in unforgettable experiences. Join us to connect with a vibrant community of event enthusiasts and never miss out on the action!"
           </p>

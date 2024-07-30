@@ -9,7 +9,8 @@ const eventSchema = new db.Schema({
     eventLocation   : String,
     eventDescription: String,
     eventOrganizer  : String,
-    eventCategory   : String
+    eventCategory   : String,
+    imgsrc          : String
 })
 
 const eventData = eventDbConnection.model('events', eventSchema);

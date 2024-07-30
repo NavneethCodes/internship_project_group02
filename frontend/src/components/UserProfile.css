@@ -1,0 +1,18 @@
+ @media (max-width: 768px) {
+    .App {
+      flex-direction: column;
+    }
+  
+    .ProfileContainer {
+      flex-direction: column;
+    }
+  
+    .Sidebar, .MainContent {
+      width: 100%;
+    }
+  
+    .Stats {
+      flex-direction: column;
+    }
+  }
+  

@@ -26,10 +26,14 @@ const LoginForm = () => {
     console.log('Submit function called');
     axios.post('http://localhost:4000/login', credentials)
      .then((res) => {
-        console.log('Login successful:', res.data);
-        toast.success(res.data.message);
-        localStorage.setItem('sessionToken', res.data.sessionToken);
-        navigate('/maineventdetails');
+        if(res.data.user.userStatus === 'suspend'){
+          toast.error("Admin blocked your access! If you think this is a mistake, contact admin or try again later!");
+        } else {
+          toast.success(res.data.message);
+          sessionStorage.setItem('user_id', res.data.user._id);
+          sessionStorage.setItem('userName', res.data.user.userName);
+          navigate('/maineventdetails');
+        }
       })
      .catch((error) => {
         console.log('Login error:', error);

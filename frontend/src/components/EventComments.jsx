@@ -8,7 +8,6 @@ const EventComments = () => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [error, setError] = useState('');
-
   const [eventDetails, setEventDetails] = useState(null);
   const [userNames, setUserNames] = useState({});
 
@@ -63,13 +62,13 @@ const EventComments = () => {
     }
 
     try {
-      const userId = '669936773820a89acb123df3';
-      console.log(userId,eventId, newComment);
-      // await axios.post(`http://localhost:4000/action/comment`, { 
-      //     user_id: userId,
-      //     event_id: eventId,
-      //     comment: newComment 
-      // });
+      const userId = sessionStorage.getItem('user_id');
+      console.log(userId, eventId, newComment);
+      await axios.put(`http://localhost:4000/action/comment`, { 
+          "user_id": userId,
+          "event_id": eventId,
+          "comment": newComment 
+      });
 
       const response = await axios.get(`http://localhost:4000/id/${userId}`);
       setComments([...comments, { user_id: userId, comment: newComment }]);
@@ -89,12 +88,34 @@ const EventComments = () => {
             <img src={eventDetails.imgsrc || 'default-image-url'} alt="Event" className="event-image" />
             <div className="event-details">
               <h3>{eventDetails.eventName || 'Event Title'}</h3>
-              <p>{eventDetails.eventDescription || 'Event Description'}</p>
-              <p><strong>Date:</strong> {eventDetails.eventDate || 'Event Date'}</p>
-              <p><strong>Location:</strong> {eventDetails.eventLocation || 'Event Location'}</p>
+              <div className="event-detail-item">
+                <span className="event-detail-icon">📍 Location :</span>
+                <span>{eventDetails.eventLocation || 'Event Location'}</span>
+              </div>
+              <div className="event-detail-item">
+                <span className="event-detail-icon">📅 Date :</span>
+                <span>{new Date(new Date(eventDetails.eventStartTime).toLocaleDateString()).toLocaleDateString() || 'Event Date'}</span>
+              </div>
+              <div className="event-detail-item">
+                <span className="event-detail-icon">🕙 Starting Time :</span>
+                <span>{new Date(eventDetails.eventStartTime).toLocaleTimeString() || 'Event Starting Time'}</span>
+              </div>
+              <div className="event-detail-item">
+                <span className="event-detail-icon">🕗 Ending Time :</span>
+                <span>{new Date(eventDetails.eventEndTime).toLocaleTimeString() || 'Event Ending Time'}</span>
+              </div>
+              <div className="event-detail-item">
+                <span className="event-detail-icon">👤 Organizer :</span>
+                <span>{eventDetails.eventOrganizer || 'Event Organizer'}</span>
+              </div>
+              <div className="event-detail-item">
+                <span className="event-detail-icon">📝 Description :</span>
+                <span>{eventDetails.eventDescription || 'Event Description'}</span>
+              </div>
             </div>
           </>
         )}
+        <button className="register-button">Register Now</button>
       </div>
       <div className="right-section comment-bg">
         <div className="comment-area">

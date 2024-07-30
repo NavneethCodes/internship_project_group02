@@ -4,7 +4,7 @@ img {
   display: block;
 }
 
-.container {
+.container100 {
   width: 100%;
   width: 820px;
   height: 340px;
@@ -13,7 +13,7 @@ img {
   margin-inline: 50px;
 }
 
-.card {
+.fe-card {
   min-width: 70px;
   height: 100%;
   border-radius: 30px;
@@ -29,25 +29,25 @@ img {
   --transition-timing: 0.35s;
 }
 
-.card:hover {
+.fe-card:hover {
   flex-grow: 7;
 }
 
-.card > .background {
+.fe-card > .background {
   position: absolute;
   inset: 0;
   object-fit: cover;
   object-position: center;
   filter: brightness(0.4);
-  z-index: -1;
+  z-index: 0;
   transition: var(--transition-timing) ease;
 }
 
-.card:hover > .background {
+.fe-card:hover > .background {
   filter: brightness(1);
 }
 
-.card > .card-content {
+.fe-card > .card-content {
   display: flex;
   align-items: center;
   position: absolute;
@@ -59,7 +59,7 @@ img {
   z-index: 10;
 }
 
-.card:hover > .card-content {
+.fe-card:hover > .card-content {
   inset: 20px;
   top: auto;
 }
@@ -80,7 +80,7 @@ img {
   overflow: hidden;
 }
 
-.card:hover .profile-image {
+.fe-card:hover .profile-image {
   border: 3px solid rgb(110, 252, 205);
 }
 
@@ -88,7 +88,7 @@ img {
   stroke: #fefefe;
 }
 
-.card:hover .profile-image > svg {
+.fe-card:hover .profile-image > svg {
   stroke: rgb(110, 252, 205);
 }
 
@@ -100,12 +100,12 @@ img {
   color:#fefefe;
 }
 
-.card:hover .title {
+.fe-card:hover .title {
   opacity: 1;
   translate: 0 0;
 }
 
-.card > .backdrop {
+.fe-card > .backdrop {
   position: absolute;
   left: 0;
   right: 0;
@@ -118,4 +118,4 @@ img {
 .flex-expand{
     margin-top: 300px;
     background:transparent;
-}
+}  
