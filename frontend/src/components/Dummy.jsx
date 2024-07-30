@@ -67,10 +67,10 @@ const Dummy = () => {
 
       <div className="unique-button">
         <button className="prev" onClick={prevSlide}>
-          <FontAwesomeIcon icon={faArrowLeft} />
+          <FontAwesomeIcon icon={faArrowRight} />
         </button>
         <button className="next" onClick={nextSlide}>
-          <FontAwesomeIcon icon={faArrowRight} />
+          <FontAwesomeIcon icon={faArrowLeft} />
         </button>
       </div>
     </div>

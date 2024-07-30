@@ -125,6 +125,7 @@ const Icon = styled(motion.div)`
   width: 80px;
   height: 80px;
   background-color: white;
+  color:black;
   backdrop-filter:blur(50px);
   border-radius: 0.5rem;
   display: flex;
@@ -135,7 +136,8 @@ const Icon = styled(motion.div)`
   font-size: 2rem;
 
     &:hover {
-    border:5px solid green ;
+    background-color:black ;
+    color:white;
   }
 `;
 
@@ -169,7 +171,7 @@ function HomePage() {
           whileTap={{ scale: 0.9 }}
           onClick={routing}
         >
-          <span className="get-started">Get started</span>
+          <span className="get-started">Get started !</span>
         </Button>
         <IconGrid>
           <Icon whileHover={{ scale: 1.2 }}><FaInstagram /></Icon>
