@@ -2,11 +2,12 @@
 import React, { useState } from 'react';
 import './SignUp.css';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [details, setDetails] = useState({
     userContact: '',
     userEmail: '',
@@ -35,10 +36,11 @@ const SignUp = () => {
       console.log(details);
       axios.post('http://localhost:4000/usernew', details)
         .then((res) => {
+          console.log(res.data);
           toast.success(res.data.message);
-          sessionStorage.setItem('user_id', res.data.user._id);
-          sessionStorage.setItem('userName', res.data.user.userName);
-          navigate('/loginform');
+          sessionStorage.setItem('user_id', res.data.savedUser._id);
+          sessionStorage.setItem('userName', res.data.savedUser.userName);
+          navigate('/login');
         })
         .catch((error) => {
           if (error.response) {

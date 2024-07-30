@@ -7,7 +7,7 @@ const userSchema = new db.Schema({
   userName: String,
   userPassword: String,
   userStatus: String,
-  liked_events: [{ type: db.Schema.Types.ObjectId, ref: 'events' }]
+  registered_events: [{ type: db.Schema.Types.ObjectId, ref: 'events' }]
 });
 
 const userData = userDbConnection.model('users', userSchema);

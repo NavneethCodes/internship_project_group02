@@ -19,7 +19,7 @@ import { IoReorderThreeOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';  // Import Link from react-router-dom
 import '../styles/Sidebarr.css';
 
-export default function Sidebar() {
+export default function Sidebarr() {
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = () => {
