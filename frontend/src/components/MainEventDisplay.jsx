@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom';
 import Eventdetail from './Eventdetail';
 import Sidebarr from './Sidebarr';
 import './MainEventDisplay.css';
+import { Button } from '@mui/material';
+import top1 from '../Images/top-5.jpeg';
 import logo from '../Images/p-logo.png';
 import top2 from '../Images/top-4.jpeg';
 import Dropdown from '@mui/joy/Dropdown';
 import Menu from '@mui/joy/Menu';
 import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
-import top1 from '../Images/top-5.jpeg';
-import top2 from '../Images/top-4.jpeg';
 import axios from 'axios';
 
 const MainEventDisplay = () => {
@@ -18,15 +18,12 @@ const MainEventDisplay = () => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get('http://localhost:4000/all-categories');
         console.log('Categories fetched:', response.data.categories);
-        console.log('Fetched Categories:', response.data.categories);
         setCategories(response.data.categories || []);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -41,7 +38,6 @@ const MainEventDisplay = () => {
       try {
         const response = await axios.get('http://localhost:4000/events');
         console.log('Events fetched:', response.data);
-        console.log('Fetched Events:', response.data);
         setEvents(response.data);
         setFilteredEvents(response.data);
       } catch (error) {
@@ -58,36 +54,17 @@ const MainEventDisplay = () => {
     } else {
       const filtered = events.filter(event => event.eventCategory === selectedCategory);
       console.log(`Filtered events for category "${selectedCategory}":`, filtered);
-      console.log(`Filtered Events (${selectedCategory}):`, filtered);
       setFilteredEvents(filtered);
     }
   }, [selectedCategory, events]);
 
-  useEffect(() => {
-    const user = sessionStorage.getItem('userName');
-    const username = sessionStorage.getItem('userName');
-    if (user && username) {
-      setLoggedIn(true);
-      setUserName(username);
-    }
-  }, []);
-
   const handleCategoryClick = (category) => {
-    console.log('Selected Category:', category);
     setSelectedCategory(category);
     console.log('Selected category:', category);
   };
 
-  const handleLoginClick = () => {
+  const handleClick = () => {
     window.location.href = '/login';
-  };
-
-  const handleLogoutClick = () => {
-    sessionStorage.removeItem('userName');
-    sessionStorage.removeItem('user_id');
-    setLoggedIn(false);
-    setUserName('');
-    window.location.reload();
   };
 
   return (
@@ -100,14 +77,7 @@ const MainEventDisplay = () => {
         </label>
         <input type="text" placeholder="search" name="eventName" />
         <div className="btn-area">
-          {loggedIn ? (
-            <>
-              <div className='user-name-container'><span className="user-name">{userName}</span></div>
-              <button onClick={handleLogoutClick}>Logout</button>
-            </>
-          ) : (
-            <button onClick={handleLoginClick}>Login</button>
-          )}
+          <button onClick={handleClick}>Login</button>
         </div>
       </div>
       <div className="top-design">

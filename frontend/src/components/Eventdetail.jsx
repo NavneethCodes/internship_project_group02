@@ -15,27 +15,13 @@ import axios from 'axios';
 import CommentIcon from '@mui/icons-material/ModeCommentOutlined';
 import './Eventdetail.css';
 
-export default function Eventdetail() {
+export default function Eventdetail({ events }) {
   const [liked, setLiked] = React.useState({});
   const [expandedCardIndex, setExpandedCardIndex] = React.useState(null);
   const [commentSectionIndex, setCommentSectionIndex] = React.useState(null);
   const [comments, setComments] = React.useState({});
   const [newComment, setNewComment] = React.useState('');
-  const [cardData, setCardData] = React.useState([]);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get('http://localhost:4000/events');
-        setCardData(response.data);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const handleLike = async (index) => {
     const isLiked = liked[index];
@@ -43,17 +29,17 @@ export default function Eventdetail() {
     setLiked((prevLiked) => ({ ...prevLiked, [index]: !isLiked }));
 
     try {
-      const eventId = cardData[index]._id.$oid;
+      const eventId = events[index]._id.$oid;
       const userId = await axios.get('http://localhost:4000/profile').then(res => res.data.user._id);
-      await axios.post(`http://localhost:4000/action/${isLiked ? 'unlike' : 'like'}`, { user_id:userId, event_id:eventId});
+      await axios.post(`http://localhost:4000/action/${isLiked ? 'unlike' : 'like'}`, { user_id: userId, event_id: eventId });
 
-      setCardData((prevCardData) => {
-        const newCardData = [...prevCardData];
-        const likesCount = newCardData[index].likes.length;
-        newCardData[index].likes = isLiked
-          ? newCardData[index].likes.filter((like) => like !== userId)
-          : [...newCardData[index].likes, userId];
-        return newCardData;
+      setEvents((prevEvents) => {
+        const newEvents = [...prevEvents];
+        const likesCount = newEvents[index].likes.length;
+        newEvents[index].likes = isLiked
+          ? newEvents[index].likes.filter((like) => like !== userId)
+          : [...newEvents[index].likes, userId];
+        return newEvents;
       });
 
     } catch (error) {
@@ -66,17 +52,17 @@ export default function Eventdetail() {
   };
 
   const handleCommentToggle = (index) => {
-    if (cardData[index] && cardData[index]._id && cardData[index]._id) {
-      const eventId = cardData[index]._id; // Extract the event ID
+    if (events[index] && events[index]._id && events[index]._id) {
+      const eventId = events[index]._id; // Extract the event ID
       navigate(`/comments/${eventId}`);
     } else {
-      console.error('Event ID not found or invalid:', cardData[index]);
+      console.error('Event ID not found or invalid:', events[index]);
     }
   };
 
   const handleAddComment = async (index) => {
     try {
-      const eventId = cardData[index]._id.$oid;
+      const eventId = events[index]._id.$oid;
       await axios.post(`http://localhost:4000/events/${eventId}/comments`, { comment: newComment });
       setComments((prevComments) => ({
         ...prevComments,
@@ -89,17 +75,17 @@ export default function Eventdetail() {
   };
 
   const handleNavigateToDetails = (index) => {
-    if (cardData[index] && cardData[index]._id && cardData[index]._id) {
-      const eventId = cardData[index]._id; // Extract the event ID
+    if (events[index] && events[index]._id && events[index]._id) {
+      const eventId = events[index]._id; // Extract the event ID
       navigate(`/comments/${eventId}`);
     } else {
-      console.error('Event ID not found or invalid:', cardData[index]);
+      console.error('Event ID not found or invalid:', events[index]);
     }
   };
 
   return (
     <Box className="card-grid">
-      {cardData.map((card, index) => (
+      {events.map((card, index) => (
         <Card
           key={index}
           variant="outlined"
