@@ -7,7 +7,7 @@ import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 const Dummy = () => {
   const [items, setItems] = useState([]);
   const routing = () =>{
-    window.location.href='/maineventdetails'
+    window.location.href='/login'
   }
 
   useEffect(() => {
