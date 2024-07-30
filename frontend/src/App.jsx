@@ -26,7 +26,7 @@ function App() {
         <Route path='/profile' element={<Profile/>}></Route> {/* New route for comments */}
         {/* Add more routes here if needed */}
       </Routes>
-
+      
       
     </>
   );

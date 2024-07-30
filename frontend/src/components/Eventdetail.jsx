@@ -9,61 +9,38 @@ import Typography from '@mui/joy/Typography';
 import Link from '@mui/joy/Link';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import Input from '@mui/joy/Input';
+import Button from '@mui/joy/Button';
 import axios from 'axios';
 import CommentIcon from '@mui/icons-material/ModeCommentOutlined';
 import './Eventdetail.css';
 
-export default function Eventdetail() {
+export default function Eventdetail({ events }) {
   const [liked, setLiked] = React.useState({});
   const [expandedCardIndex, setExpandedCardIndex] = React.useState(null);
-  const [cardData, setCardData] = React.useState([]);
+  const [commentSectionIndex, setCommentSectionIndex] = React.useState(null);
+  const [comments, setComments] = React.useState({});
+  const [newComment, setNewComment] = React.useState('');
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:4000/events');
-        const data = response.data;
-        const current_user = sessionStorage.getItem("user_id");
-        const initialLiked = data.reduce((acc, card) => {
-          acc[card._id] = card.likes.includes(current_user);
-          return acc;
-        }, {});
-        setLiked(initialLiked);
-        setCardData(data);
-      } catch (error) {
-        console.error('Error fetching data', error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  const handleLike = async (eventId) => {
-    const current_user = sessionStorage.getItem("user_id");
-
-    if (!current_user) {
-      navigate('/login');
-      return;
-    }
-
-    const isLiked = liked[eventId];
+  const handleLike = async (index) => {
+    const isLiked = liked[index];
+    const userId = axios.get('http://localhost:4000/profile');
+    setLiked((prevLiked) => ({ ...prevLiked, [index]: !isLiked }));
 
     try {
-      await axios.put(`http://localhost:4000/action/${isLiked ? 'unlike' : 'like'}`, { user_id: current_user, event_id: eventId });
+      const eventId = events[index]._id.$oid;
+      const userId = await axios.get('http://localhost:4000/profile').then(res => res.data.user._id);
+      await axios.post(`http://localhost:4000/action/${isLiked ? 'unlike' : 'like'}`, { user_id: userId, event_id: eventId });
 
-      setCardData((prevCardData) => {
-        return prevCardData.map(card => {
-          if (card._id === eventId) {
-            const updatedLikes = isLiked
-              ? card.likes.filter(id => id !== current_user)
-              : [...card.likes, current_user];
-            return { ...card, likes: updatedLikes };
-          }
-          return card;
-        });
+      setEvents((prevEvents) => {
+        const newEvents = [...prevEvents];
+        const likesCount = newEvents[index].likes.length;
+        newEvents[index].likes = isLiked
+          ? newEvents[index].likes.filter((like) => like !== userId)
+          : [...newEvents[index].likes, userId];
+        return newEvents;
       });
-
-      setLiked((prevLiked) => ({ ...prevLiked, [eventId]: !isLiked }));
 
     } catch (error) {
       console.error('Error updating like status', error);
@@ -75,26 +52,40 @@ export default function Eventdetail() {
   };
 
   const handleCommentToggle = (index) => {
-    if (cardData[index] && cardData[index]._id) {
-      const eventId = cardData[index]._id;
+    if (events[index] && events[index]._id && events[index]._id) {
+      const eventId = events[index]._id; // Extract the event ID
       navigate(`/comments/${eventId}`);
     } else {
-      console.error('Event ID not found or invalid:', cardData[index]);
+      console.error('Event ID not found or invalid:', events[index]);
+    }
+  };
+
+  const handleAddComment = async (index) => {
+    try {
+      const eventId = events[index]._id.$oid;
+      await axios.post(`http://localhost:4000/events/${eventId}/comments`, { comment: newComment });
+      setComments((prevComments) => ({
+        ...prevComments,
+        [index]: [...(prevComments[index] || []), newComment],
+      }));
+      setNewComment('');
+    } catch (error) {
+      console.error('Error adding comment', error);
     }
   };
 
   const handleNavigateToDetails = (index) => {
-    if (cardData[index] && cardData[index]._id) {
-      const eventId = cardData[index]._id;
+    if (events[index] && events[index]._id && events[index]._id) {
+      const eventId = events[index]._id; // Extract the event ID
       navigate(`/comments/${eventId}`);
     } else {
-      console.error('Event ID not found or invalid:', cardData[index]);
+      console.error('Event ID not found or invalid:', events[index]);
     }
   };
 
   return (
     <Box className="card-grid">
-      {cardData.map((card, index) => (
+      {events.map((card, index) => (
         <Card
           key={index}
           variant="outlined"
@@ -150,7 +141,7 @@ export default function Eventdetail() {
                 </Box>
                 <Box sx={{ display: 'flex', gap: 1.5, mt: 'auto' }}>
                   <Avatar variant="soft" color="black">
-                    {card.eventName[0]}
+                    {card.eventName[0]} {/* Assuming avatar is the first letter of the event name */}
                   </Avatar>
                   <div>
                     <Typography level="body-xs" sx={{ color: 'black', marginTop: '10px' }}>{card.eventOrganizer}</Typography>
@@ -164,17 +155,17 @@ export default function Eventdetail() {
                   color="neutral"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleLike(card._id);
+                    handleLike(index);
                   }}
                   sx={{
                     transition: 'all 0.3s ease-in-out',
                     ':hover': {
                       backgroundColor: 'transparent',
-                      transform: 'scale(1.1)'
+                      transform: 'scale(1.7)'
                     }
                   }}
                 >
-                  {liked[card._id] ? <FavoriteIcon color="error" /> : <FavoriteBorderRoundedIcon />}
+                  {liked[index] ? <FavoriteIcon color="error" /> : <FavoriteBorderRoundedIcon />}
                 </IconButton>
                 <Typography level="body-xs" sx={{ ml: 1 }}>{card.likes.length}</Typography>
                 <IconButton
@@ -201,9 +192,9 @@ export default function Eventdetail() {
             </Box>
             <Box className="card-back">
               <Typography level="title-lg" sx={{ fontSize: '30px', fontWeight: 'bold', marginBottom: '20px', color: 'white' }}>{card.eventName}</Typography>
-              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>Date: </span> {new Date(card.eventDate).toLocaleDateString()}</Typography>
-              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>Start Time: </span> {new Date(card.eventStartTime).toLocaleTimeString()}</Typography>
-              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>End Time: </span> {new Date(card.eventEndTime).toLocaleTimeString()}</Typography>
+              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>Date: </span> {new Date(card.eventDate.$date).toLocaleDateString()}</Typography>
+              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>Start Time: </span> {new Date(card.eventStartTime.$date).toLocaleTimeString()}</Typography>
+              <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>End Time: </span> {new Date(card.eventEndTime.$date).toLocaleTimeString()}</Typography>
               <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>Location: </span>{card.eventLocation}</Typography>
               <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '5px', color: 'white' }}><span>Organizer: </span>{card.eventOrganizer}</Typography>
               <Typography level="body-sm" sx={{ fontSize: '17px', fontWeight: 'normal', marginTop: '40px', color: 'white' }}>
@@ -215,6 +206,30 @@ export default function Eventdetail() {
                 </button>
               </Typography>
             </Box>
+            {commentSectionIndex === index && (
+              <Box className="comments-section">
+                <Typography level="title-lg">Comments</Typography>
+                <Box sx={{ maxHeight: 300, overflowY: 'auto', mt: 2 }}>
+                  {comments[index]?.length > 0 ? comments[index].map((comment, i) => (
+                    <Typography key={i} sx={{ mt: 1 }}>
+                      {comment.comment}
+                    </Typography>
+                  )) : (
+                    <Typography sx={{ mt: 1 }}>No comments yet</Typography>
+                  )}
+                </Box>
+                <Input
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Add a comment"
+                  fullWidth
+                  sx={{ mt: 2 }}
+                />
+                <Button onClick={() => handleAddComment(index)} sx={{ mt: 1 }}>
+                  Comment
+                </Button>
+              </Box>
+            )}
           </Box>
         </Card>
       ))}

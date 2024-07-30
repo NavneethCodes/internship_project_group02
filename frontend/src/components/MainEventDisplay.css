@@ -322,12 +322,13 @@
 
 .Event-categories {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     margin: 100px;
     color: white;
     font-size: 25px;
     overflow-x: auto;
     white-space: nowrap;
+    margin-top: 200px;
 }
 
 .category-button {
@@ -345,26 +346,10 @@
     display: inline-block;
 }
 
-.category-button:hover {
-    background-color: #000;
-    color: #fff;
-    transform: scale(1.05);
-    animation: hoverEffect 0.3s ease-out;
-}
-
-.category-button.selected {
-    background-color: #fff;
-    color: #000;
-}
-
-.category-button.selected:hover {
-    background-color: #000;
-    color: #fff;
-}
-
 .Event-categories h2 {
     margin-right: 20px;
     color: #fff;
+    font-size:20px;
 }
 
 @keyframes hoverEffect {
@@ -379,16 +364,48 @@
     }
 }
 
-.Event-display-container {
-    margin-top:20px;
-}
-
 .event-details-heading {
     margin-top: 100px;
     text-align: center;
     color: white;
     font-size: 70px;
 }
+/* Styles for the category dropdown button */
+.category-dropdown-btn {
+  background-color: #ffffff;
+  border: 1px solid #292727;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 18px; /* Increased font size */
+  height: 50px;
+  width: 200px;
+ 
+}
+
+.category-dropdown-btn:hover {
+  background-color: #f0f0f0;
+}
+
+/* Styles for the dropdown menu */
+.category-dropdown-menu {
+  width: 220px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) /* Change background color to white */
+}
+
+/* Styles for the dropdown menu items */
+.category-dropdown-menu-item {
+  font-size: 18px; /* Reasonable increase in font size */
+  padding: 8px 12px;
+  background-color: #ffffff; /* Ensure background color is white */
+}
+
+.category-dropdown-menu-item:hover {
+  background-color: #f0f0f0;
+}
+
+  
 
 .user-name {
     margin-right:10px;
