@@ -2,16 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Eventdetail from './Eventdetail';
 import Sidebarr from './Sidebarr';
-import Sidebarr from './Sidebarr';
 import './MainEventDisplay.css';
-import { Button } from '@mui/material';
-import top1 from '../Images/top-5.jpeg';
 import logo from '../Images/p-logo.png';
 import top2 from '../Images/top-4.jpeg';
 import Dropdown from '@mui/joy/Dropdown';
 import Menu from '@mui/joy/Menu';
 import MenuButton from '@mui/joy/MenuButton';
 import MenuItem from '@mui/joy/MenuItem';
+import top1 from '../Images/top-5.jpeg';
+import top2 from '../Images/top-4.jpeg';
 import axios from 'axios';
 
 const MainEventDisplay = () => {
@@ -26,8 +25,8 @@ const MainEventDisplay = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get('http://localhost:4000/all-categories');
-        console.log('Fetched Categories:', response.data.categories);
         console.log('Categories fetched:', response.data.categories);
+        console.log('Fetched Categories:', response.data.categories);
         setCategories(response.data.categories || []);
       } catch (error) {
         console.error('Error fetching categories:', error);
@@ -41,8 +40,8 @@ const MainEventDisplay = () => {
     const fetchEvents = async () => {
       try {
         const response = await axios.get('http://localhost:4000/events');
-        console.log('Fetched Events:', response.data);
         console.log('Events fetched:', response.data);
+        console.log('Fetched Events:', response.data);
         setEvents(response.data);
         setFilteredEvents(response.data);
       } catch (error) {
@@ -58,10 +57,8 @@ const MainEventDisplay = () => {
       setFilteredEvents(events);
     } else {
       const filtered = events.filter(event => event.eventCategory === selectedCategory);
-      console.log(`Filtered Events (${selectedCategory}):`, filtered);
-      setFilteredEvents(filtered);
-      const filtered = events.filter(event => event.eventCategory === selectedCategory);
       console.log(`Filtered events for category "${selectedCategory}":`, filtered);
+      console.log(`Filtered Events (${selectedCategory}):`, filtered);
       setFilteredEvents(filtered);
     }
   }, [selectedCategory, events]);
@@ -101,11 +98,6 @@ const MainEventDisplay = () => {
           <img src={logo} alt="cannot be displayed" className="nav-logo" />
           <p>Gleve</p>
         </label>
-        <input type='text' placeholder="search" name="eventName" />
-        <label>
-          <img src={logo} alt="cannot be displayed" className="nav-logo" />
-          <p>Gleve</p>
-        </label>
         <input type="text" placeholder="search" name="eventName" />
         <div className="btn-area">
           {loggedIn ? (
@@ -122,13 +114,7 @@ const MainEventDisplay = () => {
         <div className="para">
           <p className="td-txt">Discover, Track, and Experience Global Events.</p>
         </div>
-        <div className="para">
-          <p className="td-txt">Discover, Track, and Experience Global Events.</p>
-        </div>
         <div className="inside-top-design-2">
-          <p className="td-txt-description">
-            "Stay informed and engaged with the world's most exciting events. Explore upcoming concerts, festivals, conferences, and sports matches happening globally. Track your favorite events, receive real-time updates, and immerse yourself in unforgettable experiences. Join us to connect with a vibrant community of event enthusiasts and never miss out on the action!"
-          </p>
           <p className="td-txt-description">
             "Stay informed and engaged with the world's most exciting events. Explore upcoming concerts, festivals, conferences, and sports matches happening globally. Track your favorite events, receive real-time updates, and immerse yourself in unforgettable experiences. Join us to connect with a vibrant community of event enthusiasts and never miss out on the action!"
           </p>
