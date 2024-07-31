@@ -166,8 +166,42 @@ app.delete("/userdeletion/:id", async (req, res) => {
   }
 });
 
+app.put('/user-info-update/:id', async (req, res) => {
+  try {
+    let user = await userModel.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+    console.log('Current User Data:', user);
+    console.log('Received Update Data:', req.body);
+    let updatedFields = {};
+    if (req.body.userName && req.body.userName !== user.userName) {
+      updatedFields.userName = req.body.userName;
+    }
+    if (req.body.userEmail && req.body.userEmail !== user.userEmail) {
+      updatedFields.userEmail = req.body.userEmail;
+    }
+    if (req.body.userContact && req.body.userContact !== user.userContact) {
+      updatedFields.userContact = req.body.userContact;
+    }
+    if (req.body.userPassword && req.body.newPassword && req.body.userPassword !== req.body.newPassword) {
+      updatedFields.userPassword = req.body.newPassword;
+    }
+    if (Object.keys(updatedFields).length === 0) {
+      return res.status(400).json({ message: "No changes detected!" });
+    }
+    Object.assign(user, updatedFields);
+    await user.save();
+    return res.status(200).json({ user, message: "Successfully updated the profile!" });
+  } catch (error) {
+      console.error("Error updating user profile:", error);
+      return res.status(500).json({ message: "An error occurred while updating the profile." });
+  }
+});
+  
+
 //This would be used to update the user's status
-app.put("/userupdate/:id", async (req, res) => {
+app.put("/user-status-update/:id", async (req, res) => {
     const userId = req.params.id;
     const data = await userModel.findById(userId);
     var userStatus = data.userStatus;
