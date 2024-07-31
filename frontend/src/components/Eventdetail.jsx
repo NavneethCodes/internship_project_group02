@@ -171,7 +171,7 @@ export default function Eventdetail() {
                     transition: 'all 0.3s ease-in-out',
                     ':hover': {
                       backgroundColor: 'transparent',
-                      transform: 'scale(1.1)'
+                      transform: 'scale(1.5)'
                     }
                   }}
                 >

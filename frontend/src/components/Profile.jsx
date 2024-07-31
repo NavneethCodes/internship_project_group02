@@ -54,28 +54,21 @@ const Profile = () => {
 
   const handlePasswordSubmit = () => {
     // Verify password
-    axios.post('http://localhost:4000/verify-password', { password: enteredPassword })
-      .then(response => {
-        if (response.data.isValid) {
-          // Save the form data
-          axios.post('http://localhost:4000/update-profile', form)
-            .then(response => {
-              setInitialForm(form); // Update initialForm with the latest saved values
-              setMessage('Profile updated successfully.');
-              setOpenSnackbar(true);
-            })
-            .catch(error => {
-              console.error('Error saving profile:', error);
-            });
-          setOpenPasswordDialog(false);
-        } else {
-          setMessage('Incorrect password. Please try again.');
+    if (enteredPassword === form.userPassword) {
+      console.log("Form\n",form)
+      axios.put(`http://localhost:4000/user-info-update/${sessionStorage.getItem("user_id")}`, form)
+        .then(res => {
+          setInitialForm(form);
+          setMessage('Profile updated successfully.');
           setOpenSnackbar(true);
-        }
-      })
-      .catch(error => {
-        console.error('Error verifying password:', error);
-      });
+        }).catch(error => {
+          console.error('Error saving profile:', error);
+        });
+      setOpenPasswordDialog(false);
+    } else {
+      setMessage('Incorrect password. Please try again.');
+      setOpenSnackbar(true);
+    }
   };
 
   const handlePasswordClose = () => {
