@@ -102,7 +102,7 @@ const MainEventDisplay = () => {
       </div>
       <h2 className="event-details-heading">Event Details</h2>
       <div className="Event-categories">
-        <h2>Categories</h2>
+        <h2>Category</h2>
         <Dropdown>
           <MenuButton className="category-dropdown-btn">
             {selectedCategory} ▼
