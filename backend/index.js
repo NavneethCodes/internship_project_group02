@@ -1,4 +1,5 @@
 const express = require("express");
+const nodemailer = require("nodemailer")
 const cors = require("cors");
 const app = express();
 const PORT = 4000;
@@ -6,10 +7,21 @@ require("./connection");
 const userModel = require("./models/userData");
 const eventModel = require("./models/eventData");
 const recordModel = require("./models/eventRecords");
+const { text } = require("stream/consumers");
 
 app.use(cors());
 
 app.use(express.json());
+
+const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port:465,
+  secure: true,
+  auth: {
+    user: `gleve.event.managements@gmail.com`,
+    pass: `ewyg kpyi mbsk pacm`
+  }
+})
 
 //This would return all the existing users from the db.
 app.get("/users", async (req, res) => {
@@ -36,6 +48,34 @@ app.get('/id/:id', async (req, res) => {
     return res.status(201).json({userName : user.userName});
   } catch {
     return res.status(400).send({ message: "No user found!"});
+  }
+})
+
+app.get('/send-email-to-all', async(req, res) =>{
+  try {
+    const userEmails = await userModel.find({}, 'userEmail');
+    let mails = userEmails.map(mail => mail.userEmail);
+    // res.status(200).json(mails);
+    if (mails.length === 0) {
+      console.log(`No user founds.`);
+      res.status(400).json({message: "No users in mail, try again later!!"});
+    }
+    const mailOption = {
+      from    : 'Gleve <gleve.event.managements@gmail.com>',
+      subject : `New event came up! Hurry, join the fun!`,
+      text    : `Hey Glever, another event is up in the horizon!\n\nExcited for the event?\nHere are the details!`
+    };
+    for (let mail of mails) {
+      try{
+        await transporter.sendMail({...mailOption, to: mail});
+        console.log(`Mail send to ${mail}`);
+      }catch (error) {
+        console.log(`Error sending email to ${mail}`);
+      }
+    }
+    res.status(200).send('Email sent successfully!');
+  } catch (error) {
+    res.status(500).json({message: "Cannot send mail now."})
   }
 })
 
