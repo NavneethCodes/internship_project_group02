@@ -14,7 +14,7 @@ import landbg from '../Images/land-bg2.png'
 
 
 const routing = ()=>{
-  window.location.href='/maineventdetails';
+  window.location.href='/login';
 }
 
 
