@@ -1,37 +1,49 @@
-form {
+.admin-event-container {
+  .paper {
+    padding: 2em;
+    border-radius: 12px;
+  }
+
+  form {
     display: flex;
     flex-direction: column;
     max-width: 600px;
     margin: 0 auto;
   }
-  
-  div {
+
+  .MuiTextField-root {
     margin-bottom: 15px;
   }
-  
-  label {
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-  
-  input,
-  textarea {
-    padding: 8px;
-    font-size: 16px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  button {
+
+  .submit-button {
     padding: 10px 20px;
     font-size: 16px;
     background-color: #007bff;
     color: white;
     border: none;
     cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
   }
-  
-  button:hover {
+
+  .submit-button:hover {
     background-color: #0056b3;
   }
-  
+
+  @media (max-width: 768px) {
+    .paper {
+      padding: 1em;
+    }
+
+    form {
+      width: 100%;
+    }
+
+    .MuiTextField-root {
+      margin-bottom: 10px;
+    }
+
+    .submit-button {
+      font-size: 14px;
+    }
+  }
+}
