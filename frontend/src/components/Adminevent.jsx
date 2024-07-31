@@ -1,71 +1,206 @@
-import React, { useState,useEffect } from 'react';
-// import './Adminevent.css';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import React, { useState } from 'react';
+import styled, { keyframes } from 'styled-components';
+import {
+  Box,
+  Button,
+  Container,
+  TextField,
+  Typography,
+  Paper,
+  Grid,
+  Snackbar,
+} from '@mui/material';
 import axios from 'axios';
-import {useNavigate,useLocation} from 'react-router-dom';
 
-const Adminevent = () => {
-  /*  const [count,setCount]=useState(0);
-  let valueAdd=()=>{
-    setCount(count+1)
-  } */
-const [form,setForm]=useState(
-  {
-    Eventname:'',
-    Title:'',
-    Date:'',
-    Time:'',
-    Location:'',
-    Description:'',
-    Organizer:''
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
-)
-var navigate = useNavigate();
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
-  function valueFetch (e){
-     // console.log(e)
-     setForm({...form,[e.target.name]:e.target.value})
-}
+const StyledContainer = styled(Container)`
+  animation: ${fadeIn} 0.5s ease-in-out;
+`;
 
-const location = useLocation()
+const AdminEvent = () => {
+  const [eventDetails, setEventDetails] = useState({
+    eventName: '',
+    eventDate: '',
+    eventStartTime: '',
+    eventEndTime: '',
+    eventLocation: '',
+    eventDescription: '',
+    eventOrganizer: '',
+    eventCategory: '',
+    imgsrc: '',
+  });
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEventDetails({
+      ...eventDetails,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const eventPayload = {
+      ...eventDetails,
+      eventDate: new Date(eventDetails.eventDate),
+      eventStartTime: new Date(`${eventDetails.eventDate}T${eventDetails.eventStartTime}:00Z`),
+      eventEndTime: new Date(`${eventDetails.eventDate}T${eventDetails.eventEndTime}:00Z`),
+    };
+
+    try {
+      const response = await axios.post('http://localhost:4000/eventnew', eventPayload);
+      setSnackbarMessage(response.data.message || 'Event created successfully!');
+      setOpenSnackbar(true);
+    } catch (error) {
+      setSnackbarMessage('Error creating event');
+      setOpenSnackbar(true);
+      console.error('Error:', error);
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
 
   return (
-    <>
-      <Box
-        component="form"
-        sx={{
-          '& > :not(style)': { m: 1, width: '25ch' },
-        }}
-        noValidate
-        autoComplete="off" 
-      >
-        <Stack spacing={2} direction="column">
-          <h1 style={{color:'green'}}>Add Events</h1>
-          <TextField id="Eventname-input" label="Event Name" variant="standard" name="Eventname" value={form.Eventname} onChange={valueFetch}  />
-          <br />
-          <TextField id="Title-input" label="Title" variant="standard"  name="Title" value={form.Title} onChange={valueFetch}/>
-          <br />
-          <TextField id="Date-input" label="Date" variant="standard"  name="Date" value={form.Date} onChange={valueFetch}/>
-          <br />
-          <TextField id="Time-input" label="Time" variant="standard"  name="Time"  value={form.Time} onChange={valueFetch}/>
-          <br />
-          <TextField id="Location-input" label="Location" variant="standard"  name="Location"  value={form.Location} onChange={valueFetch}/>
-          <br />
-          <TextField id="Description-input" label="Description" variant="standard"  name="Description"  value={form.Description} onChange={valueFetch}/>
-          <br />
-          <TextField id="Organizer-input" label="Organizer" variant="standard"  name="Organizer"  value={form.Organizer} onChange={valueFetch}/>
-          <br />
-          <Button variant="contained" color='success' onClick={{}}>Add</Button>
-        </Stack>
-      </Box>
-    </>
+    <StyledContainer component="main" maxWidth="md">
+      <Paper elevation={3} style={{ padding: '2em' }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          Create a New Event
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Event Name"
+                name="eventName"
+                value={eventDetails.eventName}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                type="date"
+                label="Event Date"
+                name="eventDate"
+                value={eventDetails.eventDate}
+                onChange={handleChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                type="time"
+                label="Event Start Time"
+                name="eventStartTime"
+                value={eventDetails.eventStartTime}
+                onChange={handleChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                required
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                type="time"
+                label="Event End Time"
+                name="eventEndTime"
+                value={eventDetails.eventEndTime}
+                onChange={handleChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Event Location"
+                name="eventLocation"
+                value={eventDetails.eventLocation}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Event Description"
+                name="eventDescription"
+                value={eventDetails.eventDescription}
+                onChange={handleChange}
+                multiline
+                rows={4}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Event Organizer"
+                name="eventOrganizer"
+                value={eventDetails.eventOrganizer}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Event Category"
+                name="eventCategory"
+                value={eventDetails.eventCategory}
+                onChange={handleChange}
+                required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Image URL"
+                name="imgsrc"
+                value={eventDetails.imgsrc}
+                onChange={handleChange}
+              />
+            </Grid>
+          </Grid>
+          <Box mt={3}>
+            <Button type="submit" fullWidth variant="contained" color="primary">
+              Create Event
+            </Button>
+          </Box>
+        </form>
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+          message={snackbarMessage}
+        />
+      </Paper>
+    </StyledContainer>
   );
-  
-}
+};
 
-
-export default Adminevent
+export default AdminEvent;

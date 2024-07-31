@@ -73,6 +73,7 @@ export default function Eventdetail() {
   const handleExpand = (index) => {
     setExpandedCardIndex(index === expandedCardIndex ? null : index);
   };
+  
 
   const handleCommentToggle = (index) => {
     if (cardData[index] && cardData[index]._id) {
