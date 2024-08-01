@@ -13,30 +13,21 @@ import axios from 'axios';
 import CommentIcon from '@mui/icons-material/ModeCommentOutlined';
 import './Eventdetail.css';
 
-export default function Eventdetail() {
+export default function Eventdetail({ events }) {
   const [liked, setLiked] = React.useState({});
   const [expandedCardIndex, setExpandedCardIndex] = React.useState(null);
   const [cardData, setCardData] = React.useState([]);
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:4000/events');
-        const data = response.data;
-        const current_user = sessionStorage.getItem("user_id");
-        const initialLiked = data.reduce((acc, card) => {
-          acc[card._id] = card.likes.includes(current_user);
-          return acc;
-        }, {});
-        setLiked(initialLiked);
-        setCardData(data);
-      } catch (error) {
-        console.error('Error fetching data', error);
-      }
-    };
-    fetchData();
-  }, []);
+    const current_user = sessionStorage.getItem("user_id");
+    const initialLiked = events.reduce((acc, card) => {
+      acc[card._id] = card.likes.includes(current_user);
+      return acc;
+    }, {});
+    setLiked(initialLiked);
+    setCardData(events);
+  }, [events]);
 
   const handleLike = async (eventId) => {
     const current_user = sessionStorage.getItem("user_id");
@@ -73,7 +64,6 @@ export default function Eventdetail() {
   const handleExpand = (index) => {
     setExpandedCardIndex(index === expandedCardIndex ? null : index);
   };
-  
 
   const handleCommentToggle = (index) => {
     if (cardData[index] && cardData[index]._id) {
