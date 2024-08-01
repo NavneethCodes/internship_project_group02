@@ -26,6 +26,7 @@ function App() {
         <Route path='/events' element={<AdminEvent/>}></Route>
         <Route path='/profile' element={<UserProfile/>}></Route> {/* New route for comments */}
         {/* Add more routes here if needed */}
+        
       </Routes>
       
       
