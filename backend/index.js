@@ -476,7 +476,7 @@ app.put('/:choice/:id/:event', async (req, res) => {
       }
     }
     await user.save();
-    return res.status(400).json({user, message:"Operation done successfully!"});
+    return res.status(200).json({user, message:"Operation done successfully!"});
   } catch (error) {
     console.log("An error occured!\n", error);
   }
