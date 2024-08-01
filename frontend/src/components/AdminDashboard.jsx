@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import AdminEvent from './Adminevent'; // Import AdminEvent component
 import './AdminDashboard.css';
 
 const Container = styled.div`
@@ -143,6 +144,7 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('users');
   const [users, setUsers] = useState([]);
   const [events, setEvents] = useState([]);
+  const [showAdminEvent, setShowAdminEvent] = useState(false);
 
   useEffect(() => {
     axios.get('http://localhost:4000/users')
@@ -157,7 +159,7 @@ const AdminDashboard = () => {
   const handleBlockUser = async (userId, currentStatus) => {
     try {
       const newStatus = currentStatus === 'active' ? 'suspend' : 'active';
-      await axios.put(`http://localhost:4000/userupdate/${userId}`, { status: newStatus });
+      await axios.put(`http://localhost:4000/user-status-update/${userId}`, { status: newStatus });
       setUsers(users.map(user =>
         user._id === userId ? { ...user, userStatus: newStatus } : user
       ));
@@ -169,12 +171,9 @@ const AdminDashboard = () => {
   return (
     <Container>
       <Sidebar>
-        <SidebarItem>Alerts</SidebarItem>
-        <SidebarItem>Calendar</SidebarItem>
-        <SidebarItem>Contacts</SidebarItem>
-        <SidebarItem>Notifications</SidebarItem>
-        <SidebarItem>Passwords</SidebarItem>
-        <SidebarItem>Settings</SidebarItem>
+        <SidebarItem onClick={() => { setActiveTab('users'); setShowAdminEvent(false); }}>Users</SidebarItem>
+        <SidebarItem onClick={() => { setActiveTab('events'); setShowAdminEvent(false); }}>Events</SidebarItem>
+        <SidebarItem onClick={() => setShowAdminEvent(true)}>Create Event</SidebarItem>
       </Sidebar>
       <Main>
         <Header>
@@ -182,22 +181,23 @@ const AdminDashboard = () => {
           <span>April, 1 Friday</span>
         </Header>
         <Content>
-          <TabButtons>
-            <TabButton
-              active={activeTab === 'users'}
-              onClick={() => setActiveTab('users')}
-            >
-              Users
-            </TabButton>
-            <TabButton
-              active={activeTab === 'events'}
-              onClick={() => setActiveTab('events')}
-            >
-              Events
-            </TabButton>
-          </TabButtons>
-          {activeTab === 'users' && (
+          {showAdminEvent && <AdminEvent />}
+          {!showAdminEvent && activeTab === 'users' && (
             <>
+              {/* <TabButtons>
+                <TabButton
+                  active={activeTab === 'users'}
+                  onClick={() => setActiveTab('users')}
+                >
+                  Users
+                </TabButton>
+                <TabButton
+                  active={activeTab === 'events'}
+                  onClick={() => { setActiveTab('events'); setShowAdminEvent(false); }}
+                >
+                  Events
+                </TabButton>
+              </TabButtons> */}
               <ScheduleHeader>
                 <div>Username</div>
                 <div>Phone Number</div>
@@ -224,8 +224,22 @@ const AdminDashboard = () => {
               </div>
             </>
           )}
-          {activeTab === 'events' && (
+          {!showAdminEvent && activeTab === 'events' && (
             <>
+              {/* <TabButtons>
+                <TabButton
+                  active={activeTab === 'users'}
+                  onClick={() => { setActiveTab('users'); setShowAdminEvent(false); }}
+                >
+                  Users
+                </TabButton>
+                <TabButton
+                  active={activeTab === 'events'}
+                  onClick={() => setActiveTab('events')}
+                >
+                  Events
+                </TabButton>
+              </TabButtons> */}
               <ScheduleHeader>
                 <div>Event Name</div>
                 <div>Event Date</div>

@@ -45,8 +45,8 @@ const LoginForm = () => {
       });
   };
 
-  const handleButtonClick = () => {
-    submit();
+  const handleButtonClick = (e) => {
+    submit(e);
   };
 
   return (

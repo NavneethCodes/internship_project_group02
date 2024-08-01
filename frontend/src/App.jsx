@@ -23,10 +23,12 @@ function App() {
         <Route path='/dashboard' element={<AdminDashboard/>}></Route>
         <Route path='/comments/:eventId' element={<EventComments/>}></Route>
         <Route path='/adminevent' element={<Adminevent/>}></Route>
+        {/* <Route path='/events' element={<AdminEvent/>}></Route> */}
         <Route path='/profile' element={<Profile/>}></Route> {/* New route for comments */}
         {/* Add more routes here if needed */}
+        <Route path='/admineventedit' element={<Admineventedit/>}></Route>
       </Routes>
-      <Admineventedit/>
+      
       
     </>
   );
