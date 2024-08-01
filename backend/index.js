@@ -7,7 +7,7 @@ require("./connection");
 const userModel = require("./models/userData");
 const eventModel = require("./models/eventData");
 const recordModel = require("./models/eventRecords");
-const { text } = require("stream/consumers");
+// const { text } = require("stream/consumers");
 
 app.use(cors());
 
@@ -51,10 +51,79 @@ app.get('/id/:id', async (req, res) => {
   }
 })
 
-app.get('/send-email-to-all', async(req, res) =>{
+
+//This function is to send email to all registered members about the newly arrived event
+app.get('/send-email-to-all/:event_id', async(req, res) =>{
   try {
+    const event = await eventModel.findById(req.params.event_id);
+    const htmlTemplate = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>New Event Notification</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+          margin: 0;
+          padding: 0;
+        }
+        .container {
+          width: 80%;
+          margin: 20px auto;
+          background-color: #ffffff;
+          padding: 20px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+          background-color: #4CAF50;
+          color: white;
+          padding: 10px 0;
+          text-align: center;
+        }
+        .content {
+          padding: 20px;
+        }
+        .event-img {
+          width: 100%;
+          height: auto;
+        }
+        .footer {
+          text-align: center;
+          padding: 10px;
+          background-color: #f4f4f4;
+          color: #777777;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>New Event Notification</h1>
+        </div>
+        <div class="content">
+          <p>Hey Glever, another event is up in the horizon!</p>
+          <p>Excited for the event? Here are the details!</p>
+          <h2>${event.eventName}</h2>
+          <p><strong>Description:</strong> ${event.eventDescription}</p>
+          <p><strong>Location:</strong> ${event.eventLocation}</p>
+          <p><strong>Date:</strong> ${event.eventDate}</p>
+          <p><strong>Time:</strong> ${event.eventStartTime} - ${event.eventEndTime}</p>
+          <p><strong>Category:</strong> ${event.eventCategory}</p>
+          <p><strong>Organizer:</strong> ${event.eventOrganizer}</p>
+          <img src="${event.imgsrc}" alt="Event Image" class="event-img">
+        </div>
+        <div class="footer">
+          <p>Thank you for being a part of our community!</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
     const userEmails = await userModel.find({}, 'userEmail');
     let mails = userEmails.map(mail => mail.userEmail);
+    mails = ['tikirekfreefire@gmail.com']
     // res.status(200).json(mails);
     if (mails.length === 0) {
       console.log(`No user founds.`);
@@ -63,7 +132,8 @@ app.get('/send-email-to-all', async(req, res) =>{
     const mailOption = {
       from    : 'Gleve <gleve.event.managements@gmail.com>',
       subject : `New event came up! Hurry, join the fun!`,
-      text    : `Hey Glever, another event is up in the horizon!\n\nExcited for the event?\nHere are the details!`
+      text    : `Hey Glever, another event is up in the horizon!\n\nExcited for the event?\nHere are the details!`,
+      html    : htmlTemplate
     };
     for (let mail of mails) {
       try{
@@ -193,6 +263,55 @@ app.post("/eventnew", async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+  }
+});
+
+app.put(`/update-event/:event_id`, async (req, res) => {
+  try{
+    let event = await eventModel.findById(req.params.event_id);
+    console.log(event);
+    console.log("Changes\n", req.body);
+    if(!event) {
+      return res.status(404).json({message: "Event not found!"});
+    }
+    let updated_fields = {};
+    if (req.body.eventName && (req.body.eventName !== event.eventName)) {
+      updated_fields.eventName = req.body.eventName;
+      console.log("Inside");
+    }
+    if (req.body.eventDescription && req.body.eventDescription !== event.eventDescription) {
+      updated_fields.eventDescription = req.body.eventDescription;
+    }
+    if (req.body.eventLocation && req.body.eventLocation !== event.eventLocation) {
+      updated_fields.eventLocation = req.body.eventLocation;
+    }
+    if (req.body.eventDate && req.body.eventDate !== event.eventDate) {
+      updated_fields.eventDate = req.body.eventDate;
+    }
+    if (req.body.eventStartTime && req.body.eventStartTime !== event.eventStartTime) {
+      updated_fields.eventStartTime = req.body.eventStartTime;
+    }
+    if (req.body.eventEndTime && req.body.eventEndTime !== event.eventEndTime) {
+      updated_fields.eventEndTime = req.body.eventEndTime;
+    }
+    if (req.body.eventCategory && req.body.eventCategory !== event.eventCategory) {
+      updated_fields.eventCategory = req.body.eventCategory;
+    }
+    if (req.body.eventOrganizer && req.body.eventOrganizer !== event.eventOrganizer) {
+      updated_fields.eventOrganizer = req.body.eventOrganizer;
+    }
+    if (req.body.imgsrc && req.body.imgsrc !== event.imgsrc) {
+      updated_fields.imgsrc = req.body.imgsrc;
+    }
+    console.log(updated_fields);
+    if (Object.keys(updated_fields).length === 0) {
+      return res.status(400).json({message: "No changes detected!"});
+    }
+    Object.assign(event, updated_fields);
+    await event.save();
+    return res.status(200).json({message: "Successfully edited the event details!"});
+  } catch (error) {
+    res.status(500).json({message: "Error in updating the event!"});
   }
 });
 
@@ -357,7 +476,7 @@ app.put('/:choice/:id/:event', async (req, res) => {
       }
     }
     await user.save();
-    return res.status(400).json({user, message:"Operation done successfully!"});
+    return res.status(200).json({user, message:"Operation done successfully!"});
   } catch (error) {
     console.log("An error occured!\n", error);
   }

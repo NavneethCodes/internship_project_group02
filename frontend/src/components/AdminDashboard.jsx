@@ -159,7 +159,7 @@ const AdminDashboard = () => {
   const handleBlockUser = async (userId, currentStatus) => {
     try {
       const newStatus = currentStatus === 'active' ? 'suspend' : 'active';
-      await axios.put(`http://localhost:4000/userupdate/${userId}`, { status: newStatus });
+      await axios.put(`http://localhost:4000/user-status-update/${userId}`, { status: newStatus });
       setUsers(users.map(user =>
         user._id === userId ? { ...user, userStatus: newStatus } : user
       ));

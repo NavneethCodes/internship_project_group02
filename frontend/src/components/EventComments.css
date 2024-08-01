@@ -168,6 +168,12 @@
     font-size: 12px;
 }
 
+.register-button.unregister {
+    background-color: #d3d3d3; /* Pale color */
+    color: #000; /* Optional: change text color */
+  }
+  
+
 .comment-list .comment-text {
     font-size: 14px;
     color: #333;

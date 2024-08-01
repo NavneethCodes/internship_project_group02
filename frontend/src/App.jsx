@@ -8,9 +8,9 @@ import MainEventDisplay from './components/MainEventDisplay.jsx';
 import HomePage from './components/HomePage.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
 import EventComments from './components/EventComments';
-import Adminevent from './components/Adminevent.jsx';
-
-
+import Adminevent from './components/AdminEvent.jsx';
+import AdminEventCreationForm from './components/AdminEvent.jsx';
+import AdminEvent from './components/AdminEvent.jsx';
 
 
 function App() {
@@ -25,9 +25,10 @@ function App() {
         <Route path='/dashboard' element={<AdminDashboard/>}></Route>
         <Route path='/comments/:eventId' element={<EventComments/>}></Route>
         <Route path='/adminevent' element={<Adminevent/>}></Route>
-        <Route path='/events' element={<Adminevent/>}></Route>
+        <Route path='/events' element={<AdminEvent/>}></Route>
         <Route path='/profile' element={<Profile/>}></Route> {/* New route for comments */}
         {/* Add more routes here if needed */}
+        <Route path='/admineventedit' element={<Admineventedit/>}></Route>
       </Routes>
       
       
