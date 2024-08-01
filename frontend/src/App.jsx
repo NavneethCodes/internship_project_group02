@@ -9,7 +9,7 @@ import HomePage from './components/HomePage.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
 import EventComments from './components/EventComments';
 import Adminevent from './components/Adminevent.jsx';
-
+import Admineventedit from './components/Admineventedit.jsx';
 
 function App() {
   return (
@@ -26,7 +26,7 @@ function App() {
         <Route path='/profile' element={<Profile/>}></Route> {/* New route for comments */}
         {/* Add more routes here if needed */}
       </Routes>
-      
+      <Admineventedit/>
       
     </>
   );
