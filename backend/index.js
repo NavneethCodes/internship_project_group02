@@ -7,7 +7,7 @@ require("./connection");
 const userModel = require("./models/userData");
 const eventModel = require("./models/eventData");
 const recordModel = require("./models/eventRecords");
-const { text } = require("stream/consumers");
+// const { text } = require("stream/consumers");
 
 app.use(cors());
 
@@ -193,6 +193,55 @@ app.post("/eventnew", async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+  }
+});
+
+app.put(`/update-event/:event_id`, async (req, res) => {
+  try{
+    let event = await eventModel.findById(req.params.event_id);
+    console.log(event);
+    console.log("Changes\n", req.body);
+    if(!event) {
+      return res.status(404).json({message: "Event not found!"});
+    }
+    let updated_fields = {};
+    if (req.body.eventName && (req.body.eventName !== event.eventName)) {
+      updated_fields.eventName = req.body.eventName;
+      console.log("Inside");
+    }
+    if (req.body.eventDescription && req.body.eventDescription !== event.eventDescription) {
+      updated_fields.eventDescription = req.body.eventDescription;
+    }
+    if (req.body.eventLocation && req.body.eventLocation !== event.eventLocation) {
+      updated_fields.eventLocation = req.body.eventLocation;
+    }
+    if (req.body.eventDate && req.body.eventDate !== event.eventDate) {
+      updated_fields.eventDate = req.body.eventDate;
+    }
+    if (req.body.eventStartTime && req.body.eventStartTime !== event.eventStartTime) {
+      updated_fields.eventStartTime = req.body.eventStartTime;
+    }
+    if (req.body.eventEndTime && req.body.eventEndTime !== event.eventEndTime) {
+      updated_fields.eventEndTime = req.body.eventEndTime;
+    }
+    if (req.body.eventCategory && req.body.eventCategory !== event.eventCategory) {
+      updated_fields.eventCategory = req.body.eventCategory;
+    }
+    if (req.body.eventOrganizer && req.body.eventOrganizer !== event.eventOrganizer) {
+      updated_fields.eventOrganizer = req.body.eventOrganizer;
+    }
+    if (req.body.imgsrc && req.body.imgsrc !== event.imgsrc) {
+      updated_fields.imgsrc = req.body.imgsrc;
+    }
+    console.log(updated_fields);
+    if (Object.keys(updated_fields).length === 0) {
+      return res.status(400).json({message: "No changes detected!"});
+    }
+    Object.assign(event, updated_fields);
+    await event.save();
+    return res.status(200).json({message: "Successfully edited the event details!"});
+  } catch (error) {
+    res.status(500).json({message: "Error in updating the event!"});
   }
 });
 

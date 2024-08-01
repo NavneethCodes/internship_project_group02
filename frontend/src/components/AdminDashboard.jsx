@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import AdminEvent from './AdminEvent'; // Import AdminEvent component
+import AdminEvent from './Adminevent'; // Import AdminEvent component
 import './AdminDashboard.css';
 
 const Container = styled.div`
@@ -159,7 +159,7 @@ const AdminDashboard = () => {
   const handleBlockUser = async (userId, currentStatus) => {
     try {
       const newStatus = currentStatus === 'active' ? 'suspend' : 'active';
-      await axios.put(`http://localhost:4000/userupdate/${userId}`, { status: newStatus });
+      await axios.put(`http://localhost:4000/user-status-update/${userId}`, { status: newStatus });
       setUsers(users.map(user =>
         user._id === userId ? { ...user, userStatus: newStatus } : user
       ));
