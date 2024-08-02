@@ -153,6 +153,9 @@ const UserProfile = () => {
   const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
   const [enteredPassword, setEnteredPassword] = useState('');
   const [showEditProfile, setShowEditProfile] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
+  const [registeredEventCount, setRegisteredEventCount] = useState(0);
 
   const valueFetch = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -208,8 +211,9 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
-    axios.get(`http://localhost:4000/user-info/${sessionStorage.getItem("user_id")}`)
-      .then(response => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/user-info/${sessionStorage.getItem("user_id")}`);
         const userData = {
           userName: response.data.userName || "",
           userPassword: response.data.userPassword || "",
@@ -224,18 +228,38 @@ const UserProfile = () => {
           userEmail: userData.userEmail,
           userContact: userData.userContact
         });
-      })
-      .catch(error => {
+        setRegisteredEventCount(response.data.registered_events.length);
+      } catch (error) {
         console.error('Error fetching user data:', error);
-      });
+      }
+    };
+
+    const fetchEventRecordData = async () => {
+      try {
+        const response = await axios.get('http://localhost:4000/event-records]');
+        let totalLikes = 0;
+        let totalComments = 0;
+        response.data.forEach(record => {
+          totalLikes += record.likes.length;
+          totalComments += record.comments.length;
+        });
+        setLikeCount(totalLikes);
+        setCommentCount(totalComments);
+      } catch (error) {
+        console.error('Error fetching event record data:', error);
+      }
+    };
+
+    fetchUserData();
+    fetchEventRecordData();
   }, []);
 
   return (
     <Container>
       <Sidebar>
-        <NavButton onClick={() => handleNavButtonClick('users')}>USERS</NavButton>
-        <NavButton onClick={() => handleNavButtonClick('events')}>EVENTS</NavButton>
-        <NavButton onClick={() => handleNavButtonClick('createEvent')}>CREATE EVENT</NavButton>
+        {/* <NavButton onClick={() => handleNavButtonClick('users')}>USERS</NavButton> */}
+        {/* <NavButton onClick={() => handleNavButtonClick('events')}>EVENTS</NavButton> */}
+        {/* <NavButton onClick={() => handleNavButtonClick('createEvent')}>CREATE EVENT</NavButton> */}
         <NavButton onClick={handleEditClick}>{showEditProfile ? 'Close Edit' : 'Edit Profile'}</NavButton>
       </Sidebar>
       <MainContent>
@@ -256,16 +280,16 @@ const UserProfile = () => {
             <UserTitle>Web Developer</UserTitle>
             <Stats>
               <Stat>
-                <StatNumber>234</StatNumber>
-                <StatLabel>Likes</StatLabel>
+                <StatNumber>{likeCount}</StatNumber>
+                <StatLabel>Like Count</StatLabel>
               </Stat>
               <Stat>
-                <StatNumber>567</StatNumber>
+                <StatNumber>{commentCount}</StatNumber>
                 <StatLabel>Comments</StatLabel>
               </Stat>
               <Stat>
-                <StatNumber>89</StatNumber>
-                <StatLabel>Registered</StatLabel>
+                <StatNumber>{registeredEventCount}</StatNumber>
+                <StatLabel>Registered Events</StatLabel>
               </Stat>
             </Stats>
             <Biography>
@@ -381,7 +405,7 @@ const UserProfile = () => {
                       type="password"
                       name="userPassword"
                       value={form.userPassword}
-                      placeholder={placeholders.userPassword}
+                      // placeholder={placeholders.userPassword}
                       onChange={valueFetch}
                       sx={{
                         '& .MuiOutlinedInput-root': {
