@@ -8,9 +8,11 @@ import MainEventDisplay from './components/MainEventDisplay.jsx';
 import HomePage from './components/HomePage.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
 import EventComments from './components/EventComments';
-import AdminEvent from './components/AdminEvent.jsx'
+import Adminevent from './components/Adminevent.jsx';
 import UserProfile from './components/UserProfile.jsx';
-
+import About from './components/About.jsx';
+import Contact from './components/Contact.jsx';
+import Team from './components/Team.jsx';
 
 function App() {
   return (
@@ -23,8 +25,12 @@ function App() {
         <Route path='/home' element={<HomePage/>}></Route>
         <Route path='/dashboard' element={<AdminDashboard/>}></Route>
         <Route path='/comments/:eventId' element={<EventComments/>}></Route>
-        <Route path='/events' element={<AdminEvent/>}></Route>
-        <Route path='/profile' element={<UserProfile/>}></Route> {/* New route for comments */}
+        <Route path='/events' element={<Adminevent/>}></Route>
+        <Route path='/profile' element={<UserProfile/>}></Route>
+        <Route path='/about' element={<About/>}></Route>  
+        <Route path='/contact' element={<Contact/>}></Route>
+        <Route path='/team' element={<Team/>}></Route>  
+        {/* New route for comments */}
         {/* Add more routes here if needed */}
         
       </Routes>
