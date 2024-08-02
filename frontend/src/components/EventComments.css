@@ -214,3 +214,16 @@
     color: white;
   }
   
+  .event-image-container {
+    position: relative;
+  }
+  
+  .like-button-container {
+    position: absolute;
+    bottom: -43px;
+    right: 30px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
