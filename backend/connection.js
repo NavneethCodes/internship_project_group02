@@ -1,19 +1,9 @@
 const mongoose = require('mongoose');
 
-const userDbConnection = mongoose.createConnection('mongodb+srv://navneetharun0402:navneetharun2004@cluster0.jztkyk0.mongodb.net/userdb?retryWrites=true&w=majority&appName=cluster0');
+const gleveDbConnection = mongoose.connect('mongodb+srv://gleve:gleve2024@cluster0.c6guzwj.mongodb.net/gleve_db?retryWrites=true&w=majority&appName=Cluster0').then((res) => {
+  console.log('Gleve DB is online.');
+}).catch((error) => {
+  console.log('Gleve DB is offline.');
+})
 
-userDbConnection.once('open', () => {
-  console.log('userdb is connected!');
-}).on('error', (err) => {
-  console.error('userdb connection error:', err);
-});
-
-const eventDbConnection = mongoose.createConnection('mongodb+srv://navneetharun0402:navneetharun2004@cluster0.jztkyk0.mongodb.net/eventdb?retryWrites=true&w=majority&appName=cluster0');
-
-eventDbConnection.once('open', () => {
-  console.log('eventdb is connected!');
-}).on('error', (err) => {
-  console.error('eventdb connection error:', err);
-});
-
-module.exports = { userDbConnection, eventDbConnection };
+module.exports = { gleveDbConnection }

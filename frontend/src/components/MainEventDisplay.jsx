@@ -78,6 +78,7 @@ const MainEventDisplay = () => {
   };
 
   const handleLogoutClick = () => {
+    //axios.put pass with user_id
     sessionStorage.removeItem('userName');
     sessionStorage.removeItem('user_id');
     setLoggedIn(false);

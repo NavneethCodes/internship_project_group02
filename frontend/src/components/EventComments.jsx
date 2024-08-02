@@ -140,7 +140,7 @@ const EventComments = () =>
             <div className="left-section">
                 {eventDetails && (
                     <>
-                        <img src={eventDetails.imgsrc || 'default-image-url'} alt="Event" className="event-image" />
+                        <img src={eventDetails.eventImg || 'default-image-url'} alt="Event" className="event-image" />
                         <div className="event-details">
                             <h3>{eventDetails.eventName || 'Event Title'}</h3>
                             <div className="event-detail-item">

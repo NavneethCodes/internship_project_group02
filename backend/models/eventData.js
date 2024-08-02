@@ -1,4 +1,3 @@
-const { eventDbConnection } = require('../connection');
 const db = require('mongoose');
 
 const eventSchema = new db.Schema({
@@ -10,8 +9,8 @@ const eventSchema = new db.Schema({
     eventDescription: String,
     eventOrganizer  : String,
     eventCategory   : String,
-    imgsrc          : String
+    eventImg        : String
 })
 
-const eventData = eventDbConnection.model('events', eventSchema);
+const eventData = db.model('events', eventSchema);
 module.exports = eventData;
