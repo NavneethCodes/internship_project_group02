@@ -17,6 +17,18 @@ const routing = ()=>{
   window.location.href='/login';
 }
 
+const About = ()=>{
+  window.location.href='/about';
+}
+
+const Contact = ()=>{
+  window.location.href='/contact';
+}
+
+const Team = ()=>{
+  window.location.href='/team';
+}
+
 
 const Container = styled.div`
   display: flex;
@@ -148,9 +160,9 @@ function HomePage() {
       <Header>
         <Logo>Gleve.</Logo>
         <Nav>
-          <NavLink href="#about">About</NavLink>
-          <NavLink href="#careers">Contact</NavLink>
-          <NavLink href="#team">Team</NavLink>
+          <NavLink onClick={About}>About</NavLink>
+          <NavLink onClick={Contact}>Contact</NavLink>
+          <NavLink onClick={Team}>Team</NavLink>
         </Nav>
       </Header>
       <MainSection

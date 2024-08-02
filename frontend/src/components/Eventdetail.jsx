@@ -83,6 +83,14 @@ export default function Eventdetail({ events }) {
     }
   };
 
+  const truncateText = (text, maxWords) => {
+    const words = text.split(' ');
+    if (words.length > maxWords) {
+      return words.slice(0, maxWords).join(' ') + '...';
+    }
+    return text;
+  };
+
   return (
     <Box className="card-grid">
       {cardData.map((card, index) => (
@@ -136,7 +144,9 @@ export default function Eventdetail({ events }) {
                         {card.eventName}
                       </Link>
                     </Typography>
-                    <Typography level="body-sm" sx={{ color: 'black', marginTop: '20px' }}>{card.eventDescription}</Typography>
+                    <Typography level="body-sm" sx={{ color: 'black', marginTop: '20px' }}>
+                      {truncateText(card.eventDescription, 20)}
+                    </Typography>
                   </div>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 1.5, mt: 'auto' }}>
