@@ -11,25 +11,29 @@ const teamMembers = [
   {
     name: 'Navneeth Arun',
     title: 'Founder & CEO',
-    description: 'John is the visionary behind our event management system with over 20 years of experience in the industry.',
+    description: 'Navneeth is the visionary behind our event management system with over 20 years of experience in the industry.',
   },
   {
     name: 'Harishankar',
     title: 'Chief Operating Officer',
-    description: 'Jane ensures smooth operations and oversees the execution of all events with meticulous attention to detail.',
+    description: 'Harishankar ensures smooth operations and oversees the execution of all events with meticulous attention to detail.',
   },
   {
     name: 'Afra Hakim',
     title: 'Head of Marketing',
-    description: 'Emily leads our marketing efforts, bringing events to life through innovative campaigns and strategies.',
+    description: 'Afra leads our marketing efforts, bringing events to life through innovative campaigns and strategies.',
   },
-  // Add more team members as needed
+  {
+    name: 'Achsa Gracin',
+    title: 'Event Coordinator',
+    description: 'Achsa ensures that every aspect of the event is flawlessly executed.'
+  }
 ];
 
 const Team = () => {
   return (
     <Container className="team-page" sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom align="center">
+      <Typography variant="h3" gutterBottom align="center" color='black'>
         Meet Our Team
       </Typography>
       <Grid container spacing={4} justifyContent="center">
