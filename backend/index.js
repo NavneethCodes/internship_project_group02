@@ -33,6 +33,7 @@ app.get("/users", async (req, res) => {
   }
 });
 
+//This function is to get all the inforamtion about the person with the given user id
 app.get("/user-info/:id", async (req, res) => {
   try{
     const user = await userModel.findById(req.params.id);
@@ -42,6 +43,7 @@ app.get("/user-info/:id", async (req, res) => {
   }
 });
 
+//This function is to get the user name of the person with the entered user id
 app.get('/id/:id', async (req, res) => {
   try{
     const user = await userModel.findById(req.params.id);
@@ -123,7 +125,6 @@ app.get('/send-email-to-all/:event_id', async(req, res) =>{
   `;
     const userEmails = await userModel.find({}, 'userEmail');
     let mails = userEmails.map(mail => mail.userEmail);
-    mails = ['tikirekfreefire@gmail.com']
     // res.status(200).json(mails);
     if (mails.length === 0) {
       console.log(`No user founds.`);
@@ -266,6 +267,7 @@ app.post("/eventnew", async (req, res) => {
   }
 });
 
+//This function is to update the details of the event with the given event_id
 app.put(`/update-event/:event_id`, async (req, res) => {
   try{
     let event = await eventModel.findById(req.params.event_id);
@@ -325,6 +327,8 @@ app.delete("/userdeletion/:id", async (req, res) => {
   }
 });
 
+
+//This function is used to update the details of a user having the same user_id as provided
 app.put('/user-info-update/:id', async (req, res) => {
   try {
     let user = await userModel.findById(req.params.id);
@@ -376,8 +380,8 @@ app.put("/user-status-update/:id", async (req, res) => {
     res.json(data);
 });
 
+//This function is used to like, unlike(revert like), comment and uncomment
 app.put("/action/:action", async (req, res) => {
-  console.log("inside");
   const { user_id, event_id } = req.body;
   console.log(user_id,"\n", event_id);
   const action = req.params.action;

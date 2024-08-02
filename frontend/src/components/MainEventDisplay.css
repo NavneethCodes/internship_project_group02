@@ -413,4 +413,8 @@
   }
   
 
+  .disabled-sidebar {
+    pointer-events: none; /* Disables clicking on the sidebar */
+    opacity: 0.5; /* Makes the sidebar appear disabled */
+  }
   

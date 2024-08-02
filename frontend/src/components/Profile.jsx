@@ -5,8 +5,7 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Alert, Snackbar, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Snackbar, Dialog, DialogActions, DialogContent, DialogTitle, Alert } from '@mui/material';
 
 const Profile = () => {
   const [form, setForm] = useState({
@@ -29,7 +28,6 @@ const Profile = () => {
 
   const [placeholders, setPlaceholders] = useState({
     userName: "Enter your name",
-    userPassword: "Enter your current password",
     userEmail: "Enter your email",
     userContact: "Enter your contact"
   });
@@ -54,26 +52,30 @@ const Profile = () => {
 
   const handlePasswordSubmit = () => {
     // Verify password
+    const user = axios.get(`http://localhost:4000/user_info/${sessionStorage.getItem("user_id")}`);
+    console.log(user.data);
     if (enteredPassword === form.userPassword) {
-      console.log("Form\n",form)
       axios.put(`http://localhost:4000/user-info-update/${sessionStorage.getItem("user_id")}`, form)
         .then(res => {
           setInitialForm(form);
           setMessage('Profile updated successfully.');
           setOpenSnackbar(true);
         }).catch(error => {
-          console.error('Error saving profile:', error);
+          console.error(error);
+          setMessage('Error saving profile. Please try again.');
+          setOpenSnackbar(true);
         });
-      setOpenPasswordDialog(false);
     } else {
       setMessage('Incorrect password. Please try again.');
       setOpenSnackbar(true);
     }
+    setEnteredPassword(''); // Clear the password field
+    setOpenPasswordDialog(false); // Close the dialog
   };
 
   const handlePasswordClose = () => {
+    setEnteredPassword(''); // Clear the password field
     setOpenPasswordDialog(false);
-    setEnteredPassword('');
   };
 
   const handleCloseSnackbar = () => {
@@ -85,7 +87,6 @@ const Profile = () => {
       .then(response => {
         const userData = {
           userName: response.data.userName || "",
-          userPassword: response.data.userPassword || "",
           userEmail: response.data.userEmail || "",
           userContact: response.data.userContact || ""
         };
@@ -93,7 +94,6 @@ const Profile = () => {
         setInitialForm(userData);
         setPlaceholders({
           userName: userData.userName,
-          userPassword: userData.userPassword,
           userEmail: userData.userEmail,
           userContact: userData.userContact
         });
@@ -115,8 +115,8 @@ const Profile = () => {
         autoComplete="off"
       >
         <div className="profile-header">
-        <h1>Edit Profile</h1>
-      </div>
+          <h1>Edit Profile</h1>
+        </div>
         <Stack spacing={2} direction="column">
           
           <TextField
@@ -124,7 +124,6 @@ const Profile = () => {
             label="Name"
             variant="standard"
             name="userName"
-            value={form.userName}
             placeholder={placeholders.userName}
             onChange={valueFetch}
             className="text-field"
@@ -135,7 +134,6 @@ const Profile = () => {
             label="Email"
             variant="standard"
             name="userEmail"
-            value={form.userEmail}
             placeholder={placeholders.userEmail}
             onChange={valueFetch}
             className="text-field"
@@ -146,7 +144,6 @@ const Profile = () => {
             label="Contact"
             variant="standard"
             name="userContact"
-            value={form.userContact}
             placeholder={placeholders.userContact}
             onChange={valueFetch}
             className="text-field"
@@ -160,8 +157,6 @@ const Profile = () => {
               variant="standard"
               name="userPassword"
               type="password"
-              value={form.userPassword}
-              placeholder={placeholders.userPassword}
               onChange={valueFetch}
               className="text-field"
             />
@@ -220,7 +215,7 @@ const Profile = () => {
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
       >
-        <Alert onClose={handleCloseSnackbar} severity={message.includes('Your profile remains unchanged. Please make any modifications before saving.') ? 'info' : 'success'}>
+        <Alert onClose={handleCloseSnackbar} severity={message.includes('No changes have been made.') ? 'info' : message.includes('successfully') ? 'success' : 'error'}>
           {message}
         </Alert>
       </Snackbar>

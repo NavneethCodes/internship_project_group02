@@ -249,4 +249,3 @@ const EventComments = () => {
 };
 
 export default EventComments;
-
