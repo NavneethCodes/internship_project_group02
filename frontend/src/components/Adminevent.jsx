@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
-import './AdminEvent.css'
+import './Adminevent.css'
 import {
   Box,
   Button,
