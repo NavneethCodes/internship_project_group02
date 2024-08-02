@@ -62,10 +62,9 @@ const MainEventDisplay = () => {
 
   useEffect(() => {
     const user = sessionStorage.getItem('userName');
-    const username = sessionStorage.getItem('userName');
-    if (user && username) {
+    if (user) {
       setLoggedIn(true);
-      setUserName(username);
+      setUserName(user);
     }
   }, []);
 
@@ -88,7 +87,7 @@ const MainEventDisplay = () => {
 
   return (
     <div className="Event-bg">
-      <Sidebarr />
+      {loggedIn ? <Sidebarr /> : <div className="disabled-sidebar"><Sidebarr /></div>}
       <div className="Event-navbar">
         <label>
           <img src={logo} alt="cannot be displayed" className="nav-logo" />
@@ -134,7 +133,7 @@ const MainEventDisplay = () => {
             {selectedCategory} ▼
           </MenuButton>
           <Menu>
-            <MenuItem onClick={() => handleCategoryClick('All')}></MenuItem>
+            <MenuItem onClick={() => handleCategoryClick('All')}>All</MenuItem>
             {categories.map((category, index) => (
               <MenuItem key={index} onClick={() => handleCategoryClick(category)}>
                 {category}

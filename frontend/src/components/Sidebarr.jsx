@@ -35,17 +35,13 @@ export default function Sidebarr() {
       className={`drawer-content ${open ? 'drawer-expanded' : 'drawer-collapsed'}`}
     >
       <List className="drawer-list" sx={{backgroundColor:'rgba(255, 255, 255, 0.996)',height:'100%'}}>
-        {['Home', 'Events', 'Dashboard', 'Profile', 'Notifications', 'Likes', 'Logout'].map((text, index) => (
+        {['Home','Profile'].map((text, index) => (
           <ListItem key={text} disablePadding>
             <Link to={`/${text.toLowerCase()}`} style={{ textDecoration: 'none', color: 'black' }}>
               <ListItemButton>
                 <ListItemIcon>
                   {index === 0 ? <HomeSharpIcon/> :
-                   index === 1 ? <EventIcon /> :
-                   index === 2 ? <DashboardIcon /> :
-                   index === 3 ? <PersonIcon /> :
-                   index === 4 ? <NotificationsIcon /> :
-                   index === 5 ? <FavoriteIcon /> :
+                   index === 1 ? <PersonIcon /> :
                    <LogoutIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ transition: 'transform 1s ease, opacity 1s ease', transform: open ? 'translateX(0)' : 'translateX(-100%)', opacity: open ? 1 : 0 }} />

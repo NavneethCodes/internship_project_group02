@@ -1,10 +1,10 @@
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 60px;
   background-color: transparent;
   max-width: 100%;
-  width: 1000px;
+  width: 1650px;
   margin: 0 auto; /* Center the grid */
   padding: 10px 10px 10px 10px; /* Add some padding */
   position: relative;
