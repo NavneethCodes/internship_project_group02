@@ -45,7 +45,6 @@ function App() {
         <Route path='/team' element={<Team/>}></Route>  
         {/* New route for comments */}
         {/* Add more routes here if needed */}
-        
       </Routes>
       
       

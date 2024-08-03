@@ -9,7 +9,6 @@ const userModel = require("./models/userData");
 const eventModel = require("./models/eventData");
 const recordModel = require("./models/eventRecords");
 const adminControl = require('./models/adminControl');
-const { text } = require("stream/consumers");
 
 app.use(cors());
 app.use(express.json());
@@ -250,21 +249,142 @@ app.get('/send-email-to-all/:event_id', async(req, res) => {
   }
 })
 
+//This is to send an email if the user forgets his/her password
 app.get('/forgot-password/:email_id', async (req, res) => {
   const email_id = req.params.email_id;
-  const user = await userModel.findOne({ email_id });
-  const htmlTemplate = `
-  //hxrrrrri enter code here
-  `;
-  if (user) {
-    const mailOption = {
-      from    : 'Gleve <gleve.event.management@gmail.com>',
-      subject : 'Forgot Password? No worries! we are here',
-      text    : `Hey Glever, we got your back`,
-      html    : htmlTemplate
+  try {
+    const user = await userModel.findOne({ userEmail : email_id });
+    if (user) {
+      const htmlTemplate = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Forgot Password</title>
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+                body {
+                    font-family: 'Poppins', Arial, sans-serif;
+                    background-color: #f4f4f4;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                .email-container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    border: 1px solid #ddd;
+                    background-color: #fff;
+                }
+
+                .header {
+                    background-color: black;
+                    color: white;
+                    text-align: center;
+                    padding: 40px;
+                }
+
+                .header h1 {
+                    margin: 0;
+                    font-size: 24px;
+                }
+
+                .body {
+                    padding: 40px;
+                    text-align: left;
+                    font-size: 16px;
+                    line-height: 1.6;
+                }
+
+                .body p {
+                    margin: 0 0 20px;
+                }
+
+                .button-container {
+                    text-align: center;
+                    padding: 20px;
+                }
+
+                .button {
+                    background-color: black;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    text-decoration: none;
+                    color: #ffffff;
+                    font-weight: bold;
+                    display: inline-block;
+                }
+
+                .footer {
+                    background-color: black;
+                    padding: 20px;
+                    text-align: center;
+                    color: white;
+                    font-size: 14px;
+                }
+
+                @media screen and (max-width: 600px) {
+                    .email-container {
+                        width: 100% !important;
+                        padding: 10px !important;
+                    }
+
+                    .header, .body, .footer {
+                        padding: 20px !important;
+                    }
+                }
+                @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .email-container {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+            </style>
+        </head>
+        <body>
+            <div class="email-container">
+                <div class="header">
+                    <h1>Team Gleve.</h1>
+                </div>
+                <div class="body">
+                    <p>Hi ${user.userEmail},</p>
+                    <p>You requested Team Gleve to reveal your password , here it is ..</p>
+                    <p>Your password is: <strong>${user.userPassword}</strong></p>
+                    <p>Please remember this password to sign in to your account.</p>
+                    <p>Sincerely,<br>Team Gleve.</p>
+                </div>
+                <div class="button-container">
+                    <a href="https://localhost:4000/login" class="button">Login Here</a>
+                </div>
+                <div class="footer">
+                    Copyright &copy; 2024 | Gleve.
+                </div>
+            </div>
+        </body>
+        </html>
+      `;
+      const mailOption = {
+        from: 'Gleve <gleve.event.management@gmail.com>',
+        to: email_id,
+        subject: 'Forgot Password? No worries! we are here',
+        text: `Hey Glever, we got your back`,
+        html: htmlTemplate
+      };
+      await transporter.sendMail(mailOption);
+      res.status(200).json({ message: "Email sent successfully." });
+    } else {
+      res.status(404).json({ message: "User not found." });
     }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Cannot send mail now." });
   }
-})
+});
 
 //This would return all the existing events from the db.
 app.get("/events", async (req, res) => {
