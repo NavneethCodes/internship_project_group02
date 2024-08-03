@@ -165,6 +165,8 @@ const SignUp = () => {
               <button className="close-button" onClick={handleCloseTerms}>&times;</button>
             </div>
             <div className="terms-body">
+            <h4>Terms and Conditions</h4>
+            
             <h5>1. Introduction</h5>
             <p>Welcome to Gleve. These Terms and Conditions govern your use of our online event management platform. By accessing or using our Service, you agree to comply with and be bound by these Terms and Conditions. If you do not agree with these terms, please do not use our Service.</p>
             
@@ -205,6 +207,52 @@ const SignUp = () => {
             <h5>10. Contact Us</h5>
             <p>If you have any questions about these Terms and Conditions, please contact us at +1 (123) 456-7890</p>
             
+            <h4>Privacy Policy</h4>
+
+            <h5>1. Information We Collect</h5>
+            <p>When you use our Service, we may collect personal information that you provide to us directly, including but not limited to:</p>
+            <ul>
+              <li>Account Information: Name, email address, phone number, and any other information you provide when creating an account.</li>
+              <li>Event Information: Details about the events you create or participate in, such as event names, descriptions, dates, and locations.</li>
+              <li>Payment Information: Payment details, such as credit card information or billing address, when you make purchases or payments through our Service.</li>
+            </ul>
+
+            <p>We may also collect information about your use of our Service, including:</p>
+            <ul>
+              <li>Log Data: IP address, browser type, operating system, referring URLs, and other usage statistics.</li>
+              <li>Cookies and Tracking Technologies: We use cookies and similar technologies to enhance your experience and analyze usage patterns.</li>
+            </ul>
+
+            <h5>2. How We Use Your Information</h5>
+            <p>We use the information we collect for various purposes, including:</p>
+            <ul>
+              <li>To Provide and Improve Our Service: Managing your account, processing transactions, and delivering event-related services.</li>
+              <li>To Communicate with You: Sending updates, promotional materials, and other information related to your use of our Service.</li>
+              <li>To Personalize Your Experience: Customizing content and recommendations based on your preferences and usage.</li>
+              <li>To Analyze and Monitor Usage: Understanding how our Service is used to improve functionality and user experience.</li>
+            </ul>
+
+            <h5>3. How We Share Your Information</h5>
+            <p>We may share your information in the following circumstances:</p>
+            <ul>
+              <li>With Service Providers: We may share your information with third-party service providers who perform services on our behalf, such as payment processors, email providers, and data analytics companies.</li>
+              <li>For Legal Reasons: We may disclose your information if required to do so by law or in response to legal processes, such as a subpoena or court order.</li>
+              <li>In Connection with Business Transfers: If we are involved in a merger, acquisition, or other business transfer, your information may be transferred as part of that transaction.</li>
+            </ul>
+
+            <h5>4. Data Security</h5>
+            <p>We implement reasonable security measures to protect your personal information from unauthorized access, use, or disclosure. However, no method of transmission over the Internet or electronic storage is completely secure. We cannot guarantee absolute security.</p>
+            
+            <h5>5. Your Rights and Choices</h5>
+            <p>You can access and update your personal information by logging into your account or contacting us.
+              You may opt-out of receiving promotional communications from us by following the unsubscribe instructions in those communications or by contacting us directly.
+              You can manage cookies through your browser settings. Note that disabling cookies may affect your ability to use certain features of our Service.</p>
+            
+            <h5>6. International Data Transfers</h5>
+            <p>If you are accessing our Service from outside [Your Country], your information may be transferred to and processed in India where our servers are located. By using our Service, you consent to the transfer and processing of your information in India.</p>
+            
+            <h5>7. Changes to This Privacy Policy</h5>
+            <p>We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting the new Privacy Policy on our website. Your continued use of our Service after any changes constitutes your acceptance of the new policy.</p>
             </div>
             <div className="terms-footer">
               <button onClick={handleAgree}>I Agree</button>
