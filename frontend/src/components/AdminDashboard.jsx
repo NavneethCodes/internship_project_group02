@@ -164,7 +164,7 @@ const AdminDashboard = () => {
 
   const handleDeleteUser = async (userId) => {
     try {
-      await axios.delete(`http://localhost:4000/users/${userId}`);
+      await axios.delete(`http://localhost:4000/userdeletion/${userId}`);
       setUsers(users.filter(user => user._id !== userId));
     } catch (error) {
       console.error('Error deleting user:', error);
@@ -178,7 +178,7 @@ const AdminDashboard = () => {
 
   const handleDeleteEvent = async (eventId) => {
     try {
-      await axios.delete(`http://localhost:4000/events/${eventId}`);
+      await axios.delete(`http://localhost:4000/event-delete/${eventId}`);
       setEvents(events.filter(event => event._id !== eventId));
     } catch (error) {
       console.error('Error deleting event:', error);

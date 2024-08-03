@@ -8,7 +8,7 @@ import MainEventDisplay from './components/MainEventDisplay.jsx';
 import HomePage from './components/HomePage.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
 import EventComments from './components/EventComments';
-import AdminEvent from './components/Adminevent.jsx'
+import AdminEvent from './components/AdminEvent.jsx';
 import UserProfile from './components/UserProfile.jsx';
 import About from './components/About.jsx';
 import Contact from './components/Contact.jsx';
