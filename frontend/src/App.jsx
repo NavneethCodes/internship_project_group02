@@ -8,7 +8,7 @@ import MainEventDisplay from './components/MainEventDisplay.jsx';
 import HomePage from './components/HomePage.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
 import EventComments from './components/EventComments';
-import Adminevent from './components/Adminevent.jsx';
+import AdminEvent from './components/Adminevent.jsx'
 import UserProfile from './components/UserProfile.jsx';
 import About from './components/About.jsx';
 import Contact from './components/Contact.jsx';
@@ -25,7 +25,7 @@ function App() {
         <Route path='/home' element={<HomePage/>}></Route>
         <Route path='/dashboard' element={<AdminDashboard/>}></Route>
         <Route path='/comments/:eventId' element={<EventComments/>}></Route>
-        <Route path='/events' element={<Adminevent/>}></Route>
+        <Route path='/events' element={<MainEventDisplay/>}></Route>
         <Route path='/profile' element={<UserProfile/>}></Route>
         <Route path='/about' element={<About/>}></Route>  
         <Route path='/contact' element={<Contact/>}></Route>

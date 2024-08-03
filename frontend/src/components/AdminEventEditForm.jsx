@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
-import './Adminevent.css'
+import './AdminEventEditForm.css'
 import {
   Box,
   Button,
@@ -69,7 +69,7 @@ const theme = createTheme({
   },
 });
 
-const AdminEvent = () => {
+const AdminEventEditForm = ({ event, onCancelEdit }) => {
   const [eventDetails, setEventDetails] = useState({
     eventName: '',
     eventDate: '',
@@ -83,6 +83,22 @@ const AdminEvent = () => {
   });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  useEffect(() => {
+    if (event) {
+      setEventDetails({
+        eventName: event.eventName || '',
+        eventDate: event.eventDate ? event.eventDate.split('T')[0] : '',
+        eventStartTime: event.eventStartTime ? event.eventStartTime.split('T')[1] : '',
+        eventEndTime: event.eventEndTime ? event.eventEndTime.split('T')[1] : '',
+        eventLocation: event.eventLocation || '',
+        eventDescription: event.eventDescription || '',
+        eventOrganizer: event.eventOrganizer || '',
+        eventCategory: event.eventCategory || '',
+        eventImg: event.eventImg || '',
+      });
+    }
+  }, [event]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -102,11 +118,11 @@ const AdminEvent = () => {
     };
 
     try {
-      const response = await axios.post('http://localhost:4000/eventnew', eventPayload);
-      setSnackbarMessage(response.data.message || 'Event created successfully!');
+      const response = await axios.put(`http://localhost:4000/update-event/${event._id}`, eventPayload);
+      setSnackbarMessage(response.data.message || 'Event updated successfully!');
       setOpenSnackbar(true);
     } catch (error) {
-      setSnackbarMessage('Error creating event');
+      setSnackbarMessage('Error updating event');
       setOpenSnackbar(true);
       console.error('Error:', error);
     }
@@ -121,7 +137,7 @@ const AdminEvent = () => {
       <StyledContainer component="main" maxWidth="md">
         <StyledPaper elevation={3}>
           <Typography variant='h4' align="center" gutterBottom>
-            Create a New Event
+            Edit Event
           </Typography>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
@@ -223,7 +239,7 @@ const AdminEvent = () => {
                 <TextField
                   fullWidth
                   label="Image URL"
-                  name="eventImg"
+                  name="imgsrc"
                   value={eventDetails.eventImg}
                   onChange={handleChange}
                 />
@@ -231,7 +247,15 @@ const AdminEvent = () => {
             </Grid>
             <Box mt={3}>
               <StyledButton type="submit" fullWidth variant="contained" color="primary">
-                Create Event
+                Update Event
+              </StyledButton>
+              <StyledButton                 
+                fullWidth 
+                variant="contained" 
+                color="primary" 
+                onClick={onCancelEdit}
+                style={{ marginTop: '10px' }}>
+                Cancel
               </StyledButton>
             </Box>
           </form>
@@ -247,4 +271,4 @@ const AdminEvent = () => {
   );
 };
 
-export default AdminEvent;
+export default AdminEventEditForm;

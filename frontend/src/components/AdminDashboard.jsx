@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import AdminEvent from './Adminevent.jsx';
-import './AdminDashboard.css';
+import AdminEvent from './AdminEvent.jsx';
+import AdminEventEditForm from './AdminEventEditForm.jsx';
 
 const Container = styled.div`
   display: flex;
@@ -59,28 +59,9 @@ const Content = styled.div`
   padding: 20px;
 `;
 
-const TabButtons = styled.div`
-  display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
-`;
-
-const TabButton = styled.button`
-  background-color: ${props => (props.active ? '#007bff' : '#fff')};
-  color: ${props => (props.active ? '#fff' : '#007bff')};
-  padding: 10px 20px;
-  border: 1px solid #007bff;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: ${props => (props.active ? '#0056b3' : '#f0f0f0')};
-  }
-`;
-
 const ScheduleHeader = styled.div`
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr 1fr;
+  grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr;
   padding: 10px;
   background-color: #e9ecef;
   border-radius: 5px;
@@ -89,7 +70,7 @@ const ScheduleHeader = styled.div`
 
 const ScheduleItem = styled.div`
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr 1fr;
+  grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr;
   background-color: #fff;
   padding: 15px;
   border-radius: 5px;
@@ -140,11 +121,24 @@ const CountContainer = styled.div`
   align-items: center;
 `;
 
+const ActionButton = styled.button`
+  background-color: transparent;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('users');
   const [users, setUsers] = useState([]);
   const [events, setEvents] = useState([]);
   const [showAdminEvent, setShowAdminEvent] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [eventToEdit, setEventToEdit] = useState(null);
 
   useEffect(() => {
     axios.get('http://localhost:4000/users')
@@ -168,41 +162,59 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDeleteUser = async (userId) => {
+    try {
+      await axios.delete(`http://localhost:4000/users/${userId}`);
+      setUsers(users.filter(user => user._id !== userId));
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
+  const handleEditEvent = (event) => {
+    setEventToEdit(event);
+    setIsEditMode(true);
+  };
+
+  const handleDeleteEvent = async (eventId) => {
+    try {
+      await axios.delete(`http://localhost:4000/events/${eventId}`);
+      setEvents(events.filter(event => event._id !== eventId));
+    } catch (error) {
+      console.error('Error deleting event:', error);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditMode(false);
+    setEventToEdit(null);
+  };
+
   return (
     <Container>
       <Sidebar>
-        <SidebarItem onClick={() => { setActiveTab('users'); setShowAdminEvent(false); }}>Users</SidebarItem>
-        <SidebarItem onClick={() => { setActiveTab('events'); setShowAdminEvent(false); }}>Events</SidebarItem>
-        <SidebarItem onClick={() => setShowAdminEvent(true)}>Create Event</SidebarItem>
+        <SidebarItem onClick={() => { setActiveTab('users'); setShowAdminEvent(false); setIsEditMode(false); }}>Users</SidebarItem>
+        <SidebarItem onClick={() => { setActiveTab('events'); setShowAdminEvent(false); setIsEditMode(false); }}>Events</SidebarItem>
+        <SidebarItem onClick={() => { setShowAdminEvent(true); setIsEditMode(false); }}>Create Event</SidebarItem>
       </Sidebar>
       <Main>
         <Header>
           <Title>Admin Dashboard</Title>
-          <span>April, 1 Friday</span>
+          {/* <span>April, 1 Friday</span> */}
         </Header>
         <Content>
           {showAdminEvent && <AdminEvent />}
-          {!showAdminEvent && activeTab === 'users' && (
+          {isEditMode && eventToEdit && (
+            <AdminEventEditForm event={eventToEdit} onCancelEdit={handleCancelEdit} />
+          )}
+          {!showAdminEvent && !isEditMode && activeTab === 'users' && (
             <>
-              {/* <TabButtons>
-                <TabButton
-                  active={activeTab === 'users'}
-                  onClick={() => setActiveTab('users')}
-                >
-                  Users
-                </TabButton>
-                <TabButton
-                  active={activeTab === 'events'}
-                  onClick={() => { setActiveTab('events'); setShowAdminEvent(false); }}
-                >
-                  Events
-                </TabButton>
-              </TabButtons> */}
               <ScheduleHeader>
                 <div>Username</div>
                 <div>Phone Number</div>
                 <div>Status</div>
-                <div>Actions</div>
+                <div>Block</div>
+                <div>Delete</div>
               </ScheduleHeader>
               <div>
                 {users.map((user) => (
@@ -219,32 +231,27 @@ const AdminDashboard = () => {
                         {user.userStatus === 'active' ? 'Block User' : 'Unblock User'}
                       </BlockButton>
                     </ScheduleActions>
+                    <ScheduleActions>
+                    <ActionButton
+                        onClick={() => handleDeleteUser(user._id)}
+                      >
+                        Delete User
+                      </ActionButton>
+                      </ScheduleActions>
                   </ScheduleItem>
                 ))}
               </div>
             </>
           )}
-          {!showAdminEvent && activeTab === 'events' && (
+          {!showAdminEvent && !isEditMode && activeTab === 'events' && (
             <>
-              {/* <TabButtons>
-                <TabButton
-                  active={activeTab === 'users'}
-                  onClick={() => { setActiveTab('users'); setShowAdminEvent(false); }}
-                >
-                  Users
-                </TabButton>
-                <TabButton
-                  active={activeTab === 'events'}
-                  onClick={() => setActiveTab('events')}
-                >
-                  Events
-                </TabButton>
-              </TabButtons> */}
               <ScheduleHeader>
                 <div>Event Name</div>
                 <div>Event Date</div>
                 <div>Like Count</div>
                 <div>Comments</div>
+                <div>Edit</div>
+                <div>Delete</div>
               </ScheduleHeader>
               <div>
                 {events.map((event) => (
@@ -263,6 +270,20 @@ const AdminDashboard = () => {
                         <span>{event.comments.length} Comments</span>
                       </div>
                     </CountContainer>
+                    <ScheduleActions>
+                      <ActionButton
+                        onClick={() => handleEditEvent(event)}
+                      >
+                        Edit
+                      </ActionButton>
+                    </ScheduleActions>
+                    <ScheduleActions>
+                    <ActionButton
+                        onClick={() => handleDeleteEvent(event._id)}
+                      >
+                        Delete
+                      </ActionButton>
+                      </ScheduleActions>
                   </ScheduleItem>
                 ))}
               </div>

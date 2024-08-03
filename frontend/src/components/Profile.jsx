@@ -52,6 +52,8 @@ const Profile = () => {
 
   const handlePasswordSubmit = () => {
     // Verify password
+    const user = axios.get(`http://localhost:4000/user_info/${sessionStorage.getItem("user_id")}`);
+    console.log(user.data);
     if (enteredPassword === form.userPassword) {
       axios.put(`http://localhost:4000/user-info-update/${sessionStorage.getItem("user_id")}`, form)
         .then(res => {

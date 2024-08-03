@@ -18,8 +18,9 @@ const Dummy = () => {
           id: item._id,
           name: item.eventName,
           description: item.eventDescription,
-          backgroundImage: item.imgsrc,
+          backgroundImage: item.eventImg,
         }));
+        console.log(response.data);
         setItems(formattedItems);
       } catch (error) {
         console.error('Error fetching data', error);

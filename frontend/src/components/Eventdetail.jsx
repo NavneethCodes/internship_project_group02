@@ -83,6 +83,13 @@ export default function Eventdetail({ events }) {
     }
   };
 
+  const truncateText = (text, maxLength) => {
+    if (text.length > maxLength) {
+      return text.slice(0, maxLength) + '...';
+    }
+    return text;
+  };
+
   return (
     <Box className="card-grid">
       {cardData.map((card, index) => (
@@ -91,7 +98,7 @@ export default function Eventdetail({ events }) {
           variant="outlined"
           className={`card ${expandedCardIndex === index ? 'flipped' : ''}`}
           onClick={() => handleExpand(index)}
-          sx={{ borderRadius: '40px', background: 'rgb(246, 237, 237)', backdropFilter: 'blur(40px)', border: 'none' }}
+          sx={{ borderRadius: '40px', background: 'rgba(255, 255, 255, 0.996)', backdropFilter: 'blur(40px)', border: 'none' }}
         >
           <Box className="card-inner">
             <Box className="card-front">
@@ -104,7 +111,7 @@ export default function Eventdetail({ events }) {
                 }}
               >
                 <img
-                  src={card.imgsrc}
+                  src={card.eventImg}
                   alt={card.eventName}
                   style={{
                     width: '100%',
@@ -136,7 +143,9 @@ export default function Eventdetail({ events }) {
                         {card.eventName}
                       </Link>
                     </Typography>
-                    <Typography level="body-sm" sx={{ color: 'black', marginTop: '20px' }}>{card.eventDescription}</Typography>
+                    <Typography level="body-sm" sx={{ color: 'black', marginTop: '20px' }}>
+                      {truncateText(card.eventDescription, 40)}
+                    </Typography>
                   </div>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 1.5, mt: 'auto' }}>
@@ -159,6 +168,7 @@ export default function Eventdetail({ events }) {
                   }}
                   sx={{
                     transition: 'all 0.3s ease-in-out',
+                    willChange:'transform',
                     ':hover': {
                       backgroundColor: 'transparent',
                       transform: 'scale(1.5)'

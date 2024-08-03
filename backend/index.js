@@ -7,7 +7,7 @@ require("./connection");
 const userModel = require("./models/userData");
 const eventModel = require("./models/eventData");
 const recordModel = require("./models/eventRecords");
-// const { text } = require("stream/consumers");
+const adminControl = require('./models/adminControl');
 
 app.use(cors());
 
@@ -114,7 +114,7 @@ app.get('/send-email-to-all/:event_id', async(req, res) =>{
           <p><strong>Time:</strong> ${event.eventStartTime} - ${event.eventEndTime}</p>
           <p><strong>Category:</strong> ${event.eventCategory}</p>
           <p><strong>Organizer:</strong> ${event.eventOrganizer}</p>
-          <img src="${event.imgsrc}" alt="Event Image" class="event-img">
+          <img src="${event.eventImg}" alt="Event Image" class="event-img">
         </div>
         <div class="footer">
           <p>Thank you for being a part of our community!</p>
@@ -156,7 +156,7 @@ app.get("/events", async (req, res) => {
       const data = await eventModel.aggregate([
         {
           $lookup: {
-            from: 'event-records',
+            from: 'event_records',
             localField: '_id',
             foreignField: 'event_id',
             as: 'eventRecords'
@@ -205,6 +205,18 @@ app.post("/usernew", async (req, res) => {
     const data = req.body;
     const newUser = new userModel(data);
     const savedUser = await newUser.save();
+    const admin = await adminControl.findOne();
+    if (admin) {
+      if (!admin.active_users.includes(savedUser._id)) {
+        admin.active_users.push(savedUser._id);
+        await admin.save();
+      } 
+    } else {
+      const newAdminControl = new adminControl({
+        active_users: [savedUser._id]
+      });
+      await newAdminControl.save();
+    }
     return res.status(200).json({savedUser, message:"User Created Successfully!"})
   } catch (error) {
       console.log(error);
@@ -226,7 +238,19 @@ app.post("/login", async (req, res) => {
       return res.status(400).send("Incorrect password!");
     } else {
       console.log("Logged in successfully");
-      res.status(200).json({message: "Logged in successfully!", user})
+      const admin = await adminControl.findOne();
+      if (admin) {
+        if (!admin.active_users.includes(user._id)) {
+          admin.active_users.push(user._id);
+          await admin.save();
+        }
+      } else {
+        const newAdminControl = new adminControl({
+          active_users: [user._id]
+        })
+        await newAdminControl.save();
+      }
+      res.status(200).json({message: "Logged in successfully!", user})  
     }
   } catch (error) {
     console.log(error);
@@ -235,13 +259,20 @@ app.post("/login", async (req, res) => {
 });
 
 //This would be used when a user requests a logout
-app.post('/logout', (req, res) => {
-  req.session.destroy(err => {
-    if (err) {
-      return res.status(500).json({message: 'Error logging out'})
+app.put('/logout/:id', async (req, res) => {
+  try{
+    let admin = await adminControl.findOne();
+    if (admin) {
+      console.log("inside");
+      if (admin.active_users.includes(req.params.id)) {
+        let index = admin.active_users.indexOf(req.params.id);
+        admin.active_users.splice(index, 1);
+        await admin.save();
+      }
     }
-    res.status(200).json({message: 'Logout success!'})
-  })
+  } catch (error) {
+    res.status(500).send("Error signing out!");
+  }
 })
 
 //This would be used when a new event is being created
@@ -264,6 +295,16 @@ app.post("/eventnew", async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+  }
+});
+
+//This function is to delete an event from the events collection having the same event id as passed.
+app.delete(`/event-delete/:event_id`, async (req, res) => {
+  try {
+    await eventModel.findByIdAndDelete(req.params.event_id);
+    res.send("Event deleted successfully!");
+  } catch(error) {
+    res.send("Error finding the event with this event id");
   }
 });
 
@@ -302,8 +343,8 @@ app.put(`/update-event/:event_id`, async (req, res) => {
     if (req.body.eventOrganizer && req.body.eventOrganizer !== event.eventOrganizer) {
       updated_fields.eventOrganizer = req.body.eventOrganizer;
     }
-    if (req.body.imgsrc && req.body.imgsrc !== event.imgsrc) {
-      updated_fields.imgsrc = req.body.imgsrc;
+    if (req.body.eventImg && req.body.eventImg !== event.eventImg) {
+      updated_fields.eventImg = req.body.eventImg;
     }
     console.log(updated_fields);
     if (Object.keys(updated_fields).length === 0) {
@@ -326,7 +367,6 @@ app.delete("/userdeletion/:id", async (req, res) => {
     console.log(error);
   }
 });
-
 
 //This function is used to update the details of a user having the same user_id as provided
 app.put('/user-info-update/:id', async (req, res) => {
@@ -362,7 +402,6 @@ app.put('/user-info-update/:id', async (req, res) => {
   }
 });
   
-
 //This would be used to update the user's status
 app.put("/user-status-update/:id", async (req, res) => {
     const userId = req.params.id;
