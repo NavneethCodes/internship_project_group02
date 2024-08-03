@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AiOutlineUser } from "react-icons/ai";
+import { AiOutlineUser, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { IoLockClosedOutline } from "react-icons/io5";
 import './LoginForm.css';
 import axios from 'axios';
@@ -15,6 +15,7 @@ const LoginForm = () => {
     'userEmail': "",
     'userPassword': ""
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const changelog = (e) => {
     const { name, value } = e.target;
@@ -53,6 +54,10 @@ const LoginForm = () => {
     submit(e);
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className='login-main-bg'>
       <div className='bg'>
@@ -66,8 +71,19 @@ const LoginForm = () => {
             <AiOutlineUser className='icon' />
           </div>
           <div className='input_box'>
-            <input type='password' placeholder='Password' required name='userPassword' onChange={changelog} />
-            <IoLockClosedOutline className='icon' />
+            <input 
+              type={showPassword ? 'text' : 'password'} 
+              placeholder='Password' 
+              required 
+              name='userPassword' 
+              onChange={changelog} 
+            />
+            <IoLockClosedOutline className='login-icon' />
+            {showPassword ? (
+              <AiOutlineEyeInvisible className='icon eye-icon' onClick={togglePasswordVisibility} />
+            ) : (
+              <AiOutlineEye className='icon eye-icon' onClick={togglePasswordVisibility} />
+            )}
           </div>
           <div className='rem_me'>
             <label><input type='checkbox' />Remember Me</label>
@@ -85,4 +101,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm; 
+export default LoginForm;
