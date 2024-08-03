@@ -250,21 +250,32 @@ app.get('/send-email-to-all/:event_id', async(req, res) => {
   }
 })
 
+//This is to send an email if the user forgets his/her password
 app.get('/forgot-password/:email_id', async (req, res) => {
   const email_id = req.params.email_id;
-  const user = await userModel.findOne({ email_id });
-  const htmlTemplate = `
-  //hxrrrrri enter code here
-  `;
-  if (user) {
-    const mailOption = {
-      from    : 'Gleve <gleve.event.management@gmail.com>',
-      subject : 'Forgot Password? No worries! we are here',
-      text    : `Hey Glever, we got your back`,
-      html    : htmlTemplate
+  try {
+    const user = await userModel.findOne({ userEmail : email_id });
+    if (user) {
+      const htmlTemplate = `
+        //Enter the html here
+      `;
+      const mailOption = {
+        from: 'Gleve <gleve.event.management@gmail.com>',
+        to: email_id,
+        subject: 'Forgot Password? No worries! we are here',
+        text: `Hey Glever, we got your back`,
+        html: htmlTemplate
+      };
+      await transporter.sendMail(mailOption);
+      res.status(200).json({ message: "Email sent successfully." });
+    } else {
+      res.status(404).json({ message: "User not found." });
     }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Cannot send mail now." });
   }
-})
+});
 
 //This would return all the existing events from the db.
 app.get("/events", async (req, res) => {
