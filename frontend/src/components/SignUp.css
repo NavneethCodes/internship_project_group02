@@ -168,3 +168,64 @@ color:rgb(255, 255, 255);
     margin-bottom: 10px;
   }
 }
+
+.terms-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.terms-content {
+  background-color: white;
+  border-radius: 5px;
+  width: 500px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.terms-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.terms-header h2 {
+  margin: 0;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.terms-body {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.terms-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.terms-footer button {
+  margin-left: 10px;
+  padding: 5px 15px;
+}
