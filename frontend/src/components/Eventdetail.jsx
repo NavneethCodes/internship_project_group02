@@ -111,7 +111,7 @@ export default function Eventdetail({ events }) {
                 }}
               >
                 <img
-                  src={card.imgsrc}
+                  src={card.eventImg}
                   alt={card.eventName}
                   style={{
                     width: '100%',

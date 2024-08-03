@@ -40,7 +40,7 @@ const SignUp = () => {
           toast.success(res.data.message);
           sessionStorage.setItem('user_id', res.data.savedUser._id);
           sessionStorage.setItem('userName', res.data.savedUser.userName);
-          navigate('/login');
+          navigate('/maineventdetails');
         })
         .catch((error) => {
           if (error.response) {

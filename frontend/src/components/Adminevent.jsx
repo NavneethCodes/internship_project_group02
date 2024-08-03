@@ -79,7 +79,7 @@ const AdminEvent = () => {
     eventDescription: '',
     eventOrganizer: '',
     eventCategory: '',
-    imgsrc: '',
+    eventImg: '',
   });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -223,8 +223,8 @@ const AdminEvent = () => {
                 <TextField
                   fullWidth
                   label="Image URL"
-                  name="imgsrc"
-                  value={eventDetails.imgsrc}
+                  name="eventImg"
+                  value={eventDetails.eventImg}
                   onChange={handleChange}
                 />
               </Grid>
