@@ -52,7 +52,7 @@ const StyledButton = styled(Button)`
 
 const theme = createTheme({
   typography: {
-    fontFamily: 'Roboto, sans-serif',
+    fontFamily:'Poppins',
     h4: {
       fontWeight: 600,
       color: '#333',
@@ -79,7 +79,7 @@ const AdminEventEditForm = ({ event, onCancelEdit }) => {
     eventDescription: '',
     eventOrganizer: '',
     eventCategory: '',
-    imgsrc: '',
+    eventImg: '',
   });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -95,7 +95,7 @@ const AdminEventEditForm = ({ event, onCancelEdit }) => {
         eventDescription: event.eventDescription || '',
         eventOrganizer: event.eventOrganizer || '',
         eventCategory: event.eventCategory || '',
-        imgsrc: event.imgsrc || '',
+        eventImg: event.eventImg || '',
       });
     }
   }, [event]);
@@ -240,7 +240,7 @@ const AdminEventEditForm = ({ event, onCancelEdit }) => {
                   fullWidth
                   label="Image URL"
                   name="imgsrc"
-                  value={eventDetails.imgsrc}
+                  value={eventDetails.eventImg}
                   onChange={handleChange}
                 />
               </Grid>

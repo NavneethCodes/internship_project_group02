@@ -98,7 +98,7 @@ export default function Eventdetail({ events }) {
           variant="outlined"
           className={`card ${expandedCardIndex === index ? 'flipped' : ''}`}
           onClick={() => handleExpand(index)}
-          sx={{ borderRadius: '40px', background: 'rgb(246, 237, 237)', backdropFilter: 'blur(40px)', border: 'none' }}
+          sx={{ borderRadius: '40px', background: 'rgba(255, 255, 255, 0.996)', backdropFilter: 'blur(40px)', border: 'none' }}
         >
           <Box className="card-inner">
             <Box className="card-front">
@@ -168,6 +168,7 @@ export default function Eventdetail({ events }) {
                   }}
                   sx={{
                     transition: 'all 0.3s ease-in-out',
+                    willChange:'transform',
                     ':hover': {
                       backgroundColor: 'transparent',
                       transform: 'scale(1.5)'

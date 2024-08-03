@@ -25,7 +25,7 @@ function App() {
         <Route path='/home' element={<HomePage/>}></Route>
         <Route path='/dashboard' element={<AdminDashboard/>}></Route>
         <Route path='/comments/:eventId' element={<EventComments/>}></Route>
-        <Route path='/events' element={<AdminEvent/>}></Route>
+        <Route path='/events' element={<MainEventDisplay/>}></Route>
         <Route path='/profile' element={<UserProfile/>}></Route>
         <Route path='/about' element={<About/>}></Route>  
         <Route path='/contact' element={<Contact/>}></Route>

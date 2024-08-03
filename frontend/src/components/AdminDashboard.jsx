@@ -200,7 +200,7 @@ const AdminDashboard = () => {
       <Main>
         <Header>
           <Title>Admin Dashboard</Title>
-          <span>April, 1 Friday</span>
+          {/* <span>April, 1 Friday</span> */}
         </Header>
         <Content>
           {showAdminEvent && <AdminEvent />}

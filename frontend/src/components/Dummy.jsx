@@ -18,7 +18,7 @@ const Dummy = () => {
           id: item._id,
           name: item.eventName,
           description: item.eventDescription,
-          backgroundImage: item.imgsrc,
+          backgroundImage: item.eventImg,
         }));
         setItems(formattedItems);
       } catch (error) {

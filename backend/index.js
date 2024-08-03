@@ -7,7 +7,7 @@ require("./connection");
 const userModel = require("./models/userData");
 const eventModel = require("./models/eventData");
 const recordModel = require("./models/eventRecords");
-const adminControl = require('./models/adminControl');w
+const adminControl = require('./models/adminControl');
 
 app.use(cors());
 
@@ -156,7 +156,7 @@ app.get("/events", async (req, res) => {
       const data = await eventModel.aggregate([
         {
           $lookup: {
-            from: 'event-records',
+            from: 'event_records',
             localField: '_id',
             foreignField: 'event_id',
             as: 'eventRecords'
