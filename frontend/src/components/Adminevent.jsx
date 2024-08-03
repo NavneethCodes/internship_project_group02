@@ -104,6 +104,7 @@ const AdminEvent = () => {
     try {
       const response = await axios.post('http://localhost:4000/eventnew', eventPayload);
       setSnackbarMessage(response.data.message || 'Event created successfully!');
+      await axios.get(`http://localhost:4000/send-email-to-all/${response.data.event._id}`);
       setOpenSnackbar(true);
     } catch (error) {
       setSnackbarMessage('Error creating event');

@@ -10,7 +10,6 @@ const recordModel = require("./models/eventRecords");
 const adminControl = require('./models/adminControl');
 
 app.use(cors());
-
 app.use(express.json());
 
 const transporter = nodemailer.createTransport({
@@ -22,6 +21,10 @@ const transporter = nodemailer.createTransport({
     pass: `ewyg kpyi mbsk pacm`
   }
 })
+
+const cleanupExpiredEvents = async () => {
+  
+}
 
 //This would return all the existing users from the db.
 app.get("/users", async (req, res) => {
@@ -124,6 +127,8 @@ app.get('/send-email-to-all/:event_id', async(req, res) =>{
   `;
     const userEmails = await userModel.find({}, 'userEmail');
     let mails = userEmails.map(mail => mail.userEmail);
+    // mails = ['navneetharun0402@gmail.com']
+    mails = ['harisankar.mbcet@gmail.com']
     // res.status(200).json(mails);
     if (mails.length === 0) {
       console.log(`No user founds.`);
@@ -563,7 +568,8 @@ app.put('/:choice/:id/:event', async (req, res) => {
   
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server running at http://localhost:${PORT}/`);
+  await cleanupExpiredEvents();
 });
 
