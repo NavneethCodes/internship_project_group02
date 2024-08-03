@@ -92,7 +92,7 @@ app.get('/send-email-to-all/:event_id', async(req, res) =>{
     }
     .event-img-container {
       width: 100%;
-      padding-top: 56.25%; /* 16:9 Aspect Ratio (1920x1080) */
+      padding-top: 0%; /* 16:9 Aspect Ratio (1920x1080) */
       position: relative;
       margin-bottom: 20px;
     }
@@ -108,6 +108,7 @@ app.get('/send-email-to-all/:event_id', async(req, res) =>{
     }
     .content-left {
       width: 100%;
+      margin-left:10px;
     }
     .content-left h2 {
       color: #333333;
@@ -140,8 +141,8 @@ app.get('/send-email-to-all/:event_id', async(req, res) =>{
 <body>
   <div class="container">
     <div class="header">
-      <h1>What Our Customers Say</h1>
-      <p>Relation so in confined smallest children unpacked delicate. Why sir end believe uncivil respect. Always get adieus nature day course for common.</p>
+      <h1>Hey Glever, another event is up in the horizon!</h1>
+          <p>Excited for the event? Here are the details!</p>
     </div>
     <div class="content">
       <div class="event-img-container">
@@ -158,7 +159,7 @@ app.get('/send-email-to-all/:event_id', async(req, res) =>{
       </div>
     </div>
     <div class="footer">
-      <a href="#" class="view-more">View More</a>
+      <a href="http://localhost:5173/events" class="view-more">View More</a>
       <p>Thank you for being a part of our community!</p>
     </div>
   </div>
@@ -170,7 +171,7 @@ app.get('/send-email-to-all/:event_id', async(req, res) =>{
   `;
     const userEmails = await userModel.find({}, 'userEmail');
     let mails = userEmails.map(mail => mail.userEmail);
-    mails = ['harisankar.mbcet@gmail.com']
+    mails = ['harisankar.mbcet@gmail.com','navneetharun0402@gmail.com','aishuafra@gmail.com']
     // res.status(200).json(mails);
     if (mails.length === 0) {
       console.log(`No user founds.`);
