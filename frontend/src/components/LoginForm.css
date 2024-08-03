@@ -162,4 +162,23 @@
     text-decoration: underline;
 }
 
+.input_box {
+    position: relative;
+  }
+  
+  .login-icon {
+    position: absolute;
+    right: 10px;
+    left:434px;
+    top: 50%;
+    transform: translateY(200%);
+    cursor: pointer;
+  }
+  
+  .eye-icon {
+    right: 60px;
+    top:7%
+  }
+  
+
 
