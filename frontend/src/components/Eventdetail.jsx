@@ -83,10 +83,9 @@ export default function Eventdetail({ events }) {
     }
   };
 
-  const truncateText = (text, maxWords) => {
-    const words = text.split(' ');
-    if (words.length > maxWords) {
-      return words.slice(0, maxWords).join(' ') + '...';
+  const truncateText = (text, maxLength) => {
+    if (text.length > maxLength) {
+      return text.slice(0, maxLength) + '...';
     }
     return text;
   };
@@ -145,7 +144,7 @@ export default function Eventdetail({ events }) {
                       </Link>
                     </Typography>
                     <Typography level="body-sm" sx={{ color: 'black', marginTop: '20px' }}>
-                      {truncateText(card.eventDescription, 20)}
+                      {truncateText(card.eventDescription, 40)}
                     </Typography>
                   </div>
                 </Box>
