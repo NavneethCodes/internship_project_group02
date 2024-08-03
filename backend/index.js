@@ -53,7 +53,6 @@ app.get('/id/:id', async (req, res) => {
   }
 })
 
-
 //This function is to send email to all registered members about the newly arrived event
 app.get('/send-email-to-all/:event_id', async(req, res) =>{
   try {
@@ -301,7 +300,14 @@ app.post("/eventnew", async (req, res) => {
 //This function is to delete an event from the events collection having the same event id as passed.
 app.delete(`/event-delete/:event_id`, async (req, res) => {
   try {
-    await eventModel.findByIdAndDelete(req.params.event_id);
+    const event_id = req.params.event_id;
+    const record = await recordModel.findOne({ event_id });
+    await recordModel.findByIdAndDelete(record._id);
+    await eventModel.findByIdAndDelete(event_id);
+    const all_users = await userModel.find();
+    // for (let i = 0; i < all_users.length(); i++) {
+
+    // }
     res.send("Event deleted successfully!");
   } catch(error) {
     res.send("Error finding the event with this event id");
