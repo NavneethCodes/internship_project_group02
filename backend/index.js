@@ -106,7 +106,36 @@ app.get('/id/:id', async (req, res) => {
   } catch {
     return res.status(400).send({ message: "No user found!"});
   }
-})
+});
+
+// To get the like and comment count.
+app.get('/like-comment-count/:user_id', async (req, res) => {
+  try {
+    const user_id = req.params.user_id;
+    const records = await recordModel.find();
+    let like_count = 0;
+    let comment_count = 0;
+    for (let i = 0; i < records.length; i++) {
+      if (records[i].likes.includes(user_id)) {
+        like_count ++;
+      }
+      for (let j = 0; j < records[i].comments.length;  j++) {
+        if (records[i].comments[j].user_id.toString() === user_id.toString()) {
+          comment_count ++;
+        }
+      }
+    }
+    res.status(200).json({
+      likes     : like_count,
+      comments  : comment_count,
+      message   : "Got the likes and comments count successfully"
+    })
+  } catch (error) {
+    res.status(500).json({
+      message   : "Failed to get the count"
+    })
+  }
+});
 
 //This function is to send email to all registered members about the newly arrived event
 app.get('/send-email-to-all/:event_id', async(req, res) => {
@@ -247,7 +276,7 @@ app.get('/send-email-to-all/:event_id', async(req, res) => {
   } catch (error) {
     res.status(500).json({message: "Cannot send mail now."})
   }
-})
+});
 
 //This is to send an email if the user forgets his/her password
 app.get('/forgot-password/:email_id', async (req, res) => {
