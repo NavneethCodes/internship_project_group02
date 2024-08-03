@@ -53,6 +53,10 @@ const LoginForm = () => {
     submit(e);
   };
 
+  const goToForgot = async (e) => {
+    
+  }
+
   return (
     <div className='login-main-bg'>
       <div className='bg'>
@@ -71,7 +75,7 @@ const LoginForm = () => {
           </div>
           <div className='rem_me'>
             <label><input type='checkbox' />Remember Me</label>
-            <a href='#'>Forgot Password?</a>
+            <a onClick={goToForgot}>Forgot Password?</a>
           </div>
           <div className='sub_btn'>
             <button type='submit' onClick={handleButtonClick}>Login</button>
