@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import IconButton from '@mui/joy/IconButton';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import logo from '../Images/p-logo.png';
 import './EventComments.css';
+import Sidebarr from './Sidebarr'
 
 const EventComments = () => {
   const { eventId } = useParams();
+  const navigate = useNavigate();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [error, setError] = useState('');
@@ -16,6 +19,8 @@ const EventComments = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     if (!eventId) {
@@ -46,6 +51,19 @@ const EventComments = () => {
 
     // Check registration status
     checkRegistrationStatus();
+
+    // Check if user is logged in
+    const userId = sessionStorage.getItem('user_id');
+    if (userId) {
+      axios.get(`http://localhost:4000/id/${userId}`)
+        .then(response => {
+          setLoggedIn(true);
+          setUserName(response.data.userName);
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error);
+        });
+    }
   }, [eventId]);
 
   const fetchUserNames = async (comments) => {
@@ -144,13 +162,41 @@ const EventComments = () => {
     }
   };
 
+  const handleLoginClick = () => {
+    navigate('/login');
+  };
+
+  const handleLogoutClick = () => {
+    sessionStorage.removeItem('user_id');
+    setLoggedIn(false);
+    setUserName('');
+  };
+
   return (
     <div className="main-container">
+      {loggedIn ? <Sidebarr /> : <div className="disabled-sidebar"><Sidebarr /></div>}
+      <div className="Event-navbar">
+        <label>
+          <img src={logo} alt="cannot be displayed" className="nav-logo" />
+          <p>Gleve</p>
+        </label>
+        <input type="text" placeholder="search" name="eventName" />
+        <div className="btn-area">
+          {loggedIn ? (
+            <>
+              <div className='user-name-container'><span className="user-name">{userName}</span></div>
+              <button onClick={handleLogoutClick}>Logout</button>
+            </>
+          ) : (
+            <button onClick={handleLoginClick}>Login</button>
+          )}
+        </div>
+      </div>
       <div className="left-section">
         {eventDetails && (
           <>
             <div className="event-image-container">
-              <img src={eventDetails.imgsrc || 'default-image-url'} alt="Event" className="event-image" />
+              <img src={eventDetails.eventImg || 'default-image-url'} alt="Event" className="event-image" />
               <div className="like-button-container">
                 <IconButton
                   size="small"
@@ -195,7 +241,7 @@ const EventComments = () => {
                 <span className="event-detail-icon">👤 Organizer :</span>
                 <span>{eventDetails.eventOrganizer || 'Event Organizer'}</span>
               </div>
-              <div className="event-detail-item">
+              <div className="event-detail-descrp">
                 <span className="event-detail-icon">📝 Description :</span>
                 <span>{eventDetails.eventDescription || 'Event Description'}</span>
               </div>
