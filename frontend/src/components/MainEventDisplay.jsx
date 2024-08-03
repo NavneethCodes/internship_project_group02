@@ -73,6 +73,8 @@ const MainEventDisplay = () => {
     console.log('Selected category:', category);
   };
 
+
+
   const handleLoginClick = () => {
     window.location.href = '/login';
   };
