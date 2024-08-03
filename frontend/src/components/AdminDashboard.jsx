@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import axios from 'axios';
 import Adminevent from './Adminevent.jsx';
 import AdminEventEditForm from './AdminEventEditForm.jsx';
-import Modal from './Modal.jsx';
 
 const Container = styled.div`
   display: flex;
@@ -140,9 +139,6 @@ const AdminDashboard = () => {
   const [showAdminEvent, setShowAdminEvent] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [eventToEdit, setEventToEdit] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [deleteType, setDeleteType] = useState('');
-  const [deleteId, setDeleteId] = useState('');
 
   useEffect(() => {
     axios.get('http://localhost:4000/users')
@@ -167,29 +163,26 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteUser = async (userId) => {
-    setDeleteType('user');
-    setDeleteId(userId);
-    setShowModal(true);
+    try {
+      await axios.delete(`http://localhost:4000/users/${userId}`);
+      setUsers(users.filter(user => user._id !== userId));
+      await axios.delete(`http://localhost:4000/userdeletion/${userId}`);
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
+  const handleEditEvent = (event) => {
+    setEventToEdit(event);
+    setIsEditMode(true);
   };
 
   const handleDeleteEvent = async (eventId) => {
-    setDeleteType('event');
-    setDeleteId(eventId);
-    setShowModal(true);
-  };
-
-  const confirmDelete = async () => {
     try {
-      if (deleteType === 'user') {
-        await axios.delete(`http://localhost:4000/users/${deleteId}`);
-        setUsers(users.filter(user => user._id !== deleteId));
-      } else if (deleteType === 'event') {
-        await axios.delete(`http://localhost:4000/event-delete/${deleteId}`);
-        setEvents(events.filter(event => event._id !== deleteId));
-      }
-      setShowModal(false);
+      await axios.delete(`http://localhost:4000/event-delete/${eventId}`);
+      setEvents(events.filter(event => event._id !== eventId));
     } catch (error) {
-      console.error(`Error deleting ${deleteType}:`, error);
+      console.error('Error deleting event:', error);
     }
   };
 
@@ -208,6 +201,7 @@ const AdminDashboard = () => {
       <Main>
         <Header>
           <Title>Admin Dashboard</Title>
+          {/* <span>April, 1 Friday</span> */}
         </Header>
         <Content>
           {showAdminEvent && <Adminevent />}
@@ -239,12 +233,12 @@ const AdminDashboard = () => {
                       </BlockButton>
                     </ScheduleActions>
                     <ScheduleActions>
-                      <ActionButton
+                    <ActionButton
                         onClick={() => handleDeleteUser(user._id)}
                       >
                         Delete User
                       </ActionButton>
-                    </ScheduleActions>
+                      </ScheduleActions>
                   </ScheduleItem>
                 ))}
               </div>
@@ -285,23 +279,16 @@ const AdminDashboard = () => {
                       </ActionButton>
                     </ScheduleActions>
                     <ScheduleActions>
-                      <ActionButton
+                    <ActionButton
                         onClick={() => handleDeleteEvent(event._id)}
                       >
                         Delete
                       </ActionButton>
-                    </ScheduleActions>
+                      </ScheduleActions>
                   </ScheduleItem>
                 ))}
               </div>
             </>
-          )}
-          {showModal && (
-            <Modal
-              title={`Delete ${deleteType === 'user' ? 'User' : 'Event'}`}
-              onConfirm={confirmDelete}
-              onCancel={() => setShowModal(false)}
-            />
           )}
         </Content>
       </Main>
