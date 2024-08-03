@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import './UserProfile.css';
+import Sidebarr from './Sidebarr'
 import Box from '@mui/material/Box';
+import logo from '../Images/p-logo.png';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -156,6 +158,8 @@ const UserProfile = () => {
   const [likeCount, setLikeCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
   const [registeredEventCount, setRegisteredEventCount] = useState(0);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userName, setUserName] = useState('');
 
   const valueFetch = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -234,6 +238,8 @@ const UserProfile = () => {
       }
     };
 
+    
+
     const fetchEventRecordData = async () => {
       try {
         const response = await axios.get('http://localhost:4000/event-records]');
@@ -254,8 +260,54 @@ const UserProfile = () => {
     fetchEventRecordData();
   }, []);
 
+  useEffect(() => {
+    const user = sessionStorage.getItem('userName');
+    if (user) {
+      setLoggedIn(true);
+      setUserName(user);
+    }
+  }, []);
+
+  const handleLoginClick = () => {
+    window.location.href = '/login';
+  };
+
+  const handleLogoutClick = async () => {
+    try {
+      const user_id = sessionStorage.getItem('user_id');
+      sessionStorage.removeItem('userName');
+      sessionStorage.removeItem('user_id');
+      setLoggedIn(false);
+      setUserName('');
+      window.location.reload();
+      window.location.href='./maineventdetails';
+      await axios.put(`http://localhost:4000/logout/${user_id}`);      
+    } catch(error) {
+      console.log(`Error logging out: `, error);
+    }
+  };
+
+
   return (
     <Container>
+      {loggedIn ? <Sidebarr /> : <div className="disabled-sidebar"><Sidebarr /></div>}
+      <div className="Event-navbar">
+        <label>
+          <img src={logo} alt="cannot be displayed" className="nav-logo" />
+          <p>Gleve</p>
+        </label>
+        <input type="text" placeholder="search" name="eventName" />
+        <div className="btn-area">
+          {loggedIn ? (
+            <>
+              <div className='user-name-container'><span className="user-name">{userName}</span></div>
+              <button onClick={handleLogoutClick}>Logout</button>
+            </>
+          ) : (
+            <button onClick={handleLoginClick}>Login</button>
+          )}
+        </div>
+      </div>
       <Sidebar>
         {/* <NavButton onClick={() => handleNavButtonClick('users')}>USERS</NavButton> */}
         {/* <NavButton onClick={() => handleNavButtonClick('events')}>EVENTS</NavButton> */}

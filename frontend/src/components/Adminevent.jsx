@@ -52,7 +52,7 @@ const StyledButton = styled(Button)`
 
 const theme = createTheme({
   typography: {
-    fontFamily: 'Roboto, sans-serif',
+    fontFamily:'Poppins',
     h4: {
       fontWeight: 600,
       color: '#333',
