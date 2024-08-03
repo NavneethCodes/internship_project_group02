@@ -204,7 +204,7 @@ const AdminDashboard = () => {
           {/* <span>April, 1 Friday</span> */}
         </Header>
         <Content>
-          {showAdminEvent && <AdminEvent />}
+          {showAdminEvent && <Adminevent />}
           {isEditMode && eventToEdit && (
             <AdminEventEditForm event={eventToEdit} onCancelEdit={handleCancelEdit} />
           )}

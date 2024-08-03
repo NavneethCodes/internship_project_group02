@@ -224,7 +224,7 @@ app.get('/send-email-to-all/:event_id', async(req, res) => {
   `;
     const userEmails = await userModel.find({}, 'userEmail');
     let mails = userEmails.map(mail => mail.userEmail);
-    mails = ['harisankar.mbcet@gmail.com','navneetharun0402@gmail.com','aishuafra@gmail.com']
+    // mails = ['harisankar.mbcet@gmail.com','navneetharun0402@gmail.com','aishuafra@gmail.com']
     // res.status(200).json(mails);
     if (mails.length === 0) {
       console.log(`No user founds.`);
