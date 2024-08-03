@@ -162,6 +162,10 @@ const EventComments = () => {
     }
   };
 
+  const route =() =>{
+    window.location.href='/home';
+  }
+
   const handleLoginClick = () => {
     navigate('/login');
   };
@@ -176,7 +180,7 @@ const EventComments = () => {
     <div className="main-container">
       {loggedIn ? <Sidebarr /> : <div className="disabled-sidebar"><Sidebarr /></div>}
       <div className="Event-navbar">
-        <label>
+        <label onClick={route}>
           <img src={logo} alt="cannot be displayed" className="nav-logo" />
           <p>Gleve</p>
         </label>
