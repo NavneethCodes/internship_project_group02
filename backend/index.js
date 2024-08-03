@@ -404,7 +404,6 @@ app.delete("/userdeletion/:id", async (req, res) => {
   }
 });
 
-
 //This function is used to update the details of a user having the same user_id as provided
 app.put('/user-info-update/:id', async (req, res) => {
   try {
