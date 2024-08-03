@@ -1,6 +1,6 @@
 const db = require('mongoose');
 
-const adminControlSchema = db.Schema({
+const adminControlSchema = new db.Schema({
     active_users : [{type:db.Schema.Types.ObjectId, ref:'users'}]
 });
 
