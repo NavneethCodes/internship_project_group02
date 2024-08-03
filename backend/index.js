@@ -1,5 +1,6 @@
 const express = require("express");
-const nodemailer = require("nodemailer")
+const nodemailer = require("nodemailer");
+const cron = require("node-cors")
 const cors = require("cors");
 const app = express();
 const PORT = 4000;
@@ -22,9 +23,60 @@ const transporter = nodemailer.createTransport({
   }
 })
 
-const cleanupExpiredEvents = async () => {
-  
+cron.schedule('0 0 * * *', async () => {
+  try {
+    const currentDate = new Date();
+    const result = await eventModel.deleteMany({ eventDate: { $lt: currentDate } });
+    console.log(`${result.deletedCount} past events deleted.`);
+  } catch (error) {
+    console.error('Error deleting past events:', error);
+  }
+});
+
+//This function is called when an event is to be deleted
+const delete_event = async (event_id) => {
+  try {
+    const record = await recordModel.findOne({ event_id });
+    await recordModel.findByIdAndDelete(record._id);
+    await eventModel.findByIdAndDelete(event_id);
+    const all_users = await userModel.find();
+    let index_of_event = 0;
+    for (let i = 0; i < all_users.length(); i++) {
+      if (all_users[i].registered_events.includes(event_id)) {
+        index_of_event = all_users[i].registered_events.indexOf(event_id);
+        all_users[i].registered_events.splice(index_of_event, 1);
+        all_users[i].save();
+      }
+    }
+    res.send("Event deleted successfully!");
+  } catch (error) {
+    res.send("Error finding the event with this event id")
+  }
 }
+
+//This is a function to delete any expired events.
+const cleanupExpiredEvents = async () => {
+  try {
+    const currentDate = new Date();
+    const expiredEvents = await eventModel.find({ eventDate : { $lt: currentDate } });
+    for (const event of expiredEvents) {
+      await eventModel.findByIdAndDelete(event._id);
+    }
+    console.log("Expired events deleted successfully!");
+  } catch (error) {
+    console.log("Error deleting expired events:", error);
+  }
+}
+
+// This would force the database to check for expired events.
+app.post('/admin-force-clean', async (req, res) => {
+  try {
+    await cleanupExpiredEvents();
+    res.send("Expired events cleaned");
+  } catch (error) {
+    res.status(500).send("Error cleaning up expired events.");
+  }
+});
 
 //This would return all the existing users from the db.
 app.get("/users", async (req, res) => {
@@ -57,7 +109,7 @@ app.get('/id/:id', async (req, res) => {
 })
 
 //This function is to send email to all registered members about the newly arrived event
-app.get('/send-email-to-all/:event_id', async(req, res) =>{
+app.get('/send-email-to-all/:event_id', async(req, res) => {
   try {
     const event = await eventModel.findById(req.params.event_id);
     const htmlTemplate = `
@@ -306,19 +358,7 @@ app.post("/eventnew", async (req, res) => {
 app.delete(`/event-delete/:event_id`, async (req, res) => {
   try {
     const event_id = req.params.event_id;
-    const record = await recordModel.findOne({ event_id });
-    await recordModel.findByIdAndDelete(record._id);
-    await eventModel.findByIdAndDelete(event_id);
-    const all_users = await userModel.find();
-    let index_of_event = 0;
-    for (let i = 0; i < all_users.length(); i++) {
-      if (all_users[i].registered_events.includes(event_id)) {
-        index_of_event = all_users[i].registered_events.indexOf(event_id);
-        all_users[i].registered_events.splice(index_of_event, 1);
-        all_users[i].save();
-      }
-    }
-    res.send("Event deleted successfully!");
+    delete_event(event_id);
   } catch(error) {
     res.send("Error finding the event with this event id");
   }
