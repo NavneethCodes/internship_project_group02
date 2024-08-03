@@ -9,6 +9,7 @@ const userModel = require("./models/userData");
 const eventModel = require("./models/eventData");
 const recordModel = require("./models/eventRecords");
 const adminControl = require('./models/adminControl');
+const { text } = require("stream/consumers");
 
 app.use(cors());
 app.use(express.json());
@@ -220,9 +221,6 @@ app.get('/send-email-to-all/:event_id', async(req, res) => {
   </div>
 </body>
 </html>
-
-
-
   `;
     const userEmails = await userModel.find({}, 'userEmail');
     let mails = userEmails.map(mail => mail.userEmail);
@@ -249,6 +247,22 @@ app.get('/send-email-to-all/:event_id', async(req, res) => {
     res.status(200).send('Email sent successfully!');
   } catch (error) {
     res.status(500).json({message: "Cannot send mail now."})
+  }
+})
+
+app.get('/forgot-password/:email_id', async (req, res) => {
+  const email_id = req.params.email_id;
+  const user = await userModel.findOne({ email_id });
+  const htmlTemplate = `
+  //hxrrrrri enter code here
+  `;
+  if (user) {
+    const mailOption = {
+      from    : 'Gleve <gleve.event.management@gmail.com>',
+      subject : 'Forgot Password? No worries! we are here',
+      text    : `Hey Glever, we got your back`,
+      html    : htmlTemplate
+    }
   }
 })
 

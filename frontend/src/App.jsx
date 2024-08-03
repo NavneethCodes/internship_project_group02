@@ -17,6 +17,8 @@ function App() {
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       const user_id = sessionStorage(`user_id`);
+      sessionStorage.removeItem(`user_id`);
+      sessionStorage.removeItem(`user_name`);
       if (user_id) {
         navigator.sendBeacon(`/logout/${user_id}`);
       }
