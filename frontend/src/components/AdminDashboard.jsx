@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import Adminevent from './Adminevent.jsx';
+import AdminEvent from './AdminEvent.jsx';
 import AdminEventEditForm from './AdminEventEditForm.jsx';
 
 const Container = styled.div`
