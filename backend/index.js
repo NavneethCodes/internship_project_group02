@@ -305,9 +305,14 @@ app.delete(`/event-delete/:event_id`, async (req, res) => {
     await recordModel.findByIdAndDelete(record._id);
     await eventModel.findByIdAndDelete(event_id);
     const all_users = await userModel.find();
-    // for (let i = 0; i < all_users.length(); i++) {
-
-    // }
+    let index_of_event = 0;
+    for (let i = 0; i < all_users.length(); i++) {
+      if (all_users[i].registered_events.includes(event_id)) {
+        index_of_event = all_users[i].registered_events.indexOf(event_id);
+        all_users[i].registered_events.splice(index_of_event, 1);
+        all_users[i].save();
+      }
+    }
     res.send("Event deleted successfully!");
   } catch(error) {
     res.send("Error finding the event with this event id");
@@ -367,12 +372,38 @@ app.put(`/update-event/:event_id`, async (req, res) => {
 //This would be used to delete an existing user
 app.delete("/userdeletion/:id", async (req, res) => {
   try {
-    await userModel.findByIdAndDelete(req.params.id);
-    res.send("User deleted!");
+    const user_id = req.params.id;
+    // console.log("Deleting user with ID:", user_id);
+    await userModel.findByIdAndDelete(user_id);
+    // console.log("User deleted from userModel");
+    const records = await recordModel.find();
+    // console.log("Records fetched:", records);
+    for (const record of records) {
+      // console.log("Processing record with ID:", record._id);
+      const likeIndex = record.likes.indexOf(user_id);
+      if (likeIndex > -1) {
+        record.likes.splice(likeIndex, 1);
+        console.log("Removed user from likes at index:", likeIndex);
+      }
+      for (let i = 0; i < record.comments.length; i++) {
+        // console.log(`Checking comment with ID: ${record.comments[i]._id} by user: ${record.comments[i].user_id}`);
+        if (record.comments[i].user_id.toString() === user_id.toString()) {
+          record.comments.splice(i, 1);
+          // console.log("Removed comment at position:", i);
+          // console.log("Updated comments array:", record.comments);
+          i--;
+        }
+      }
+      await record.save();
+      // console.log("Record saved:", record._id);
+    }
+    res.send("User deleted and references cleaned up!");
   } catch (error) {
-    console.log(error);
+    console.log("Error occurred:", error);
+    res.status(500).send("An error occurred while deleting the user.");
   }
 });
+
 
 //This function is used to update the details of a user having the same user_id as provided
 app.put('/user-info-update/:id', async (req, res) => {
@@ -504,6 +535,7 @@ app.get('/all-categories', async (req, res) => {
   }
 })
 
+//This function is for the users to register and unregister for events
 app.put('/:choice/:id/:event', async (req, res) => {
   try{
     const { choice, id, event } = req.params;
