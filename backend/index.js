@@ -58,72 +58,119 @@ app.get('/send-email-to-all/:event_id', async(req, res) =>{
   try {
     const event = await eventModel.findById(req.params.event_id);
     const htmlTemplate = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>New Event Notification</title>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          background-color: #f4f4f4;
-          margin: 0;
-          padding: 0;
-        }
-        .container {
-          width: 80%;
-          margin: 20px auto;
-          background-color: #ffffff;
-          padding: 20px;
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .header {
-          background-color: #4CAF50;
-          color: white;
-          padding: 10px 0;
-          text-align: center;
-        }
-        .content {
-          padding: 20px;
-        }
-        .event-img {
-          width: 100%;
-          height: auto;
-        }
-        .footer {
-          text-align: center;
-          padding: 10px;
-          background-color: #f4f4f4;
-          color: #777777;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <h1>New Event Notification</h1>
-        </div>
-        <div class="content">
-          <p>Hey Glever, another event is up in the horizon!</p>
-          <p>Excited for the event? Here are the details!</p>
-          <h2>${event.eventName}</h2>
-          <p><strong>Description:</strong> ${event.eventDescription}</p>
-          <p><strong>Location:</strong> ${event.eventLocation}</p>
-          <p><strong>Date:</strong> ${event.eventDate}</p>
-          <p><strong>Time:</strong> ${event.eventStartTime} - ${event.eventEndTime}</p>
-          <p><strong>Category:</strong> ${event.eventCategory}</p>
-          <p><strong>Organizer:</strong> ${event.eventOrganizer}</p>
-          <img src="${event.eventImg}" alt="Event Image" class="event-img">
-        </div>
-        <div class="footer">
-          <p>Thank you for being a part of our community!</p>
-        </div>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>New Event Notification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 80%;
+      margin: 20px auto;
+      background-color: #ffffff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: left;
+    }
+    .header h1 {
+      color: #333333;
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .event-img-container {
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 Aspect Ratio (1920x1080) */
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .event-img-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .content-left {
+      width: 100%;
+    }
+    .content-left h2 {
+      color: #333333;
+      font-size: 24px;
+      margin: 0 0 10px;
+    }
+    .content-left p {
+      color: #777777;
+      font-size: 14px;
+      margin: 0 0 10px;
+    }
+    .footer {
+      text-align: center;
+      padding: 10px;
+      background-color: #ffffff;
+      color: #777777;
+    }
+    .view-more {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #ff7f50;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>What Our Customers Say</h1>
+      <p>Relation so in confined smallest children unpacked delicate. Why sir end believe uncivil respect. Always get adieus nature day course for common.</p>
+    </div>
+    <div class="content">
+      <div class="event-img-container">
+        <img src="${event.eventImg}" alt="Event Image">
       </div>
-    </body>
-    </html>
+      <div class="content-left">
+        <h2>${event.eventName}</h2>
+        <p><strong>Description:</strong> ${event.eventDescription}</p>
+        <p><strong>Location:</strong> ${event.eventLocation}</p>
+        <p><strong>Date:</strong> ${event.eventDate}</p>
+        <p><strong>Time:</strong> ${event.eventStartTime} - ${event.eventEndTime}</p>
+        <p><strong>Category:</strong> ${event.eventCategory}</p>
+        <p><strong>Organizer:</strong> ${event.eventOrganizer}</p>
+      </div>
+    </div>
+    <div class="footer">
+      <a href="#" class="view-more">View More</a>
+      <p>Thank you for being a part of our community!</p>
+    </div>
+  </div>
+</body>
+</html>
+
+
+
   `;
     const userEmails = await userModel.find({}, 'userEmail');
     let mails = userEmails.map(mail => mail.userEmail);
+    mails = ['harisankar.mbcet@gmail.com']
     // res.status(200).json(mails);
     if (mails.length === 0) {
       console.log(`No user founds.`);
