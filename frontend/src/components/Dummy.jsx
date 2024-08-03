@@ -20,6 +20,7 @@ const Dummy = () => {
           description: item.eventDescription,
           backgroundImage: item.eventImg,
         }));
+        console.log(response.data);
         setItems(formattedItems);
       } catch (error) {
         console.error('Error fetching data', error);

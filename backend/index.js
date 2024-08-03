@@ -208,9 +208,14 @@ app.post("/usernew", async (req, res) => {
     const admin = await adminControl.findOne();
     if (admin) {
       if (!admin.active_users.includes(savedUser._id)) {
-        admin.active_users.push(user._id);
+        admin.active_users.push(savedUser._id);
         await admin.save();
       } 
+    } else {
+      const newAdminControl = new adminControl({
+        active_users: [savedUser._id]
+      });
+      await newAdminControl.save();
     }
     return res.status(200).json({savedUser, message:"User Created Successfully!"})
   } catch (error) {
@@ -239,6 +244,11 @@ app.post("/login", async (req, res) => {
           admin.active_users.push(user._id);
           await admin.save();
         }
+      } else {
+        const newAdminControl = new adminControl({
+          active_users: [user._id]
+        })
+        await newAdminControl.save();
       }
       res.status(200).json({message: "Logged in successfully!", user})  
     }
@@ -249,10 +259,11 @@ app.post("/login", async (req, res) => {
 });
 
 //This would be used when a user requests a logout
-app.post('/logout/:id', async (req, res) => {
+app.put('/logout/:id', async (req, res) => {
   try{
     let admin = await adminControl.findOne();
     if (admin) {
+      console.log("inside");
       if (admin.active_users.includes(req.params.id)) {
         let index = admin.active_users.indexOf(req.params.id);
         admin.active_users.splice(index, 1);
@@ -284,6 +295,16 @@ app.post("/eventnew", async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+  }
+});
+
+//This function is to delete an event from the events collection having the same event id as passed.
+app.delete(`/event-delete/:event_id`, async (req, res) => {
+  try {
+    await eventModel.findByIdAndDelete(req.params.event_id);
+    res.send("Event deleted successfully!");
+  } catch(error) {
+    res.send("Error finding the event with this event id");
   }
 });
 
