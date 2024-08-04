@@ -176,7 +176,6 @@ const AdminEventEditForm = ({ event, onCancelEdit }) => {
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  required
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -190,7 +189,6 @@ const AdminEventEditForm = ({ event, onCancelEdit }) => {
                   InputLabelProps={{
                     shrink: true,
                   }}
-                  required
                 />
               </Grid>
               <Grid item xs={12}>
@@ -239,7 +237,7 @@ const AdminEventEditForm = ({ event, onCancelEdit }) => {
                 <TextField
                   fullWidth
                   label="Image URL"
-                  name="imgsrc"
+                  name="eventImg"
                   value={eventDetails.eventImg}
                   onChange={handleChange}
                 />
@@ -261,7 +259,7 @@ const AdminEventEditForm = ({ event, onCancelEdit }) => {
           </form>
           <Snackbar
             open={openSnackbar}
-            autoHideDuration={6000}
+            autoHideDuration={3000}
             onClose={handleCloseSnackbar}
             message={snackbarMessage}
           />

@@ -384,13 +384,15 @@
 }
 
 .category-dropdown-btn:hover {
-  background-color: #f0f0f0;
+  background-color: #864343;
+  color:#000;
 }
 
 /* Styles for the dropdown menu */
 .category-dropdown-menu {
   width: 220px;
   background-color: #ffffff;
+  color:white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) /* Change background color to white */
 }
 
@@ -398,11 +400,12 @@
 .category-dropdown-menu-item {
   font-size: 18px; /* Reasonable increase in font size */
   padding: 8px 12px;
-  background-color: #ffffff; /* Ensure background color is white */
+  background-color: #fff8f8; /* Ensure background color is white */
 }
 
 .category-dropdown-menu-item:hover {
   background-color: #f0f0f0;
+  
 }
 
 .user-name {
@@ -428,6 +431,10 @@
     height:50px; /* Adjust as needed */
     left: 9px; /* Adds spacing to the left of the sort dropdown */
   }
+
+  .sort-dropdown-btn:hover {
+    color:black;
+  }
   
   .sort-dropdown-btn::after,
   .category-dropdown-btn::after {
@@ -437,4 +444,12 @@
   
   .sort-by-container{
     margin-left:50px;
+  }
+
+  .cat-col{
+    color:white;
+  }
+
+  .cat-col:hover{
+    color:rgb(0, 0, 0);
   }

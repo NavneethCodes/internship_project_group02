@@ -248,7 +248,7 @@ const UserProfile = () => {
 
     const fetchEventRecordData = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/event-records]');
+        const response = await axios.get('http://localhost:4000/event-records');
         let totalLikes = 0;
         let totalComments = 0;
         response.data.forEach(record => {

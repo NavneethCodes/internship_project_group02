@@ -167,7 +167,7 @@ const MainEventDisplay = () => {
         <h2>Category</h2>
         <Dropdown>
           <MenuButton className="category-dropdown-btn">
-            {selectedCategory} ▼
+            <span className="cat-col">{selectedCategory} ▼</span>
           </MenuButton>
           <Menu>
             <MenuItem onClick={() => handleCategoryClick('All')}></MenuItem>
@@ -182,7 +182,7 @@ const MainEventDisplay = () => {
         <h2>Sort By</h2>
         <Dropdown>
           <MenuButton className="sort-dropdown-btn">
-            {sortOption} ▼
+            <span className="cat-col">{sortOption} ▼</span>
           </MenuButton>
           <Menu>
             <MenuItem onClick={() => handleSortClick('Upcoming')}>Upcoming Events</MenuItem>

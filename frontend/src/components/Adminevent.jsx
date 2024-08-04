@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import './Adminevent.css'
 import {
@@ -83,6 +83,7 @@ const Adminevent = () => {
   });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [events, setEvents] = useState([]); // To store fetched events
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -101,17 +102,36 @@ const Adminevent = () => {
       eventEndTime: new Date(`${eventDetails.eventDate}T${eventDetails.eventEndTime}`),
     };
 
+    console.log("Event Payload:", eventPayload);
+
     try {
       const response = await axios.post('http://localhost:4000/eventnew', eventPayload);
+      console.log("Event Creation Response:", response.data);
+
       setSnackbarMessage(response.data.message || 'Event created successfully!');
-      await axios.get(`http://localhost:4000/send-email-to-all/${response.data.event._id}`);
       setOpenSnackbar(true);
+      await axios.get(`http://localhost:4000/send-email-to-all/${response.data.event._id}`);
+      // Re-fetch events
+      fetchEvents();
     } catch (error) {
       setSnackbarMessage('Error creating event');
       setOpenSnackbar(true);
       console.error('Error:', error);
     }
   };
+
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get('http://localhost:4000/events');
+      setEvents(response.data);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);

@@ -50,7 +50,7 @@ const delete_event = async (event_id) => {
     }
     res.send("Event deleted successfully!");
   } catch (error) {
-    res.send("Error finding the event with this event id")
+    res.status(500).json({message: "Error finding the event with this event id"});
   }
 }
 
