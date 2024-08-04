@@ -33,10 +33,10 @@ cron.schedule('0 0 * * *', async () => {
   }
 });
 
-//This function is called when an event is to be deleted
+// This function is called when an event is to be deleted
 const delete_event = async (event_id) => {
   try {
-    const record = await recordModel.findOne({ event_id });
+    const record = await recordModel.findOne({ event_id : event_id });
     await recordModel.findByIdAndDelete(record._id);
     await eventModel.findByIdAndDelete(event_id);
     const all_users = await userModel.find();
@@ -54,7 +54,7 @@ const delete_event = async (event_id) => {
   }
 }
 
-//This is a function to delete any expired events.
+// This is a function to delete any expired events.
 const cleanupExpiredEvents = async () => {
   try {
     const currentDate = new Date();
@@ -78,7 +78,7 @@ app.post('/admin-force-clean', async (req, res) => {
   }
 });
 
-//This would return all the existing users from the db.
+// This would return all the existing users from the db.
 app.get("/users", async (req, res) => {
   try {
     const data = await userModel.find();
@@ -88,7 +88,7 @@ app.get("/users", async (req, res) => {
   }
 });
 
-//This function is to get all the inforamtion about the person with the given user id
+// This function is to get all the inforamtion about the person with the given user id
 app.get("/user-info/:id", async (req, res) => {
   try{
     const user = await userModel.findById(req.params.id);
@@ -98,13 +98,35 @@ app.get("/user-info/:id", async (req, res) => {
   }
 });
 
-//This function is to get the user name of the person with the entered user id
+// This function is to get the user name of the person with the entered user id
 app.get('/id/:id', async (req, res) => {
   try{
     const user = await userModel.findById(req.params.id);
     return res.status(201).json({userName : user.userName});
   } catch {
     return res.status(400).send({ message: "No user found!"});
+  }
+});
+
+// This function is to get all the event names of the array passed
+app.get('/event-names', async (req, res) => {
+  try {
+    const reg_ids = req.body.registered_events;
+    console.log(reg_ids)
+    let names = [];
+    for (let i =0; i < reg_ids.length; i++) {
+      console.log("ID:- ",reg_ids[i]);
+      let event = await eventModel.findById(reg_ids[i]);
+      if (event) {
+        names.push(event.eventName);
+      } 
+      else {
+        console.log("Not valid event id");
+      }
+    }
+    return res.status(200).json({names});
+  } catch (error) {
+    res.status(500).json({message: "Unauthorized!"})
   }
 });
 
@@ -137,7 +159,7 @@ app.get('/like-comment-count/:user_id', async (req, res) => {
   }
 });
 
-//This function is to send email to all registered members about the newly arrived event
+// This function is to send email to all registered members about the newly arrived event
 app.get('/send-email-to-all/:event_id', async(req, res) => {
   try {
     const event = await eventModel.findById(req.params.event_id);
@@ -278,7 +300,7 @@ app.get('/send-email-to-all/:event_id', async(req, res) => {
   }
 });
 
-//This is to send an email if the user forgets his/her password
+// This is to send an email if the user forgets his/her password
 app.get('/forgot-password/:email_id', async (req, res) => {
   const email_id = req.params.email_id;
   try {
@@ -415,7 +437,26 @@ app.get('/forgot-password/:email_id', async (req, res) => {
   }
 });
 
-//This would return all the existing events from the db.
+// This is to send email to all users who registered for the event prior day.
+app.get('/prior-remainder/:event_id', async (req, res) => {});
+
+// This is to get all the user_id who has registered for this event.
+app.get('/register-who/:event_id', async (req, res) => {
+  const event_id = req.params.event_id;
+  const users = await userModel.find();
+  try {
+    if (await eventModel.findById(event_id)){
+      let users_registered = [];
+
+    } else {
+      res.status(400).json({message: "Event not recognized, check `_id`"});
+    }
+  } catch (error) {
+    res.status(500).json({message: "Authorization rejected!"})
+  }
+});
+
+// This would return all the existing events from the db.
 app.get("/events", async (req, res) => {
     try {
       const data = await eventModel.aggregate([
@@ -452,7 +493,7 @@ app.get("/events", async (req, res) => {
     }
   });
   
-//This would add a new user to the db, if the user has the credentials valid
+// This would add a new user to the db, if the user has the credentials valid
 app.post("/usernew", async (req, res) => {
   try {
     const { userEmail, userPassword } = req.body;
@@ -489,7 +530,7 @@ app.post("/usernew", async (req, res) => {
   }
 });
 
-//This would be used when a user logs in, checks if that person is a valid user or not
+// This would be used when a user logs in, checks if that person is a valid user or not
 app.post("/login", async (req, res) => {
   const { userEmail, userPassword } = req.body;
   try {
@@ -523,7 +564,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-//This would be used when a user requests a logout
+// This would be used when a user requests a logout
 app.put('/logout/:id', async (req, res) => {
   try{
     let admin = await adminControl.findOne();
@@ -540,7 +581,7 @@ app.put('/logout/:id', async (req, res) => {
   }
 })
 
-//This would be used when a new event is being created
+// This would be used when a new event is being created
 app.post("/eventnew", async (req, res) => {
   try {
     var data = req.body;
@@ -563,7 +604,9 @@ app.post("/eventnew", async (req, res) => {
   }
 });
 
-//This function is to delete an event from the events collection having the same event id as passed.
+// This would be used to 
+
+// This function is to delete an event from the events collection having the same event id as passed.
 app.delete(`/event-delete/:event_id`, async (req, res) => {
   try {
     const event_id = req.params.event_id;
@@ -573,7 +616,7 @@ app.delete(`/event-delete/:event_id`, async (req, res) => {
   }
 });
 
-//This function is to update the details of the event with the given event_id
+// This function is to update the details of the event with the given event_id
 app.put(`/update-event/:event_id`, async (req, res) => {
   try{
     let event = await eventModel.findById(req.params.event_id);
@@ -623,7 +666,7 @@ app.put(`/update-event/:event_id`, async (req, res) => {
   }
 });
 
-//This would be used to delete an existing user
+// This would be used to delete an existing user
 app.delete("/userdeletion/:id", async (req, res) => {
   try {
     const user_id = req.params.id;
@@ -658,7 +701,7 @@ app.delete("/userdeletion/:id", async (req, res) => {
   }
 });
 
-//This function is used to update the details of a user having the same user_id as provided
+// This function is used to update the details of a user having the same user_id as provided
 app.put('/user-info-update/:id', async (req, res) => {
   try {
     let user = await userModel.findById(req.params.id);
@@ -692,7 +735,7 @@ app.put('/user-info-update/:id', async (req, res) => {
   }
 });
   
-//This would be used to update the user's status
+// This would be used to update the user's status
 app.put("/user-status-update/:id", async (req, res) => {
     const userId = req.params.id;
     const data = await userModel.findById(userId);
@@ -709,7 +752,7 @@ app.put("/user-status-update/:id", async (req, res) => {
     res.json(data);
 });
 
-//This function is used to like, unlike(revert like), comment and uncomment
+// This function is used to like, unlike(revert like), comment and uncomment
 app.put("/action/:action", async (req, res) => {
   const { user_id, event_id } = req.body;
   console.log(user_id,"\n", event_id);
@@ -764,7 +807,7 @@ app.put("/action/:action", async (req, res) => {
   }
 })
 
-//Returns all the categories of the entered events
+// Returns all the categories of the entered events
 app.get('/all-categories', async (req, res) => {
   try {
     const events = await eventModel.find();
@@ -788,7 +831,7 @@ app.get('/all-categories', async (req, res) => {
   }
 })
 
-//This function is for the users to register and unregister for events
+// This function is for the users to register and unregister for events
 app.put('/:choice/:id/:event', async (req, res) => {
   try{
     const { choice, id, event } = req.params;
