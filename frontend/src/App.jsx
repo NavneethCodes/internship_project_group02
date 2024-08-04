@@ -36,7 +36,7 @@ function App() {
         <Route path='/signup' element={<SignUp/>}></Route>
         <Route path='/maineventdetails' element={<MainEventDisplay/>}></Route>
         <Route path='/home' element={<HomePage/>}></Route>
-        <Route path='/dashboard' element={<AdminDashboard/>}></Route>
+        <Route path='/admindashboard' element={<AdminDashboard/>}></Route>
         <Route path='/comments/:eventId' element={<EventComments/>}></Route>
         <Route path='/events' element={<MainEventDisplay/>}></Route>
         <Route path='/profile' element={<UserProfile/>}></Route>

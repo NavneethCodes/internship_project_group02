@@ -26,7 +26,9 @@ const LoginForm = () => {
     e.preventDefault();
     console.log('Submit function called');
     if (credentials.userEmail === 'admin123' && credentials.userPassword === 'admin123') {
-      navigate('/dashboard');
+      sessionStorage.setItem('user_id', "Admin");
+      sessionStorage.setItem('userName', "Admin");
+      navigate('/admindashboard');
       return;
     }
     axios.post('http://localhost:4000/login', credentials)
@@ -84,9 +86,10 @@ const LoginForm = () => {
             />
             <IoLockClosedOutline className='login-icon' />
             {showPassword ? (
-              <AiOutlineEyeInvisible className='icon eye-icon' onClick={togglePasswordVisibility} />
-            ) : (
               <AiOutlineEye className='icon eye-icon' onClick={togglePasswordVisibility} />
+              
+            ) : (
+              <AiOutlineEyeInvisible className='icon eye-icon' onClick={togglePasswordVisibility} />
             )}
           </div>
           <div className='rem_me'>

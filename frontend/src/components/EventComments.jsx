@@ -170,10 +170,18 @@ const EventComments = () => {
     navigate('/login');
   };
 
-  const handleLogoutClick = () => {
-    sessionStorage.removeItem('user_id');
-    setLoggedIn(false);
-    setUserName('');
+  const handleLogoutClick = async () => {
+    try {
+      const user_id = sessionStorage.getItem('user_id');
+      sessionStorage.removeItem('userName');
+      sessionStorage.removeItem('user_id');
+      setLoggedIn(false);
+      setUserName('');
+      window.location.reload();
+      await axios.put(`http://localhost:4000/logout/${user_id}`);      
+    } catch(error) {
+      console.log(`Error logging out: `, error);
+    }
   };
 
   return (
