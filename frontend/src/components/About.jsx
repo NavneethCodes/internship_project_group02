@@ -1,7 +1,29 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Container, Typography, Grid, Card, CardContent, CardMedia } from '@mui/material';
+import { motion } from 'framer-motion';
 import landbg from '../Images/land-bg2.png';
+
+// Animations
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const slideIn = keyframes`
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`;
 
 // Navbar styling
 const Navbar = styled.nav`
@@ -51,26 +73,55 @@ const NavLink = styled.a`
   }
 `;
 
+// About Section styling
 const AboutSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-image:url(${landbg});
-  height:100vh;
-  width:100vw;
+  background-image: url(${landbg});
+  height: 100vh;
+  width: 100vw;
   background-size: cover;
-  color: #333;
-  padding-top:5px;
+  color: white;
+  padding-top: 5px;
   padding-right: 40px;
-  padding-left:40px;
+  padding-left: 40px;
   box-sizing: border-box;
-  margin:0px;
+  margin: 0px;
+  padding-top: 100px;
+  animation: ${fadeIn} 1.5s ease-in-out;
 `;
 
-const FeatureCard = styled(Card)`
+const SectionTitle = styled(Typography)`
+  margin-bottom: 40px;
+  font-weight: bold;
+  font-size: 2rem !important;
+  color: white;
+  text-transform: uppercase;
+  text-align: center;
+  animation: ${fadeIn} 1.5s ease-in-out;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: #ff0000;
+    margin: 10px auto 0;
+    animation: ${slideIn} 1s ease-in-out;
+  }
+`;
+
+const FeatureCard = styled(motion(Card))`
   max-width: 345px;
   margin: 16px;
   background-color: rgba(255, 255, 255, 0.8);
+  animation: ${fadeIn} 1s ease-in-out, ${slideIn} 1.5s ease-in-out;
+
+  &:hover {
+    transform: scale(1.05);
+    border: 2px solid #ff0000;
+  }
 `;
 
 const About = () => {
@@ -90,16 +141,16 @@ const About = () => {
       </Navbar>
       <AboutSection>
         <Container>
-          <Typography variant="h2" gutterBottom color="indigo">
+          <SectionTitle variant="h2" gutterBottom>
             Welcome to Gleve
-          </Typography>
-          <Typography variant="h5" color="pink">
+          </SectionTitle>
+          <Typography variant="h5" color="textSecondary" align="center">
             Your Ultimate Solution for Seamless Event Management
           </Typography>
 
-          <Typography variant="h4" gutterBottom align="center" className="section-title">
+          <SectionTitle variant="h4" gutterBottom>
             Our Mission
-          </Typography>
+          </SectionTitle>
           <Typography variant="body1" paragraph align="center">
             At Gleve, we are dedicated to providing a comprehensive event management solution that simplifies the planning, organization, and execution of events. Whether it's a corporate conference, a wedding, or a community festival, our platform offers the tools you need to create unforgettable experiences.
           </Typography>
@@ -110,7 +161,7 @@ const About = () => {
 
           <Grid container spacing={4} justifyContent="center">
             <Grid item xs={12} md={4}>
-              <FeatureCard>
+              <FeatureCard whileHover={{ scale: 1.05 }}>
                 <CardMedia
                   component="img"
                   height="140"
@@ -128,7 +179,7 @@ const About = () => {
               </FeatureCard>
             </Grid>
             <Grid item xs={12} md={4}>
-              <FeatureCard>
+              <FeatureCard whileHover={{ scale: 1.05 }}>
                 <CardMedia
                   component="img"
                   height="140"
@@ -146,7 +197,7 @@ const About = () => {
               </FeatureCard>
             </Grid>
             <Grid item xs={12} md={4}>
-              <FeatureCard>
+              <FeatureCard whileHover={{ scale: 1.05 }}>
                 <CardMedia
                   component="img"
                   height="140"
