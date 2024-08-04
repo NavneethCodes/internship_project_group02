@@ -334,7 +334,7 @@ const UserProfile = () => {
                       label="Name"
                       variant="outlined"
                       name="userName"
-                      value={form.userName}
+                      // value={form.userName}
                       placeholder={placeholders.userName}
                       onChange={valueFetch}
                       sx={{
@@ -357,7 +357,7 @@ const UserProfile = () => {
                       label="Email"
                       variant="outlined"
                       name="userEmail"
-                      value={form.userEmail}
+                      // value={form.userEmail}
                       placeholder={placeholders.userEmail}
                       onChange={valueFetch}
                       sx={{
@@ -380,7 +380,7 @@ const UserProfile = () => {
                       label="Contact"
                       variant="outlined"
                       name="userContact"
-                      value={form.userContact}
+                      // value={form.userContact}
                       placeholder={placeholders.userContact}
                       onChange={valueFetch}
                       sx={{
@@ -404,7 +404,7 @@ const UserProfile = () => {
                       variant="outlined"
                       type="password"
                       name="userPassword"
-                      value={form.userPassword}
+                      // value={form.userPassword}
                       // placeholder={placeholders.userPassword}
                       onChange={valueFetch}
                       sx={{
@@ -520,3 +520,6 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
+
+
+
