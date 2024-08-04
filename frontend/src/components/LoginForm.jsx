@@ -17,6 +17,9 @@ const LoginForm = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
 
+  const [forgotPasswordSent, setForgotPasswordSent] = useState(false);
+
+
   const changelog = (e) => {
     const { name, value } = e.target;
     setCredentials({...credentials, [name]: value });
@@ -28,6 +31,7 @@ const LoginForm = () => {
     if (credentials.userEmail === 'admin123' && credentials.userPassword === 'admin123') {
       sessionStorage.setItem('user_id', "Admin");
       sessionStorage.setItem('userName', "Admin");
+      sessionStorage.setItem('userPassword', "Admin");
       navigate('/admindashboard');
       return;
     }
@@ -39,6 +43,7 @@ const LoginForm = () => {
           toast.success(res.data.message);
           sessionStorage.setItem('user_id', res.data.user._id);
           sessionStorage.setItem('userName', res.data.user.userName);
+          sessionStorage.setItem('userPassword', res.data.user.userPassword);
           navigate('/maineventdetails');
         }
       })
@@ -56,9 +61,32 @@ const LoginForm = () => {
     submit(e);
   };
 
-  const goToForgot = async (e) => {
-    
-  }
+  const sendForgotPasswordRequest = () => {
+    axios.get(`http://localhost:4000/forgot-password/${credentials.userEmail}`)
+      .then((res) => {
+        setForgotPasswordSent(true);
+        toast.success('Password is sent to your registered email id.');
+      })
+      .catch((error) => {
+        console.log('Forgot password error:', error);
+        if (error.response) {
+          toast.error(error.response.data);
+        } else {
+          toast.error('Forgot password request failed');
+        }
+      });
+  };
+
+
+  const goToForgot = (e) => {
+    e.preventDefault();
+    sendForgotPasswordRequest();
+  };
+
+  const resendForgotPasswordRequest = (e) => {
+    e.preventDefault();
+    sendForgotPasswordRequest();
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -96,6 +124,11 @@ const LoginForm = () => {
             <label><input type='checkbox' />Remember Me</label>
             <a onClick={goToForgot}>Forgot Password?</a>
           </div>
+          {forgotPasswordSent && (
+            <div className='forgot-password-message'>
+              <p>If you don't receive the password, <a href='#' onClick={resendForgotPasswordRequest}>click here</a>.</p>
+            </div>
+          )}
           <div className='sub_btn'>
             <button type='submit' onClick={handleButtonClick}>Login</button>
           </div>

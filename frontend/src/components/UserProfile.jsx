@@ -184,11 +184,13 @@ const UserProfile = () => {
   };
 
   const handlePasswordSubmit = () => {
-    if (enteredPassword === form.userPassword) {
+    if (enteredPassword === sessionStorage.getItem('userPassword')) {
       axios.put(`http://localhost:4000/user-info-update/${sessionStorage.getItem("user_id")}`, form)
         .then(res => {
           setInitialForm(form);
           setMessage('Profile updated successfully.');
+          sessionStorage.removeItem('userPassword');
+          sessionStorage.setItem('userPassword', enteredPassword);
           setOpenSnackbar(true);
         }).catch(error => {
           console.error('Error saving profile:', error);
@@ -283,6 +285,7 @@ const UserProfile = () => {
       const user_id = sessionStorage.getItem('user_id');
       sessionStorage.removeItem('userName');
       sessionStorage.removeItem('user_id');
+      sessionStorage.removeItem('userPassword');
       setLoggedIn(false);
       setUserName('');
       window.location.reload();
@@ -578,3 +581,6 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
+
+
+

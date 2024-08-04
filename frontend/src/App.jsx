@@ -1,13 +1,13 @@
 import './App.css';
 import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Profile from './components/Profile.jsx';
 import SignUp from './components/SignUp.jsx';
 import LoginForm from './components/LoginForm.jsx';
 import MainEventDisplay from './components/MainEventDisplay.jsx';
 import HomePage from './components/HomePage.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
 import EventComments from './components/EventComments';
+import Adminevent from './components/Adminevent.jsx'
 import UserProfile from './components/UserProfile.jsx';
 import About from './components/About.jsx';
 import Contact from './components/Contact.jsx';

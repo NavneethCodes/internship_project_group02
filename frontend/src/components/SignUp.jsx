@@ -48,6 +48,7 @@ const SignUp = () => {
           toast.success(res.data.message);
           sessionStorage.setItem('user_id', res.data.savedUser._id);
           sessionStorage.setItem('userName', res.data.savedUser.userName);
+          sessionStorage.setItem('userPassword', res.data.savedUser.userPassword);
           navigate('/login');
         })
         .catch((error) => {
