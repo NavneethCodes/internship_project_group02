@@ -164,9 +164,9 @@ const AdminDashboard = () => {
 
   const handleDeleteUser = async (userId) => {
     try {
-      await axios.delete(`http://localhost:4000/users/${userId}`);
-      setUsers(users.filter(user => user._id !== userId));
       await axios.delete(`http://localhost:4000/userdeletion/${userId}`);
+      setUsers(users.filter(user => user._id !== userId));
+    
     } catch (error) {
       console.error('Error deleting user:', error);
     }
@@ -204,7 +204,7 @@ const AdminDashboard = () => {
           {/* <span>April, 1 Friday</span> */}
         </Header>
         <Content>
-          {showAdminEvent && <AdminEvent />}
+          {showAdminEvent && <Adminevent />}
           {isEditMode && eventToEdit && (
             <AdminEventEditForm event={eventToEdit} onCancelEdit={handleCancelEdit} />
           )}
