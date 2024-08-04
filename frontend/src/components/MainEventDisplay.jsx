@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import Eventdetail from './Eventdetail';
 import Sidebarr from './Sidebarr';
 import './MainEventDisplay.css';
-import { Button } from '@mui/material';
 import top1 from '../Images/top-5.jpeg';
 import logo from '../Images/p-logo.png';
 import top2 from '../Images/top-4.jpeg';
@@ -18,6 +16,7 @@ const MainEventDisplay = () => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [sortOption, setSortOption] = useState('Upcoming');
   const [loggedIn, setLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
 
@@ -35,6 +34,10 @@ const MainEventDisplay = () => {
     fetchCategories();
   }, []);
 
+  const route =() =>{
+    window.location.href='/home';
+  }
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -51,14 +54,37 @@ const MainEventDisplay = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedCategory === 'All') {
-      setFilteredEvents(events);
-    } else {
-      const filtered = events.filter(event => event.eventCategory === selectedCategory);
-      console.log(`Filtered events for category "${selectedCategory}":`, filtered);
-      setFilteredEvents(filtered);
+    console.log('Applying filters and sorting...');
+    console.log('Selected category:', selectedCategory);
+    console.log('Sort option:', sortOption);
+
+    let updatedEvents = [...events]; // Create a copy of events
+
+    if (selectedCategory !== 'All') {
+      updatedEvents = updatedEvents.filter(event => event.eventCategory === selectedCategory);
     }
-  }, [selectedCategory, events]);
+    if (sortOption === 'Upcoming') {
+      // Sort by event date in ascending order (earliest first)
+      updatedEvents.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
+    }
+    else if (sortOption === 'Popular') {
+      updatedEvents.sort((a, b) => {
+        const likesA = a.likes ? a.likes.length : 0;
+        const likesB = b.likes ? b.likes.length : 0;
+    
+        if (likesB === likesA) {
+          // If the like counts are the same, sort alphabetically by event name
+          return a.eventName.localeCompare(b.eventName);
+        }
+        
+        // Otherwise, sort by number of likes
+        return likesB - likesA;
+      });
+    }
+
+    console.log('Filtered and sorted events:', updatedEvents);
+    setFilteredEvents(updatedEvents);
+  }, [selectedCategory, sortOption, events]);
 
   useEffect(() => {
     const user = sessionStorage.getItem('userName');
@@ -71,6 +97,11 @@ const MainEventDisplay = () => {
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
     console.log('Selected category:', category);
+  };
+
+  const handleSortClick = (option) => {
+    setSortOption(option);
+    console.log('Selected sort option:', option);
   };
 
   const handleLoginClick = () => {
@@ -95,7 +126,7 @@ const MainEventDisplay = () => {
     <div className="Event-bg">
       {loggedIn ? <Sidebarr /> : <div className="disabled-sidebar"><Sidebarr /></div>}
       <div className="Event-navbar">
-        <label>
+        <label onClick={route}>
           <img src={logo} alt="cannot be displayed" className="nav-logo" />
           <p>Gleve</p>
         </label>
@@ -139,12 +170,23 @@ const MainEventDisplay = () => {
             {selectedCategory} ▼
           </MenuButton>
           <Menu>
-            <MenuItem onClick={() => handleCategoryClick('All')}>All</MenuItem>
+            <MenuItem onClick={() => handleCategoryClick('All')}></MenuItem>
             {categories.map((category, index) => (
               <MenuItem key={index} onClick={() => handleCategoryClick(category)}>
                 {category}
               </MenuItem>
             ))}
+          </Menu>
+        </Dropdown>
+        <div className="sort-by-container"></div>
+        <h2>Sort By</h2>
+        <Dropdown>
+          <MenuButton className="sort-dropdown-btn">
+            {sortOption} ▼
+          </MenuButton>
+          <Menu>
+            <MenuItem onClick={() => handleSortClick('Upcoming')}>Upcoming Events</MenuItem>
+            <MenuItem onClick={() => handleSortClick('Popular')}>Popular Events</MenuItem>
           </Menu>
         </Dropdown>
       </div>

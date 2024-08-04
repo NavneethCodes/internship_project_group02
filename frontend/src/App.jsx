@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Profile from './components/Profile.jsx';
 import SignUp from './components/SignUp.jsx';
@@ -8,13 +8,27 @@ import MainEventDisplay from './components/MainEventDisplay.jsx';
 import HomePage from './components/HomePage.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
 import EventComments from './components/EventComments';
-import AdminEvent from './components/Adminevent.jsx'
+import AdminEvent from './components/AdminEvent.jsx'
 import UserProfile from './components/UserProfile.jsx';
 import About from './components/About.jsx';
 import Contact from './components/Contact.jsx';
 import Team from './components/Team.jsx';
 
 function App() {
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      const user_id = sessionStorage(`user_id`);
+      sessionStorage.removeItem(`user_id`);
+      sessionStorage.removeItem(`user_name`);
+      if (user_id) {
+        navigator.sendBeacon(`/logout/${user_id}`);
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    }
+  }, []);
   return (
     <>
       <Routes>
@@ -32,7 +46,6 @@ function App() {
         <Route path='/team' element={<Team/>}></Route>  
         {/* New route for comments */}
         {/* Add more routes here if needed */}
-        
       </Routes>
       
       

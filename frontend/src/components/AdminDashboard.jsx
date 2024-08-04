@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
-import AdminEvent from './Adminevent.jsx';
+import AdminEvent from './AdminEvent.jsx';
 import AdminEventEditForm from './AdminEventEditForm.jsx';
 
 const Container = styled.div`
@@ -164,8 +164,9 @@ const AdminDashboard = () => {
 
   const handleDeleteUser = async (userId) => {
     try {
-      await axios.delete(`http://localhost:4000/users/${userId}`);
+      await axios.delete(`http://localhost:4000/userdeletion/${userId}`);
       setUsers(users.filter(user => user._id !== userId));
+    
     } catch (error) {
       console.error('Error deleting user:', error);
     }
@@ -178,7 +179,7 @@ const AdminDashboard = () => {
 
   const handleDeleteEvent = async (eventId) => {
     try {
-      await axios.delete(`http://localhost:4000/events/${eventId}`);
+      await axios.delete(`http://localhost:4000/event-delete/${eventId}`);
       setEvents(events.filter(event => event._id !== eventId));
     } catch (error) {
       console.error('Error deleting event:', error);
@@ -203,7 +204,7 @@ const AdminDashboard = () => {
           {/* <span>April, 1 Friday</span> */}
         </Header>
         <Content>
-          {showAdminEvent && <AdminEvent />}
+          {showAdminEvent && <Adminevent />}
           {isEditMode && eventToEdit && (
             <AdminEventEditForm event={eventToEdit} onCancelEdit={handleCancelEdit} />
           )}
