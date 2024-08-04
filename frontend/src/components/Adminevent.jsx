@@ -69,7 +69,7 @@ const theme = createTheme({
   },
 });
 
-const AdminEvent = () => {
+const Adminevent = () => {
   const [eventDetails, setEventDetails] = useState({
     eventName: '',
     eventDate: '',
@@ -238,7 +238,7 @@ const AdminEvent = () => {
           </form>
           <Snackbar
             open={openSnackbar}
-            autoHideDuration={6000}
+            autoHideDuration={3000}
             onClose={handleCloseSnackbar}
             message={snackbarMessage}
           />
@@ -248,4 +248,4 @@ const AdminEvent = () => {
   );
 };
 
-export default AdminEvent;
+export default Adminevent;

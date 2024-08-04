@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import axios from 'axios';
 import Adminevent from './Adminevent.jsx';
 import AdminEventEditForm from './AdminEventEditForm.jsx';
+import Modal from './Modal.jsx';
+import logo from '../Images/p-logo.png';
 
 const Container = styled.div`
   display: flex;
@@ -13,7 +15,10 @@ const Container = styled.div`
 
 const Sidebar = styled.div`
   width: 250px;
-  padding: 20px;
+  padding-top: 100px;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-bottom: 20px;
   background-color: #fff;
   border-right: 1px solid #ddd;
 `;
@@ -30,6 +35,7 @@ const SidebarItem = styled.div`
 `;
 
 const Main = styled.div`
+padding-top:100px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -138,7 +144,12 @@ const AdminDashboard = () => {
   const [events, setEvents] = useState([]);
   const [showAdminEvent, setShowAdminEvent] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [eventToEdit, setEventToEdit] = useState(null);
+  const [eventToEdit, setEventToEdit] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [deleteType, setDeleteType] = useState('');
+  const [deleteId, setDeleteId] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userName, setUserName] = useState('');
 
   useEffect(() => {
     axios.get('http://localhost:4000/users')
@@ -163,13 +174,9 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteUser = async (userId) => {
-    try {
-      await axios.delete(`http://localhost:4000/userdeletion/${userId}`);
-      setUsers(users.filter(user => user._id !== userId));
-    
-    } catch (error) {
-      console.error('Error deleting user:', error);
-    }
+    setDeleteType('user');
+    setDeleteId(userId);
+    setShowModal(true);
   };
 
   const handleEditEvent = (event) => {
@@ -178,11 +185,54 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteEvent = async (eventId) => {
+    setDeleteType('event');
+    setDeleteId(eventId);
+    setShowModal(true);
+  };
+
+  const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:4000/event-delete/${eventId}`);
-      setEvents(events.filter(event => event._id !== eventId));
+      if (deleteType === 'user') {
+        await axios.delete(`http://localhost:4000/userdeletion/${deleteId}`);
+        setUsers(users.filter(user => user._id !== deleteId));
+      } else if (deleteType === 'event') {
+        await axios.delete(`http://localhost:4000/event-delete/${deleteId}`);
+        setEvents(events.filter(event => event._id !== deleteId));
+      }
+      setShowModal(false);
     } catch (error) {
-      console.error('Error deleting event:', error);
+      console.error(`Error deleting ${deleteType}:`, error);
+    }
+  };
+
+  useEffect(() => {
+    const user = sessionStorage.getItem('userName');
+    if (user) {
+      setLoggedIn(true);
+      setUserName(user);
+    }
+  }, []);
+
+  const handleLoginClick = () => {
+    window.location.href='/login';
+  };
+
+  const route =() =>{
+    window.location.href='/home';
+  }
+
+  const handleLogoutClick = async () => {
+    try {
+      const user_id = sessionStorage.getItem('user_id');
+      sessionStorage.removeItem('userName');
+      sessionStorage.removeItem('user_id');
+      setLoggedIn(false);
+      setUserName('');
+      window.location.reload();
+      window.location.href='/home' ;
+      await axios.put(`http://localhost:4000/logout/${user_id}`);     
+    } catch(error) {
+      console.log(`Error logging out: `, error);
     }
   };
 
@@ -193,6 +243,23 @@ const AdminDashboard = () => {
 
   return (
     <Container>
+      <div className="Event-navbar">
+        <label onClick={route}>
+          <img src={logo} alt="cannot be displayed" className="nav-logo" />
+          <p>Gleve</p>
+        </label>
+        <input type="text" placeholder="search" name="eventName" />
+        <div className="btn-area">
+          {loggedIn ? (
+            <>
+              <div className='user-name-container'><span className="user-name">{userName}</span></div>
+              <button onClick={handleLogoutClick}>Logout</button>
+            </>
+          ) : (
+            <button onClick={handleLoginClick}>Login</button>
+          )}
+        </div>
+      </div>
       <Sidebar>
         <SidebarItem onClick={() => { setActiveTab('users'); setShowAdminEvent(false); setIsEditMode(false); }}>Users</SidebarItem>
         <SidebarItem onClick={() => { setActiveTab('events'); setShowAdminEvent(false); setIsEditMode(false); }}>Events</SidebarItem>
@@ -201,7 +268,7 @@ const AdminDashboard = () => {
       <Main>
         <Header>
           <Title>Admin Dashboard</Title>
-          {/* <span>April, 1 Friday</span> */}
+          <button className='reload-btn'>Refresh DB</button>
         </Header>
         <Content>
           {showAdminEvent && <Adminevent />}
@@ -233,12 +300,12 @@ const AdminDashboard = () => {
                       </BlockButton>
                     </ScheduleActions>
                     <ScheduleActions>
-                    <ActionButton
+                      <ActionButton
                         onClick={() => handleDeleteUser(user._id)}
                       >
                         Delete User
                       </ActionButton>
-                      </ScheduleActions>
+                    </ScheduleActions>
                   </ScheduleItem>
                 ))}
               </div>
@@ -279,16 +346,23 @@ const AdminDashboard = () => {
                       </ActionButton>
                     </ScheduleActions>
                     <ScheduleActions>
-                    <ActionButton
+                      <ActionButton
                         onClick={() => handleDeleteEvent(event._id)}
                       >
                         Delete
                       </ActionButton>
-                      </ScheduleActions>
+                    </ScheduleActions>
                   </ScheduleItem>
                 ))}
               </div>
             </>
+          )}
+          {showModal && (
+            <Modal
+              title={`Delete ${deleteType === 'user' ? 'User' : 'Event'}`}
+              onConfirm={confirmDelete}
+              onCancel={() => setShowModal(false)}
+            />
           )}
         </Content>
       </Main>
