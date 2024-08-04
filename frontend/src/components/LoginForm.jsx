@@ -31,6 +31,7 @@ const LoginForm = () => {
     if (credentials.userEmail === 'admin123' && credentials.userPassword === 'admin123') {
       sessionStorage.setItem('user_id', "Admin");
       sessionStorage.setItem('userName', "Admin");
+      sessionStorage.setItem('userPassword', "Admin");
       navigate('/admindashboard');
       return;
     }
@@ -42,6 +43,7 @@ const LoginForm = () => {
           toast.success(res.data.message);
           sessionStorage.setItem('user_id', res.data.user._id);
           sessionStorage.setItem('userName', res.data.user.userName);
+          sessionStorage.setItem('userPassword', res.data.user.userPassword);
           navigate('/maineventdetails');
         }
       })

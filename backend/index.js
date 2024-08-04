@@ -50,7 +50,7 @@ const delete_event = async (event_id) => {
     }
     res.send("Event deleted successfully!");
   } catch (error) {
-    res.send("Error finding the event with this event id")
+    res.status(500).json({message: "Error finding the event with this event id"});
   }
 }
 
@@ -438,7 +438,9 @@ app.get('/forgot-password/:email_id', async (req, res) => {
 });
 
 // This is to send email to all users who registered for the event prior day.
-app.get('/prior-remainder/:event_id', async (req, res) => {});
+app.get('/prior-remainder/:event_id', async (req, res) => {
+
+});
 
 // This is to get all the user_id who has registered for this event.
 app.get('/register-who/:event_id', async (req, res) => {

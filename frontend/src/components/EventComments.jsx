@@ -175,6 +175,7 @@ const EventComments = () => {
       const user_id = sessionStorage.getItem('user_id');
       sessionStorage.removeItem('userName');
       sessionStorage.removeItem('user_id');
+      sessionStorage.removeItem('userPassword');
       setLoggedIn(false);
       setUserName('');
       window.location.reload();

@@ -226,6 +226,7 @@ const AdminDashboard = () => {
       const user_id = sessionStorage.getItem('user_id');
       sessionStorage.removeItem('userName');
       sessionStorage.removeItem('user_id');
+      sessionStorage.removeItem('userPassword');
       setLoggedIn(false);
       setUserName('');
       window.location.reload();
@@ -279,7 +280,7 @@ const AdminDashboard = () => {
             <>
               <ScheduleHeader>
                 <div>Username</div>
-                <div>Phone Number</div>
+                <div>Email ID</div>
                 <div>Status</div>
                 <div>Block</div>
                 <div>Delete</div>
@@ -288,7 +289,7 @@ const AdminDashboard = () => {
                 {users.map((user) => (
                   <ScheduleItem key={user._id}>
                     <ScheduleTitle>{user.userName}</ScheduleTitle>
-                    <ScheduleTime>{user.userContact}</ScheduleTime>
+                    <ScheduleTime>{user.userEmail}</ScheduleTime>
                     <StatusText status={user.userStatus}>
                       {user.userStatus === 'active' ? 'Active' : 'Suspended'}
                     </StatusText>
