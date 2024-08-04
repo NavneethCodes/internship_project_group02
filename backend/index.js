@@ -1,5 +1,6 @@
 const express = require("express");
-const nodemailer = require("nodemailer")
+const nodemailer = require("nodemailer");
+const cron = require("node-cron");
 const cors = require("cors");
 const app = express();
 const PORT = 4000;
@@ -22,9 +23,60 @@ const transporter = nodemailer.createTransport({
   }
 })
 
-const cleanupExpiredEvents = async () => {
-  
+cron.schedule('0 0 * * *', async () => {
+  try {
+    const currentDate = new Date();
+    const result = await eventModel.deleteMany({ eventDate: { $lt: currentDate } });
+    console.log(`${result.deletedCount} past events deleted.`);
+  } catch (error) {
+    console.error('Error deleting past events:', error);
+  }
+});
+
+//This function is called when an event is to be deleted
+const delete_event = async (event_id) => {
+  try {
+    const record = await recordModel.findOne({ event_id });
+    await recordModel.findByIdAndDelete(record._id);
+    await eventModel.findByIdAndDelete(event_id);
+    const all_users = await userModel.find();
+    let index_of_event = 0;
+    for (let i = 0; i < all_users.length(); i++) {
+      if (all_users[i].registered_events.includes(event_id)) {
+        index_of_event = all_users[i].registered_events.indexOf(event_id);
+        all_users[i].registered_events.splice(index_of_event, 1);
+        all_users[i].save();
+      }
+    }
+    res.send("Event deleted successfully!");
+  } catch (error) {
+    res.send("Error finding the event with this event id")
+  }
 }
+
+//This is a function to delete any expired events.
+const cleanupExpiredEvents = async () => {
+  try {
+    const currentDate = new Date();
+    const expiredEvents = await eventModel.find({ eventDate : { $lt: currentDate } });
+    for (const event of expiredEvents) {
+      await eventModel.findByIdAndDelete(event._id);
+    }
+    console.log("Expired events deleted successfully!");
+  } catch (error) {
+    console.log("Error deleting expired events:", error);
+  }
+}
+
+// This would force the database to check for expired events.
+app.post('/admin-force-clean', async (req, res) => {
+  try {
+    await cleanupExpiredEvents();
+    res.send("Expired events cleaned");
+  } catch (error) {
+    res.status(500).send("Error cleaning up expired events.");
+  }
+});
 
 //This would return all the existing users from the db.
 app.get("/users", async (req, res) => {
@@ -54,81 +106,153 @@ app.get('/id/:id', async (req, res) => {
   } catch {
     return res.status(400).send({ message: "No user found!"});
   }
-})
+});
+
+// To get the like and comment count.
+app.get('/like-comment-count/:user_id', async (req, res) => {
+  try {
+    const user_id = req.params.user_id;
+    const records = await recordModel.find();
+    let like_count = 0;
+    let comment_count = 0;
+    for (let i = 0; i < records.length; i++) {
+      if (records[i].likes.includes(user_id)) {
+        like_count ++;
+      }
+      for (let j = 0; j < records[i].comments.length;  j++) {
+        if (records[i].comments[j].user_id.toString() === user_id.toString()) {
+          comment_count ++;
+        }
+      }
+    }
+    res.status(200).json({
+      likes     : like_count,
+      comments  : comment_count,
+      message   : "Got the likes and comments count successfully"
+    })
+  } catch (error) {
+    res.status(500).json({
+      message   : "Failed to get the count"
+    })
+  }
+});
 
 //This function is to send email to all registered members about the newly arrived event
-app.get('/send-email-to-all/:event_id', async(req, res) =>{
+app.get('/send-email-to-all/:event_id', async(req, res) => {
   try {
     const event = await eventModel.findById(req.params.event_id);
     const htmlTemplate = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>New Event Notification</title>
-      <style>
-        body {
-          font-family: Arial, sans-serif;
-          background-color: #f4f4f4;
-          margin: 0;
-          padding: 0;
-        }
-        .container {
-          width: 80%;
-          margin: 20px auto;
-          background-color: #ffffff;
-          padding: 20px;
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .header {
-          background-color: #4CAF50;
-          color: white;
-          padding: 10px 0;
-          text-align: center;
-        }
-        .content {
-          padding: 20px;
-        }
-        .event-img {
-          width: 100%;
-          height: auto;
-        }
-        .footer {
-          text-align: center;
-          padding: 10px;
-          background-color: #f4f4f4;
-          color: #777777;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <h1>New Event Notification</h1>
-        </div>
-        <div class="content">
-          <p>Hey Glever, another event is up in the horizon!</p>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>New Event Notification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 80%;
+      margin: 20px auto;
+      background-color: #ffffff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      text-align: left;
+    }
+    .header h1 {
+      color: #333333;
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .event-img-container {
+      width: 100%;
+      padding-top: 0%; /* 16:9 Aspect Ratio (1920x1080) */
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .event-img-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .content-left {
+      width: 100%;
+      margin-left:10px;
+    }
+    .content-left h2 {
+      color: #333333;
+      font-size: 24px;
+      margin: 0 0 10px;
+    }
+    .content-left p {
+      color: #777777;
+      font-size: 14px;
+      margin: 0 0 10px;
+    }
+    .footer {
+      text-align: center;
+      padding: 10px;
+      background-color: #ffffff;
+      color: #777777;
+    }
+    .view-more {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #ff7f50;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Hey Glever, another event is up in the horizon!</h1>
           <p>Excited for the event? Here are the details!</p>
-          <h2>${event.eventName}</h2>
-          <p><strong>Description:</strong> ${event.eventDescription}</p>
-          <p><strong>Location:</strong> ${event.eventLocation}</p>
-          <p><strong>Date:</strong> ${event.eventDate}</p>
-          <p><strong>Time:</strong> ${event.eventStartTime} - ${event.eventEndTime}</p>
-          <p><strong>Category:</strong> ${event.eventCategory}</p>
-          <p><strong>Organizer:</strong> ${event.eventOrganizer}</p>
-          <img src="${event.eventImg}" alt="Event Image" class="event-img">
-        </div>
-        <div class="footer">
-          <p>Thank you for being a part of our community!</p>
-        </div>
+    </div>
+    <div class="content">
+      <div class="event-img-container">
+        <img src="${event.eventImg}" alt="Event Image">
       </div>
-    </body>
-    </html>
+      <div class="content-left">
+        <h2>${event.eventName}</h2>
+        <p><strong>Description:</strong> ${event.eventDescription}</p>
+        <p><strong>Location:</strong> ${event.eventLocation}</p>
+        <p><strong>Date:</strong> ${event.eventDate}</p>
+        <p><strong>Time:</strong> ${event.eventStartTime} - ${event.eventEndTime}</p>
+        <p><strong>Category:</strong> ${event.eventCategory}</p>
+        <p><strong>Organizer:</strong> ${event.eventOrganizer}</p>
+      </div>
+    </div>
+    <div class="footer">
+      <a href="http://localhost:5173/events" class="view-more">View More</a>
+      <p>Thank you for being a part of our community!</p>
+    </div>
+  </div>
+</body>
+</html>
   `;
     const userEmails = await userModel.find({}, 'userEmail');
     let mails = userEmails.map(mail => mail.userEmail);
-    // mails = ['navneetharun0402@gmail.com']
-    mails = ['harisankar.mbcet@gmail.com']
+    // mails = ['harisankar.mbcet@gmail.com','navneetharun0402@gmail.com','aishuafra@gmail.com']
     // res.status(200).json(mails);
     if (mails.length === 0) {
       console.log(`No user founds.`);
@@ -152,7 +276,144 @@ app.get('/send-email-to-all/:event_id', async(req, res) =>{
   } catch (error) {
     res.status(500).json({message: "Cannot send mail now."})
   }
-})
+});
+
+//This is to send an email if the user forgets his/her password
+app.get('/forgot-password/:email_id', async (req, res) => {
+  const email_id = req.params.email_id;
+  try {
+    const user = await userModel.findOne({ userEmail : email_id });
+    if (user) {
+      const htmlTemplate = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Forgot Password</title>
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+                body {
+                    font-family: 'Poppins', Arial, sans-serif;
+                    background-color: #f4f4f4;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                .email-container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    border: 1px solid #ddd;
+                    background-color: #fff;
+                }
+
+                .header {
+                    background-color: black;
+                    color: white;
+                    text-align: center;
+                    padding: 40px;
+                }
+
+                .header h1 {
+                    margin: 0;
+                    font-size: 24px;
+                }
+
+                .body {
+                    padding: 40px;
+                    text-align: left;
+                    font-size: 16px;
+                    line-height: 1.6;
+                }
+
+                .body p {
+                    margin: 0 0 20px;
+                }
+
+                .button-container {
+                    text-align: center;
+                    padding: 20px;
+                }
+
+                .button {
+                    background-color: black;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    text-decoration: none;
+                    color: #ffffff;
+                    font-weight: bold;
+                    display: inline-block;
+                }
+
+                .footer {
+                    background-color: black;
+                    padding: 20px;
+                    text-align: center;
+                    color: white;
+                    font-size: 14px;
+                }
+
+                @media screen and (max-width: 600px) {
+                    .email-container {
+                        width: 100% !important;
+                        padding: 10px !important;
+                    }
+
+                    .header, .body, .footer {
+                        padding: 20px !important;
+                    }
+                }
+                @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .email-container {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+            </style>
+        </head>
+        <body>
+            <div class="email-container">
+                <div class="header">
+                    <h1>Team Gleve.</h1>
+                </div>
+                <div class="body">
+                    <p>Hi ${user.userEmail},</p>
+                    <p>You requested Team Gleve to reveal your password , here it is ..</p>
+                    <p>Your password is: <strong>${user.userPassword}</strong></p>
+                    <p>Please remember this password to sign in to your account.</p>
+                    <p>Sincerely,<br>Team Gleve.</p>
+                </div>
+                <div class="button-container">
+                    <a href="https://localhost:4000/login" class="button">Login Here</a>
+                </div>
+                <div class="footer">
+                    Copyright &copy; 2024 | Gleve.
+                </div>
+            </div>
+        </body>
+        </html>
+      `;
+      const mailOption = {
+        from: 'Gleve <gleve.event.management@gmail.com>',
+        to: email_id,
+        subject: 'Forgot Password? No worries! we are here',
+        text: `Hey Glever, we got your back`,
+        html: htmlTemplate
+      };
+      await transporter.sendMail(mailOption);
+      res.status(200).json({ message: "Email sent successfully." });
+    } else {
+      res.status(404).json({ message: "User not found." });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Cannot send mail now." });
+  }
+});
 
 //This would return all the existing events from the db.
 app.get("/events", async (req, res) => {
@@ -306,19 +567,7 @@ app.post("/eventnew", async (req, res) => {
 app.delete(`/event-delete/:event_id`, async (req, res) => {
   try {
     const event_id = req.params.event_id;
-    const record = await recordModel.findOne({ event_id });
-    await recordModel.findByIdAndDelete(record._id);
-    await eventModel.findByIdAndDelete(event_id);
-    const all_users = await userModel.find();
-    let index_of_event = 0;
-    for (let i = 0; i < all_users.length(); i++) {
-      if (all_users[i].registered_events.includes(event_id)) {
-        index_of_event = all_users[i].registered_events.indexOf(event_id);
-        all_users[i].registered_events.splice(index_of_event, 1);
-        all_users[i].save();
-      }
-    }
-    res.send("Event deleted successfully!");
+    delete_event(event_id);
   } catch(error) {
     res.send("Error finding the event with this event id");
   }

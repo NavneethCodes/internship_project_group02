@@ -34,6 +34,10 @@ const MainEventDisplay = () => {
     fetchCategories();
   }, []);
 
+  const route =() =>{
+    window.location.href='/home';
+  }
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -122,7 +126,7 @@ const MainEventDisplay = () => {
     <div className="Event-bg">
       {loggedIn ? <Sidebarr /> : <div className="disabled-sidebar"><Sidebarr /></div>}
       <div className="Event-navbar">
-        <label>
+        <label onClick={route}>
           <img src={logo} alt="cannot be displayed" className="nav-logo" />
           <p>Gleve</p>
         </label>
