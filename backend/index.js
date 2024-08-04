@@ -447,7 +447,15 @@ app.get('/register-who/:event_id', async (req, res) => {
   try {
     if (await eventModel.findById(event_id)){
       let users_registered = [];
-
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].registered_events.includes(event_id)) {
+          users_registered.push(users[i]._id);
+        }
+      }
+      return res.status(200).json({
+        users_registered: users_registered, 
+        message         : "Successfully extracted all users who registered for the event"
+      })
     } else {
       res.status(400).json({message: "Event not recognized, check `_id`"});
     }
