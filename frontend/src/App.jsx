@@ -1,13 +1,13 @@
 import './App.css';
 import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Profile from './components/Profile.jsx';
 import SignUp from './components/SignUp.jsx';
 import LoginForm from './components/LoginForm.jsx';
 import MainEventDisplay from './components/MainEventDisplay.jsx';
 import HomePage from './components/HomePage.jsx';
 import AdminDashboard from './components/AdminDashboard.jsx';
 import EventComments from './components/EventComments';
+import Adminevent from './components/Adminevent.jsx'
 import UserProfile from './components/UserProfile.jsx';
 import About from './components/About.jsx';
 import Contact from './components/Contact.jsx';
@@ -36,7 +36,7 @@ function App() {
         <Route path='/signup' element={<SignUp/>}></Route>
         <Route path='/maineventdetails' element={<MainEventDisplay/>}></Route>
         <Route path='/home' element={<HomePage/>}></Route>
-        <Route path='/dashboard' element={<AdminDashboard/>}></Route>
+        <Route path='/admindashboard' element={<AdminDashboard/>}></Route>
         <Route path='/comments/:eventId' element={<EventComments/>}></Route>
         <Route path='/events' element={<MainEventDisplay/>}></Route>
         <Route path='/profile' element={<UserProfile/>}></Route>

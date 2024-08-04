@@ -229,3 +229,20 @@ color:rgb(255, 255, 255);
   margin-left: 10px;
   padding: 5px 15px;
 }
+
+.input_box {
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: white;
+}
+
+.eye-icon {
+  right: 40px;
+}
