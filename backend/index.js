@@ -34,18 +34,20 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 // This function is called when an event is to be deleted
-const delete_event = async (event_id) => {
+const delete_event = async (event_id, res) => {
   try {
-    const record = await recordModel.findOne({ event_id : event_id });
-    await recordModel.findByIdAndDelete(record._id);
+    const record = await recordModel.findOne({ event_id: event_id });
+    if (record) {
+      await recordModel.findByIdAndDelete(record._id);
+    }
     await eventModel.findByIdAndDelete(event_id);
     const all_users = await userModel.find();
     let index_of_event = 0;
-    for (let i = 0; i < all_users.length(); i++) {
+    for (let i = 0; i < all_users.length; i++) {
       if (all_users[i].registered_events.includes(event_id)) {
         index_of_event = all_users[i].registered_events.indexOf(event_id);
         all_users[i].registered_events.splice(index_of_event, 1);
-        all_users[i].save();
+        await all_users[i].save();
       }
     }
     res.send("Event deleted successfully!");
@@ -718,7 +720,7 @@ app.post("/eventnew", async (req, res) => {
 app.delete(`/event-delete/:event_id`, async (req, res) => {
   try {
     const event_id = req.params.event_id;
-    delete_event(event_id);
+    delete_event(event_id, res);
   } catch(error) {
     res.send("Error finding the event with this event id");
   }
