@@ -6,8 +6,10 @@ import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 const Dummy = () => {
   const [items, setItems] = useState([]);
-  const routing = () =>{
-    window.location.href='/login'
+  const [intervalId, setIntervalId] = useState(null);
+  
+  const routing = () => {
+    window.location.href = '/login';
   }
 
   useEffect(() => {
@@ -29,6 +31,12 @@ const Dummy = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const id = setInterval(nextSlide, 4000); // Change slide every 5 seconds
+    setIntervalId(id);
+    return () => clearInterval(id);
+  }, [items]);
 
   const nextSlide = () => {
     setItems(prevItems => {
