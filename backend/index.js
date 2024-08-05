@@ -60,6 +60,8 @@ const cleanupExpiredEvents = async () => {
     const currentDate = new Date();
     const expiredEvents = await eventModel.find({ eventDate : { $lt: currentDate } });
     for (const event of expiredEvents) {
+      const record = await recordModel.findOne({event_id : event._id});
+      await recordModel.findByIdAndDelete(record._id);
       await eventModel.findByIdAndDelete(event._id);
     }
     console.log("Expired events deleted successfully!");
@@ -437,9 +439,47 @@ app.get('/forgot-password/:email_id', async (req, res) => {
   }
 });
 
+// Function to find difference between current date and the event date
+const diffDate = (event_date) => {
+  const current_date = new Date();
+  const ms_diff = event_date.getTime() - current_date.getTime();
+  const sec_diff = ms_diff / 1000;
+  const min_diff = sec_diff / 60;
+  const hour_diff = min_diff / 60;
+  const days_diff = hour_diff / 24;
+  return days_diff;
+}
+
+const registered_users = async (event_id) => {
+  const users = await userModel.find();
+  try {
+    if (await eventModel.findById(event_id)) {
+      let users_registered = [];
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].registered_events.includes(event_id)) {
+          users_registered.push(users[i]);
+        }
+        if (users_registered.length > 0) {
+          return { users: users_registered, message: "Users registered returned." };
+        }
+        return { users: null, message: "Empty, no users registered for this event!"};
+      }
+    } else {
+      return { users: null, message: "Invalid input received!"};
+    }
+  } catch (error) {
+    
+  }
+}
+
 // This is to send email to all users who registered for the event prior day.
 app.get('/prior-remainder/:event_id', async (req, res) => {
-
+  const event = await eventModel.findById(req.params.event_id);
+  const difference = Math.floor(diffDate(event.eventDate));
+  diffs = [0, 2, 9]
+  if (difference in diffs) {
+      console.log(`The event happens in ${difference + 1} ${difference == 0 ? 'day' : 'days'}`);
+  }
 });
 
 // This is to get all the user_id who has registered for this event.
@@ -613,8 +653,6 @@ app.post("/eventnew", async (req, res) => {
     console.log(error);
   }
 });
-
-// This would be used to 
 
 // This function is to delete an event from the events collection having the same event id as passed.
 app.delete(`/event-delete/:event_id`, async (req, res) => {
