@@ -172,38 +172,61 @@ app.get('/send-email-to-all/:event_id', async(req, res) => {
   <meta charset="UTF-8">
   <title>New Event Notification</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #ffffff;
+      font-family: 'Open Sans', Arial, sans-serif;
+      background-color: #f7f7f7;
       margin: 0;
       padding: 0;
     }
+
     .container {
       width: 80%;
-      margin: 20px auto;
+      max-width: 800px;
+      margin: 40px auto;
       background-color: #ffffff;
       padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-in-out;
     }
+
     .header {
-      text-align: left;
+      text-align: center;
+      border-bottom: 1px solid #eeeeee;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
     }
+
     .header h1 {
       color: #333333;
-      font-size: 32px;
+      font-size: 28px;
       margin-bottom: 10px;
     }
+
+    .header p {
+      color: #777777;
+      font-size: 16px;
+    }
+
     .content {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      animation: slideIn 1s ease-in-out;
     }
+
     .event-img-container {
       width: 100%;
-      padding-top: 0%; /* 16:9 Aspect Ratio (1920x1080) */
+      margin-right:30px;
       position: relative;
       margin-bottom: 20px;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
+
     .event-img-container img {
       position: absolute;
       top: 0;
@@ -211,46 +234,82 @@ app.get('/send-email-to-all/:event_id', async(req, res) => {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.5s ease;
     }
+
+    .event-img-container img:hover {
+      transform: scale(1.05);
+    }
+
     .content-left {
       width: 100%;
-      margin-left:10px;
     }
+
     .content-left h2 {
       color: #333333;
       font-size: 24px;
       margin: 0 0 10px;
     }
+
     .content-left p {
-      color: #777777;
-      font-size: 14px;
-      margin: 0 0 10px;
+      color: #555555;
+      font-size: 16px;
+      margin: 5px 0;
     }
+
     .footer {
       text-align: center;
-      padding: 10px;
-      background-color: #ffffff;
-      color: #777777;
+      padding: 20px 10px;
+      background-color: #f7f7f7;
+      border-radius: 0 0 10px 10px;
+      border-top: 1px solid #eeeeee;
     }
+
     .view-more {
       display: inline-block;
       margin-top: 20px;
-      padding: 10px 20px;
+      padding: 12px 30px;
       background-color: #ff7f50;
       color: #ffffff;
       text-decoration: none;
-      border-radius: 5px;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      border-radius: 25px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .view-more:hover {
+      background-color: #ff5733;
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>Hey Glever, another event is up in the horizon!</h1>
-          <p>Excited for the event? Here are the details!</p>
+        <h1>Hey Glever, another event is up in the horizon!</h1>
+        <p>Excited for the event? Here are the details!</p>
     </div>
     <div class="content">
       <div class="event-img-container">
@@ -273,6 +332,7 @@ app.get('/send-email-to-all/:event_id', async(req, res) => {
   </div>
 </body>
 </html>
+
   `;
     const userEmails = await userModel.find({}, 'userEmail');
     let mails = userEmails.map(mail => mail.userEmail);
