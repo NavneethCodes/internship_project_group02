@@ -977,7 +977,7 @@ app.get('/register-who/:event_id', async (req, res) => {
     const reg_users = await registered_users(event_id);
     let users = [];
     for (let i = 0; i < reg_users.users.length; i++) {
-      users.push(reg_users.users[i].userName);
+      users.push(reg_users.users[i]);
     }
     console.log("Registered users for this event:- "+ users);
   } catch (error) {

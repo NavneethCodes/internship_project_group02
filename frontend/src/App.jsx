@@ -19,8 +19,9 @@ function App() {
       const user_id = sessionStorage(`user_id`);
       sessionStorage.removeItem(`user_id`);
       sessionStorage.removeItem(`user_name`);
+      sessionStorage.removeItem(`userPassword`);
       if (user_id) {
-        navigator.sendBeacon(`/logout/${user_id}`);
+        navigator.sendBeacon(`http://localhost:4000/logout/${user_id}`);
       }
     };
     window.addEventListener('beforeunload', handleBeforeUnload);
