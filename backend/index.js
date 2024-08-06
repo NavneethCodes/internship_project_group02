@@ -41,8 +41,7 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 //This function is to send mail to the passed mail addresses
-const send_mails = async (event_id, subject, htmlTemplate, emails) => {
-  const event = await eventModel.findById(event_id);
+const send_mails = async (subject, htmlTemplate, emails) => {
   try {
     const mailOption = {
       from     : `Gleve <gleve.event.managements@gmail.com>`,
@@ -67,6 +66,7 @@ const send_mails = async (event_id, subject, htmlTemplate, emails) => {
 const delete_event = async (event_id) => {
   try {
     const record = await recordModel.findOne({ event_id: event_id });
+    console.log("Record\n" + record);
     if (record) {
       await recordModel.findByIdAndDelete(record._id);
     }
@@ -81,9 +81,10 @@ const delete_event = async (event_id) => {
     }
     return 1;
   } catch (error) {
+    console.error("Error in delete_event:", error);
     return 0;
   }
-}
+};
 
 // This is a function to delete any expired events.
 const cleanupExpiredEvents = async () => {
@@ -258,6 +259,7 @@ app.get('/like-comment-count/:user_id', async (req, res) => {
 app.get('/send-email-to-all/:event_id', async(req, res) => {
   try {
     const event_id = req.params.event_id;
+    const event = await eventModel.findById(event_id);
     const htmlTemplate = `
 <!DOCTYPE html>
 <html>
@@ -436,7 +438,7 @@ app.get('/send-email-to-all/:event_id', async(req, res) => {
       res.status(400).json({message: "No users in mail, try again later!!"});
     }
     const subject = `New event is up in the Horizon! Join the fun!`;
-    const value = send_mails(event_id, subject, htmlTemplate, mails);
+    const value = await send_mails(subject, htmlTemplate, mails);
     if (value === 1) {
       res.status(200).send('Email sent successfully!');
     } else {
@@ -587,6 +589,7 @@ app.get('/forgot-password/:email_id', async (req, res) => {
 // This is to send email to all users who registered for the event prior day.
 app.get('/prior-remainder/:event_id', async (req, res) => {
   const event_id = req.params.event_id;
+  const event = await eventModel.findById(event_id);
   try {
     const difference = Math.floor(diffDate(event.eventDate));
     if (difference in [0, 2, 9]) {
@@ -764,8 +767,8 @@ app.get('/prior-remainder/:event_id', async (req, res) => {
 </html>
       `;
       const subject = `Remember Glever, the event you registered is just in ${difference + 1} ${difference == 0 ? 'day' : 'days'}`
-      let emails = get_emails_of_registered(reg_users);
-      const value = send_mails(event_id, subject, htmlTemplate, emails);
+      let emails = await get_emails_of_registered(reg_users);
+      const value = send_mails(subject, htmlTemplate, emails);
       if (value === 1) {
         res.status(200).send("Emails sent successfully");
       } else {
@@ -779,9 +782,10 @@ app.get('/prior-remainder/:event_id', async (req, res) => {
 
 app.get(`/mail-to-registered-on-updates/:event_id`, async (req, res) => {
   const event_id = req.params.event_id;
+  const event = await eventModel.findById(event_id);
   try {
     const reg_users = await registered_users(event_id);
-    let emails = get_emails_of_registered(reg_users);
+    let emails = await get_emails_of_registered(reg_users);
     const htmlTemplate = `
 <!DOCTYPE html>
 <html>
@@ -952,7 +956,7 @@ app.get(`/mail-to-registered-on-updates/:event_id`, async (req, res) => {
 
     `;
     const subject = "A bit of change to the event you registered😅"
-    const value = send_mails(event_id, subject, htmlTemplate, emails);
+    const value = send_mails(subject, htmlTemplate, emails);
     if (value === 1) {
       res.status(200).send("Emails sent successfully!");
     } else {
@@ -1130,7 +1134,7 @@ app.post("/eventnew", async (req, res) => {
 app.delete(`/event-delete/:event_id`, async (req, res) => {
   try {
     const event_id = req.params.event_id;
-    const val = delete_event(event_id);
+    const val = await delete_event(event_id);
     if (val === 1) {
       res.status(400).send("Event deleted successfully!");
     } else {
