@@ -40,7 +40,6 @@ cron.schedule('0 0 * * *', async () => {
   }
 });
 
-
 // This function is called when an event is to be deleted
 const delete_event = async (event_id) => {
   try {
@@ -80,6 +79,49 @@ const cleanupExpiredEvents = async () => {
     console.log("Error deleting expired events:", error);
   }
 }
+
+// Function to find difference between current date and the event date
+const diffDate = (event_date) => {
+  const current_date = new Date();
+  const ms_diff = event_date.getTime() - current_date.getTime();
+  const sec_diff = ms_diff / 1000;
+  const min_diff = sec_diff / 60;
+  const hour_diff = min_diff / 60;
+  const days_diff = hour_diff / 24;
+  return days_diff;
+}
+
+// Function is to return the Names of all the users who have registered for a purticular event
+const registered_users = async (event_id) => {
+  try {
+    console.log("Received event ID:", event_id);
+
+    const event = await eventModel.findById(event_id);
+    console.log("Event found:", event);
+
+    if (event) {
+      const users = await userModel.find();
+      console.log("All users fetched:", users.length);
+      let users_registered = [];
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].registered_events.includes(event_id)) {
+          console.log("User registered for event:", users[i]);
+          users_registered.push(users[i]);
+        }
+      }
+      if (users_registered.length > 0) {
+        return { users: users_registered, message: "Users registered returned." };
+      } else {
+        return { users: null, message: "Empty, no users registered for this event!" };
+      }
+    } else {
+      return { users: null, message: "Invalid input received!" };
+    }
+  } catch (error) {
+    console.error("Error in registered_users function:", error);
+    return { users: null, message: "An error occurred while retrieving users." };
+  }
+};
 
 // This would force the database to check for expired events.
 app.post('/admin-force-clean', async (req, res) => {
@@ -509,49 +551,6 @@ app.get('/forgot-password/:email_id', async (req, res) => {
     res.status(500).json({ message: "Cannot send mail now." });
   }
 });
-
-// Function to find difference between current date and the event date
-const diffDate = (event_date) => {
-  const current_date = new Date();
-  const ms_diff = event_date.getTime() - current_date.getTime();
-  const sec_diff = ms_diff / 1000;
-  const min_diff = sec_diff / 60;
-  const hour_diff = min_diff / 60;
-  const days_diff = hour_diff / 24;
-  return days_diff;
-}
-
-// Function is to return the Names of all the users who have registered for a purticular event
-const registered_users = async (event_id) => {
-  try {
-    console.log("Received event ID:", event_id);
-
-    const event = await eventModel.findById(event_id);
-    console.log("Event found:", event);
-
-    if (event) {
-      const users = await userModel.find();
-      console.log("All users fetched:", users.length);
-      let users_registered = [];
-      for (let i = 0; i < users.length; i++) {
-        if (users[i].registered_events.includes(event_id)) {
-          console.log("User registered for event:", users[i]);
-          users_registered.push(users[i]);
-        }
-      }
-      if (users_registered.length > 0) {
-        return { users: users_registered, message: "Users registered returned." };
-      } else {
-        return { users: null, message: "Empty, no users registered for this event!" };
-      }
-    } else {
-      return { users: null, message: "Invalid input received!" };
-    }
-  } catch (error) {
-    console.error("Error in registered_users function:", error);
-    return { users: null, message: "An error occurred while retrieving users." };
-  }
-};
 
 // This is to send email to all users who registered for the event prior day.
 app.get('/prior-remainder/:event_id', async (req, res) => {
