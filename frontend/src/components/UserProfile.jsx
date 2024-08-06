@@ -253,15 +253,16 @@ const UserProfile = () => {
     };
     const fetchEventRecordData = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/event-records');
-        let totalLikes = 0;
+        // const response = await axios.get('http://localhost:4000/event-records');
+        const response = await axios.get(`http://localhost:4000/like-comment-count/${sessionStorage.getItem(`user_id`)}`);
+        let totalLikes =0;
         let totalComments = 0;
-        response.data.forEach(record => {
-          totalLikes += record.likes.length;
-          totalComments += record.comments.length;
-        });
-        setLikeCount(totalLikes);
-        setCommentCount(totalComments);
+        // response.data.forEach(record => {
+        //   totalLikes += record.likes.length;
+        //   totalComments += record.comments.length;
+        // });
+        setLikeCount(response.data.likes);
+        setCommentCount(response.data.comments);
       } catch (error) {
         console.error('Error fetching event record data:', error);
       }
