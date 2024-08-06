@@ -5,6 +5,7 @@ import Adminevent from './Adminevent.jsx';
 import AdminEventEditForm from './AdminEventEditForm.jsx';
 import Modal from './Modal.jsx';
 import logo from '../Images/p-logo.png';
+import { Snackbar } from '@mui/material';
 
 const Container = styled.div`
   display: flex;
@@ -35,7 +36,7 @@ const SidebarItem = styled.div`
 `;
 
 const Main = styled.div`
-padding-top:100px;
+  padding-top: 100px;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -150,6 +151,8 @@ const AdminDashboard = () => {
   const [deleteId, setDeleteId] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
     axios.get('http://localhost:4000/users')
@@ -195,11 +198,14 @@ const AdminDashboard = () => {
       if (deleteType === 'user') {
         await axios.delete(`http://localhost:4000/userdeletion/${deleteId}`);
         setUsers(users.filter(user => user._id !== deleteId));
+        setSnackbarMessage('User deleted successfully!');
       } else if (deleteType === 'event') {
         await axios.delete(`http://localhost:4000/event-delete/${deleteId}`);
         setEvents(events.filter(event => event._id !== deleteId));
+        setSnackbarMessage('Event deleted successfully!');
       }
       setShowModal(false);
+      setOpenSnackbar(true);
     } catch (error) {
       console.error(`Error deleting ${deleteType}:`, error);
     }
@@ -217,7 +223,7 @@ const AdminDashboard = () => {
     window.location.href='/login';
   };
 
-  const route =() =>{
+  const route = () => {
     window.location.href='/home';
   }
 
@@ -230,8 +236,8 @@ const AdminDashboard = () => {
       setLoggedIn(false);
       setUserName('');
       window.location.reload();
-      window.location.href='/home' ;
-      await axios.put(`http://localhost:4000/logout/${user_id}`);     
+      window.location.href='/home';
+      await axios.put(`http://localhost:4000/logout/${user_id}`);
     } catch(error) {
       console.log(`Error logging out: `, error);
     }
@@ -240,6 +246,10 @@ const AdminDashboard = () => {
   const handleCancelEdit = () => {
     setIsEditMode(false);
     setEventToEdit(null);
+  };
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
   };
 
   return (
@@ -352,8 +362,8 @@ const AdminDashboard = () => {
                       >
                         Delete
                       </ActionButton>
-                    </ScheduleActions>
-                  </ScheduleItem>
+                      </ScheduleActions>
+                    </ScheduleItem>
                 ))}
               </div>
             </>
@@ -365,6 +375,12 @@ const AdminDashboard = () => {
               onCancel={() => setShowModal(false)}
             />
           )}
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={3000}
+            onClose={handleCloseSnackbar}
+            message={snackbarMessage}
+          />
         </Content>
       </Main>
     </Container>
