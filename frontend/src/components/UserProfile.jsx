@@ -162,13 +162,13 @@ const UserProfile = () => {
   const [message, setMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
-  const [enteredPassword, setEnteredPassword] = useState('');
+  let   [enteredPassword, setEnteredPassword] = useState('');
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
   const [registeredEventCount, setRegisteredEventCount] = useState(0);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userName, setUserName] = useState('');
+  let   [userName, setUserName] = useState('');
 
   const valueFetch = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -190,6 +190,9 @@ const UserProfile = () => {
     if (enteredPassword === sessionStorage.getItem('userPassword')) {
       axios.put(`http://localhost:4000/user-info-update/${sessionStorage.getItem("user_id")}`, form)
         .then(res => {
+          if(form.newPassword != "") {
+            enteredPassword = form.newPassword;
+          }
           setInitialForm(form);
           setMessage('Profile updated successfully.');
           sessionStorage.removeItem('userPassword');
@@ -288,6 +291,7 @@ const UserProfile = () => {
       sessionStorage.removeItem('userPassword');
       setLoggedIn(false);
       setUserName('');
+      setEnteredPassword('');
       window.location.reload();
       window.location.href='./maineventdetails';
       await axios.put(`http://localhost:4000/logout/${user_id}`);      
