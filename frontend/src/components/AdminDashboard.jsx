@@ -15,24 +15,37 @@ const Container = styled.div`
 `;
 
 const Sidebar = styled.div`
-  width: 250px;
+  width: 170px;
   padding-top: 100px;
   padding-right: 20px;
   padding-left: 20px;
   padding-bottom: 20px;
   background-color: #fff;
   border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
 `;
 
 const SidebarItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 10px 0;
+  padding: 10px 15px;
+  margin: 5px 0;
+  margin-right:20px;
   cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s;
 
   &:hover {
-    background-color: #f2f2f2;
+    background-color: #e9ecef;
+    transform: translateX(10px);
   }
+
+  ${props => props.active && `
+    background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
+    color: #fff;
+    border-radius: 4px;
+    transform: translateX(10px);
+  `}
 `;
 
 const Main = styled.div`
@@ -272,9 +285,9 @@ const AdminDashboard = () => {
         </div>
       </div>
       <Sidebar>
-        <SidebarItem onClick={() => { setActiveTab('users'); setShowAdminEvent(false); setIsEditMode(false); }}>Users</SidebarItem>
-        <SidebarItem onClick={() => { setActiveTab('events'); setShowAdminEvent(false); setIsEditMode(false); }}>Events</SidebarItem>
-        <SidebarItem onClick={() => { setShowAdminEvent(true); setIsEditMode(false); }}>Create Event</SidebarItem>
+      <SidebarItem active={activeTab === 'users'} onClick={() => { setActiveTab('users'); setShowAdminEvent(false); setIsEditMode(false); }}>Users</SidebarItem>
+<SidebarItem active={activeTab === 'events'} onClick={() => { setActiveTab('events'); setShowAdminEvent(false); setIsEditMode(false); }}>Events</SidebarItem>
+<SidebarItem active={showAdminEvent && activeTab === 'create-event'} onClick={() => { setActiveTab('create-event') ; setShowAdminEvent(true); setIsEditMode(false); }}>Create Event</SidebarItem>
       </Sidebar>
       <Main>
         <Header>
