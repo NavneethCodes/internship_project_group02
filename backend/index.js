@@ -48,6 +48,7 @@ const send_mails = async (subject, htmlTemplate, emails) => {
       subject  :  subject,
       html     :  htmlTemplate
     }
+    console.log("Inside emails:- ", emails);
     for (let email of emails) {
       try {
         await transporter.sendMail({...mailOption, to: email});
@@ -782,10 +783,12 @@ app.get('/prior-remainder/:event_id', async (req, res) => {
 
 app.get(`/mail-to-registered-on-updates/:event_id`, async (req, res) => {
   const event_id = req.params.event_id;
+  console.log("Event_id:- "+event_id);
   const event = await eventModel.findById(event_id);
   try {
     const reg_users = await registered_users(event_id);
     let emails = await get_emails_of_registered(reg_users);
+    console.log("Emails:- "+emails)
     const htmlTemplate = `
 <!DOCTYPE html>
 <html>
@@ -956,7 +959,7 @@ app.get(`/mail-to-registered-on-updates/:event_id`, async (req, res) => {
 
     `;
     const subject = "A bit of change to the event you registered😅"
-    const value = send_mails(subject, htmlTemplate, emails);
+    const value = await send_mails(subject, htmlTemplate, emails);
     if (value === 1) {
       res.status(200).send("Emails sent successfully!");
     } else {
@@ -1136,7 +1139,7 @@ app.delete(`/event-delete/:event_id`, async (req, res) => {
     const event_id = req.params.event_id;
     const val = await delete_event(event_id);
     if (val === 1) {
-      res.status(400).send("Event deleted successfully!");
+      res.status(200).send("Event deleted successfully!");
     } else {
       res.status(500).send("Error in deletion");
     }
