@@ -40,6 +40,29 @@ cron.schedule('0 0 * * *', async () => {
   }
 });
 
+//This function is to send mail to the passed mail addresses
+const send_mails = async (event_id, subject, htmlTemplate, emails) => {
+  const event = await eventModel.findById(event_id);
+  try {
+    const mailOption = {
+      from     : `Gleve <gleve.event.managements@gmail.com>`,
+      subject  :  subject,
+      html     :  htmlTemplate
+    }
+    for (let email of emails) {
+      try {
+        await transporter.sendMail({...mailOption, to: email});
+      } catch (error) {
+        console.log(`Error sending mail to ${email}`);
+      }
+    }
+    return 1;
+  } catch (error) {
+    console.log("Error in sending,\n"+error);
+    return 0;
+  }  
+} 
+
 // This function is called when an event is to be deleted
 const delete_event = async (event_id) => {
   try {
@@ -122,6 +145,23 @@ const registered_users = async (event_id) => {
     return { users: null, message: "An error occurred while retrieving users." };
   }
 };
+
+// This function is to return all the registered users
+const get_emails_of_registered = async (reg_users) => {
+  let emails = [];
+  try {
+    for (let i = 0; i < reg_users.users.length; i++) {
+      emails.push(reg_users.users[i].userEmail);
+    }
+    if (emails.length > 0) {
+      return emails;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log("There was an error recovering the email id of people who registered for this event");
+  }
+}
 
 // This would force the database to check for expired events.
 app.post('/admin-force-clean', async (req, res) => {
@@ -217,7 +257,7 @@ app.get('/like-comment-count/:user_id', async (req, res) => {
 // This function is to send email to all registered members about the newly arrived event
 app.get('/send-email-to-all/:event_id', async(req, res) => {
   try {
-    const event = await eventModel.findById(req.params.event_id);
+    const event_id = req.params.event_id;
     const htmlTemplate = `
 <!DOCTYPE html>
 <html>
@@ -395,21 +435,13 @@ app.get('/send-email-to-all/:event_id', async(req, res) => {
       console.log(`No user founds.`);
       res.status(400).json({message: "No users in mail, try again later!!"});
     }
-    const mailOption = {
-      from    : 'Gleve <gleve.event.managements@gmail.com>',
-      subject : `New event came up! Hurry, join the fun!`,
-      text    : `Hey Glever, another event is up in the horizon!\n\nExcited for the event?\nHere are the details!`,
-      html    : htmlTemplate
-    };
-    for (let mail of mails) {
-      try{
-        await transporter.sendMail({...mailOption, to: mail});
-        console.log(`Mail send to ${mail}`);
-      }catch (error) {
-        console.log(`Error sending email to ${mail}`);
-      }
+    const subject = `New event is up in the Horizon! Join the fun!`;
+    const value = send_mails(event_id, subject, htmlTemplate, mails);
+    if (value === 1) {
+      res.status(200).send('Email sent successfully!');
+    } else {
+      res.status(400).send('Error in sending the emails');
     }
-    res.status(200).send('Email sent successfully!');
   } catch (error) {
     res.status(500).json({message: "Cannot send mail now."})
   }
@@ -554,11 +586,380 @@ app.get('/forgot-password/:email_id', async (req, res) => {
 
 // This is to send email to all users who registered for the event prior day.
 app.get('/prior-remainder/:event_id', async (req, res) => {
-  const event = await eventModel.findById(req.params.event_id);
-  const difference = Math.floor(diffDate(event.eventDate));
-  diffs = [0, 2, 9]
-  if (difference in diffs) {
+  const event_id = req.params.event_id;
+  try {
+    const difference = Math.floor(diffDate(event.eventDate));
+    if (difference in [0, 2, 9]) {
       console.log(`The event happens in ${difference + 1} ${difference == 0 ? 'day' : 'days'}`);
+      const htmlTemplate = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Change in our Event!</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Open Sans', Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 800px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .header {
+      text-align: center;
+      border-bottom: 1px solid #eeeeee;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      color: #333333;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #777777;
+      font-size: 16px;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      animation: slideIn 1s ease-in-out;
+    }
+
+    .event-img-container {
+      width: 100%;
+      position: relative;
+      margin-right:30px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-img-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .event-img-container img:hover {
+      transform: scale(1.05);
+    }
+
+    .content-left {
+      width: 100%;
+    }
+
+    .content-left h2 {
+      color: #333333;
+      font-size: 24px;
+      margin: 0 0 10px;
+    }
+
+    .content-left p {
+      color: #555555;
+      font-size: 16px;
+      margin: 5px 0;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px 10px;
+      background-color: #f7f7f7;
+      border-radius: 0 0 10px 10px;
+      border-top: 1px solid #eeeeee;
+    }
+
+    .view-more {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 30px;
+      background-color: #ff7f50;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 25px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .view-more:hover {
+      background-color: #ff5733;
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .justified-text {
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Hey Glever, a gentle remainder!</h1>
+      <p class="justified-text">The event you have registered for, ${event.eventName} is happening in ${difference + 1} ${difference == 0 ? 'day' : 'days'}</p>
+    </div>
+    <div class="content">
+      <div class="event-img-container">
+        <img src="${event.eventImg}" alt="Event Image">
+      </div>
+      <div class="content-left">
+        <h2>${event.eventName}</h2>
+        <p><strong>Description:</strong> ${event.eventDescription}</p>
+        <p><strong>Location:</strong> ${event.eventLocation}</p>
+        <p><strong>Date:</strong> ${event.eventDate}</p>
+        <p><strong>Time:</strong> ${event.eventStartTime} - ${event.eventEndTime}</p>
+        <p><strong>Category:</strong> ${event.eventCategory}</p>
+        <p><strong>Organizer:</strong> ${event.eventOrganizer}</p>
+      </div>
+    </div>
+    <div class="footer">
+      <a href="http://localhost:5173/events" class="view-more">View More</a>
+      <p>Thank you for being a part of our community!</p>
+    </div>
+  </div>
+</body>
+</html>
+      `;
+      const subject = `Remember Glever, the event you registered is just in ${difference + 1} ${difference == 0 ? 'day' : 'days'}`
+      let emails = get_emails_of_registered(reg_users);
+      const value = send_mails(event_id, subject, htmlTemplate, emails);
+      if (value === 1) {
+        res.status(200).send("Emails sent successfully");
+      } else {
+        res.status(400).send("Error in sending the emails");
+      }
+    }
+  } catch (error) {
+    return res.status(500).json({message:"Authentication error!"});
+  }
+});
+
+app.get(`/mail-to-registered-on-updates/:event_id`, async (req, res) => {
+  const event_id = req.params.event_id;
+  try {
+    const reg_users = await registered_users(event_id);
+    let emails = get_emails_of_registered(reg_users);
+    const htmlTemplate = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Change in our Event details</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Open Sans', Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 800px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .header {
+      text-align: center;
+      border-bottom: 1px solid #eeeeee;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      color: #333333;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #777777;
+      font-size: 16px;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      animation: slideIn 1s ease-in-out;
+    }
+
+    .event-img-container {
+      width: 100%;
+      position: relative;
+      margin-right:30px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-img-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .event-img-container img:hover {
+      transform: scale(1.05);
+    }
+
+    .content-left {
+      width: 100%;
+    }
+
+    .content-left h2 {
+      color: #333333;
+      font-size: 24px;
+      margin: 0 0 10px;
+    }
+
+    .content-left p {
+      color: #555555;
+      font-size: 16px;
+      margin: 5px 0;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px 10px;
+      background-color: #f7f7f7;
+      border-radius: 0 0 10px 10px;
+      border-top: 1px solid #eeeeee;
+    }
+
+    .view-more {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 30px;
+      background-color: #ff7f50;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 25px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .view-more:hover {
+      background-color: #ff5733;
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Hey Glever, There is a bit of a change to the event, ${event.eventName} you have registered</h1>
+      <p>Here are the changed details!</p>
+    </div>
+    <div class="content">
+      <div class="event-img-container">
+        <img src="${event.eventImg}" alt="Event Image">
+      </div>
+      <div class="content-left">
+        <h2>${event.eventName}</h2>
+        <p><strong>Description:</strong> ${event.eventDescription}</p>
+        <p><strong>Location:</strong> ${event.eventLocation}</p>
+        <p><strong>Date:</strong> ${event.eventDate}</p>
+        <p><strong>Time:</strong> ${event.eventStartTime} - ${event.eventEndTime}</p>
+        <p><strong>Category:</strong> ${event.eventCategory}</p>
+        <p><strong>Organizer:</strong> ${event.eventOrganizer}</p>
+      </div>
+    </div>
+    <div class="footer">
+      <a href="http://localhost:5173/events" class="view-more">View More</a>
+      <p>Thank you for being a part of our community!</p>
+    </div>
+  </div>
+</body>
+</html>
+
+    `;
+    const subject = "A bit of change to the event you registered😅"
+    const value = send_mails(event_id, subject, htmlTemplate, emails);
+    if (value === 1) {
+      res.status(200).send("Emails sent successfully!");
+    } else {
+      res.status(400).send("Error in sending the emails");
+    }
+  } catch (error) {
+    return res.status(500).json({message: "Authentication error"});
   }
 });
 
@@ -568,7 +969,6 @@ app.get('/register-who/:event_id', async (req, res) => {
   try {
     const reg_users = await registered_users(event_id);
     let users = [];
-    console.log("Registered users:- \n",reg_users)
     for (let i = 0; i < reg_users.users.length; i++) {
       users.push(reg_users.users[i].userName);
     }

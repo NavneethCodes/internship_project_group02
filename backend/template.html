@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>New Event Notification</title>
+  <title>Change in our Event!</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
 
@@ -135,13 +135,17 @@
         transform: translateX(0);
       }
     }
+
+    .justified-text {
+      text-align: left;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>Hey Glever, Event:"${event.eventName}" details have been changed...</h1>
-      <p>Here are the changed details!</p>
+      <h1>Hey Glever, a gentle remainder!</h1>
+      <p class="justified-text">The event you have registered for, ${event.eventName} is happening in ${difference + 1} ${difference == 0 ? 'day' : 'days'}</p>
     </div>
     <div class="content">
       <div class="event-img-container">
