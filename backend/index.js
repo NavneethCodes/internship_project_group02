@@ -1105,6 +1105,7 @@ app.put('/logout/:id', async (req, res) => {
         await admin.save();
       }
     }
+    res.status(200).send("User logged out successfully!");
   } catch (error) {
     res.status(500).send("Error signing out!");
   }
