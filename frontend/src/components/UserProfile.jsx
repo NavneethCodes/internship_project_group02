@@ -43,7 +43,7 @@ const MainContent = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 5px;
   overflow: hidden;
   flex-direction: column;
 `;
@@ -52,7 +52,6 @@ const ProfileAndEditContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: flex-start;
   width: 100%;
 `;
 
@@ -65,8 +64,11 @@ const ProfileContainer = styled(motion.div)`
   padding: 2rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
+  max-width: 1200px;
+  height:100vh;
+  max-height:700px;
   margin-right: 20px;
+  margin-top:50px;
 `;
 
 const EditProfileContainer = styled(motion.div)`
@@ -78,7 +80,8 @@ const EditProfileContainer = styled(motion.div)`
   padding: 2rem;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
+  max-width: 600px;
+  margin-top:50px;
 `;
 
 const Avatar = styled(motion.img)`
@@ -245,9 +248,6 @@ const UserProfile = () => {
         console.error('Error fetching user data:', error);
       }
     };
-
-    
-
     const fetchEventRecordData = async () => {
       try {
         const response = await axios.get('http://localhost:4000/event-records');
@@ -296,6 +296,15 @@ const UserProfile = () => {
     }
   };
 
+  
+  const passprint = () => {
+    let maskedPassword = '';
+    for (let i = 0; i < placeholders.userPassword.length; i++) {
+      maskedPassword += '*';
+    }
+    return maskedPassword;
+  };
+
 
   return (
     <Container>
@@ -305,7 +314,7 @@ const UserProfile = () => {
           <img src={logo} alt="cannot be displayed" className="nav-logo" />
           <p>Gleve</p>
         </label>
-        <input type="text" placeholder="search" name="eventName" />
+        {/* <input type="text" placeholder="search" name="eventName" /> */}
         <div className="btn-area">
           {loggedIn ? (
             <>
@@ -327,8 +336,8 @@ const UserProfile = () => {
         <ProfileAndEditContainer>
           <ProfileContainer
             initial={{ x: showEditProfile ? 0 : -300, opacity: showEditProfile ? 0 : 1 }}
-            animate={{ x: showEditProfile ? -300 : 0, opacity: showEditProfile ? 1 : 1 }}
-            transition={{ duration: 0.5 }}
+            animate={{ x: showEditProfile ? -100 : 0, opacity: showEditProfile ? 1 : 1 ,maxWidth: showEditProfile ? 700:1200 }}
+            transition={{ duration: 0.3 }}
           >
             <Avatar
               src="https://via.placeholder.com/100"
@@ -466,7 +475,7 @@ const UserProfile = () => {
                       type="password"
                       name="userPassword"
                       // value={form.userPassword}
-                      // placeholder={placeholders.userPassword}
+                      placeholder={passprint()}
                       onChange={valueFetch}
                       sx={{
                         '& .MuiOutlinedInput-root': {

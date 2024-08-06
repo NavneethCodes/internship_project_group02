@@ -193,7 +193,7 @@ const EventComments = () => {
           <img src={logo} alt="cannot be displayed" className="nav-logo" />
           <p>Gleve</p>
         </label>
-        <input type="text" placeholder="search" name="eventName" />
+        {/* <input type="text" placeholder="search" name="eventName" /> */}
         <div className="btn-area">
           {loggedIn ? (
             <>

@@ -19,6 +19,7 @@ const MainEventDisplay = () => {
   const [sortOption, setSortOption] = useState('Upcoming');
   const [loggedIn, setLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -34,9 +35,9 @@ const MainEventDisplay = () => {
     fetchCategories();
   }, []);
 
-  const route =() =>{
-    window.location.href='/home';
-  }
+  const route = () => {
+    window.location.href = '/home';
+  };
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -63,28 +64,40 @@ const MainEventDisplay = () => {
     if (selectedCategory !== 'All') {
       updatedEvents = updatedEvents.filter(event => event.eventCategory === selectedCategory);
     }
+
     if (sortOption === 'Upcoming') {
       // Sort by event date in ascending order (earliest first)
       updatedEvents.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
-    }
-    else if (sortOption === 'Popular') {
+    } else if (sortOption === 'Popular') {
       updatedEvents.sort((a, b) => {
         const likesA = a.likes ? a.likes.length : 0;
         const likesB = b.likes ? b.likes.length : 0;
-    
+
         if (likesB === likesA) {
           // If the like counts are the same, sort alphabetically by event name
           return a.eventName.localeCompare(b.eventName);
         }
-        
+
         // Otherwise, sort by number of likes
         return likesB - likesA;
       });
     }
 
+    if (searchQuery) {
+      updatedEvents = updatedEvents.filter(event => 
+        (event.eventName && event.eventName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (event.eventCategory && event.eventCategory.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (event.eventLocation && event.eventLocation.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (event.eventOrganizer && event.eventOrganizer.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        // (event.eventStartTime && event.eventStartTime.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        // (event.eventEndTime && event.eventEndTime.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (event.eventDescription && event.eventDescription.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+    }
+
     console.log('Filtered and sorted events:', updatedEvents);
     setFilteredEvents(updatedEvents);
-  }, [selectedCategory, sortOption, events]);
+  }, [selectedCategory, sortOption, events, searchQuery]);
 
   useEffect(() => {
     const user = sessionStorage.getItem('userName');
@@ -117,10 +130,14 @@ const MainEventDisplay = () => {
       setLoggedIn(false);
       setUserName('');
       window.location.reload();
-      await axios.put(`http://localhost:4000/logout/${user_id}`);      
-    } catch(error) {
+      await axios.put(`http://localhost:4000/logout/${user_id}`);
+    } catch (error) {
       console.log(`Error logging out: `, error);
     }
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
   };
 
   return (
@@ -131,11 +148,17 @@ const MainEventDisplay = () => {
           <img src={logo} alt="cannot be displayed" className="nav-logo" />
           <p>Gleve</p>
         </label>
-        <input type="text" placeholder="search" name="eventName" />
+        <input
+          type="text"
+          placeholder="search"
+          value={searchQuery}
+          onChange={handleSearchChange}
+          name="search"
+        />
         <div className="btn-area">
           {loggedIn ? (
             <>
-              <div className='user-name-container'><span className="user-name">{userName}</span></div>
+              <div className="user-name-container"><span className="user-name">{userName}</span></div>
               <button onClick={handleLogoutClick}>Logout</button>
             </>
           ) : (
@@ -171,7 +194,7 @@ const MainEventDisplay = () => {
             <span className="cat-col">{selectedCategory} ▼</span>
           </MenuButton>
           <Menu>
-            <MenuItem onClick={() => handleCategoryClick('All')}></MenuItem>
+            <MenuItem onClick={() => handleCategoryClick('All')}>All</MenuItem>
             {categories.map((category, index) => (
               <MenuItem key={index} onClick={() => handleCategoryClick(category)}>
                 {category}
