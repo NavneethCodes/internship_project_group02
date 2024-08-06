@@ -26,15 +26,23 @@ const transporter = nodemailer.createTransport({
 cron.schedule('0 0 * * *', async () => {
   try {
     const currentDate = new Date();
-    const result = await eventModel.deleteMany({ eventDate: { $lt: currentDate } });
-    console.log(`${result.deletedCount} past events deleted.`);
+    const results = await eventModel.find({ eventDate: { $lt: currentDate } });
+    for (const result of results) {
+      const val = await delete_event(result._id);
+      if (val === 1) {
+        console.log("Events, expired, deleted!");
+      } else {
+        console.log("Error in deletion");
+      }
+    }
   } catch (error) {
     console.error('Error deleting past events:', error);
   }
 });
 
+
 // This function is called when an event is to be deleted
-const delete_event = async (event_id, res) => {
+const delete_event = async (event_id) => {
   try {
     const record = await recordModel.findOne({ event_id: event_id });
     if (record) {
@@ -42,17 +50,16 @@ const delete_event = async (event_id, res) => {
     }
     await eventModel.findByIdAndDelete(event_id);
     const all_users = await userModel.find();
-    let index_of_event = 0;
     for (let i = 0; i < all_users.length; i++) {
       if (all_users[i].registered_events.includes(event_id)) {
-        index_of_event = all_users[i].registered_events.indexOf(event_id);
+        const index_of_event = all_users[i].registered_events.indexOf(event_id);
         all_users[i].registered_events.splice(index_of_event, 1);
         await all_users[i].save();
       }
     }
-    res.send("Event deleted successfully!");
+    return 1;
   } catch (error) {
-    res.status(500).json({message: "Error finding the event with this event id"});
+    return 0;
   }
 }
 
@@ -60,13 +67,15 @@ const delete_event = async (event_id, res) => {
 const cleanupExpiredEvents = async () => {
   try {
     const currentDate = new Date();
-    const expiredEvents = await eventModel.find({ eventDate : { $lt: currentDate } });
+    const expiredEvents = await eventModel.find({ eventDate: { $lt: currentDate } });
     for (const event of expiredEvents) {
-      const record = await recordModel.findOne({event_id : event._id});
-      await recordModel.findByIdAndDelete(record._id);
-      await eventModel.findByIdAndDelete(event._id);
+      const val = await delete_event(event._id);
+      if (val === 1) {
+        console.log("Expired events deleted successfully!");
+      } else {
+        console.log("Error, was not able to delete the events");
+      }
     }
-    console.log("Expired events deleted successfully!");
   } catch (error) {
     console.log("Error deleting expired events:", error);
   }
@@ -512,27 +521,37 @@ const diffDate = (event_date) => {
   return days_diff;
 }
 
+// Function is to return the Names of all the users who have registered for a purticular event
 const registered_users = async (event_id) => {
-  const users = await userModel.find();
   try {
-    if (await eventModel.findById(event_id)) {
+    console.log("Received event ID:", event_id);
+
+    const event = await eventModel.findById(event_id);
+    console.log("Event found:", event);
+
+    if (event) {
+      const users = await userModel.find();
+      console.log("All users fetched:", users.length);
       let users_registered = [];
       for (let i = 0; i < users.length; i++) {
         if (users[i].registered_events.includes(event_id)) {
+          console.log("User registered for event:", users[i]);
           users_registered.push(users[i]);
         }
-        if (users_registered.length > 0) {
-          return { users: users_registered, message: "Users registered returned." };
-        }
-        return { users: null, message: "Empty, no users registered for this event!"};
+      }
+      if (users_registered.length > 0) {
+        return { users: users_registered, message: "Users registered returned." };
+      } else {
+        return { users: null, message: "Empty, no users registered for this event!" };
       }
     } else {
-      return { users: null, message: "Invalid input received!"};
+      return { users: null, message: "Invalid input received!" };
     }
   } catch (error) {
-    
+    console.error("Error in registered_users function:", error);
+    return { users: null, message: "An error occurred while retrieving users." };
   }
-}
+};
 
 // This is to send email to all users who registered for the event prior day.
 app.get('/prior-remainder/:event_id', async (req, res) => {
@@ -544,27 +563,19 @@ app.get('/prior-remainder/:event_id', async (req, res) => {
   }
 });
 
-// This is to get all the user_id who has registered for this event.
+// This is to get all the user names who has registered for this event.
 app.get('/register-who/:event_id', async (req, res) => {
   const event_id = req.params.event_id;
-  const users = await userModel.find();
   try {
-    if (await eventModel.findById(event_id)){
-      let users_registered = [];
-      for (let i = 0; i < users.length; i++) {
-        if (users[i].registered_events.includes(event_id)) {
-          users_registered.push(users[i]._id);
-        }
-      }
-      return res.status(200).json({
-        users_registered: users_registered, 
-        message         : "Successfully extracted all users who registered for the event"
-      })
-    } else {
-      res.status(400).json({message: "Event not recognized, check `_id`"});
+    const reg_users = await registered_users(event_id);
+    let users = [];
+    console.log("Registered users:- \n",reg_users)
+    for (let i = 0; i < reg_users.users.length; i++) {
+      users.push(reg_users.users[i].userName);
     }
+    console.log("Registered users for this event:- "+ users);
   } catch (error) {
-    res.status(500).json({message: "Authorization rejected!"})
+    console.log("Error recovering the users who registered for the event!");
   }
 });
 
@@ -603,7 +614,7 @@ app.get("/events", async (req, res) => {
       console.log(error);
       res.status(500).send('Error fetching events');
     }
-  });
+});
   
 // This would add a new user to the db, if the user has the credentials valid
 app.post("/usernew", async (req, res) => {
@@ -720,7 +731,12 @@ app.post("/eventnew", async (req, res) => {
 app.delete(`/event-delete/:event_id`, async (req, res) => {
   try {
     const event_id = req.params.event_id;
-    delete_event(event_id, res);
+    const val = delete_event(event_id);
+    if (val === 1) {
+      res.status(400).send("Event deleted successfully!");
+    } else {
+      res.status(500).send("Error in deletion");
+    }
   } catch(error) {
     res.send("Error finding the event with this event id");
   }
