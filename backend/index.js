@@ -1006,7 +1006,8 @@ app.get("/events", async (req, res) => {
         {
           $addFields: {
             likes: { $ifNull: ["$eventRecords.likes", []] },
-            comments: { $ifNull: ["$eventRecords.comments", []] }
+            comments: { $ifNull: ["$eventRecords.comments", []] },
+            registration: "$eventRecords.registration"
           }
         },
         {
@@ -1118,9 +1119,10 @@ app.post("/eventnew", async (req, res) => {
     const datasave = new eventModel(data);
     const saved_event = await datasave.save();
     const recordsInit = new recordModel({
-      event_id  : saved_event._id,
-      likes     : [],
-      comments  : []
+      event_id      : saved_event._id,
+      likes         : [],
+      comments      : [],
+      registration  : "open"
     });
     await recordsInit.save();
 
@@ -1285,6 +1287,19 @@ app.put("/user-status-update/:id", async (req, res) => {
     res.json(data);
 });
 
+// This would be used to change the registered status of an event from registered to unregistered and vice-versa
+app.put("/event-registration-status-change/:event_id", async (req, res) => {
+  const event_id = req.params.event_id;
+  const record = await recordModel.findOne({event_id: event_id});
+  var eventRegistration = record.registration;
+  if (eventRegistration === 'open') {
+    record.registration = 'closeed';
+  } else {
+    record.registration = 'open';
+  }
+  await record.save();
+  res.json(record);
+});
 // This function is used to like, unlike(revert like), comment and uncomment
 app.put("/action/:action", async (req, res) => {
   const { user_id, event_id } = req.body;
