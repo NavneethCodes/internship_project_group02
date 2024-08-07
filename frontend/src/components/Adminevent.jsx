@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
-import './Adminevent.css'
+import './Adminevent.css';
 import {
   Box,
   Button,
@@ -14,6 +14,7 @@ import {
   createTheme,
 } from '@mui/material';
 import axios from 'axios';
+import { BarLoader } from 'react-spinners';
 
 const fadeIn = keyframes`
   from {
@@ -52,7 +53,7 @@ const StyledButton = styled(Button)`
 
 const theme = createTheme({
   typography: {
-    fontFamily:'Poppins',
+    fontFamily: 'Poppins',
     h4: {
       fontWeight: 600,
       color: '#333',
@@ -69,6 +70,19 @@ const theme = createTheme({
   },
 });
 
+const LoaderContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+`;
+
 const Adminevent = () => {
   const [eventDetails, setEventDetails] = useState({
     eventName: '',
@@ -83,6 +97,7 @@ const Adminevent = () => {
   });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const [events, setEvents] = useState([]); // To store fetched events
 
   const handleChange = (e) => {
@@ -102,20 +117,27 @@ const Adminevent = () => {
       eventEndTime: new Date(`${eventDetails.eventDate}T${eventDetails.eventEndTime}`),
     };
 
-    console.log("Event Payload:", eventPayload);
+    console.log('Event Payload:', eventPayload);
 
     try {
+      setLoading(true);
       const response = await axios.post('http://localhost:4000/eventnew', eventPayload);
-      console.log("Event Creation Response:", response.data);
+      console.log('Event Creation Response:', response.data);
 
       setSnackbarMessage(response.data.message || 'Event created successfully!');
       setOpenSnackbar(true);
       await axios.get(`http://localhost:4000/send-email-to-all/${response.data.event._id}`);
       // Re-fetch events
       fetchEvents();
+
+      setTimeout(() => {
+        setLoading(false);
+        window.location.reload();
+      }, 2000);
     } catch (error) {
       setSnackbarMessage('Error creating event');
       setOpenSnackbar(true);
+      setLoading(false); // Hide loader in case of error
       console.error('Error:', error);
     }
   };
@@ -139,9 +161,14 @@ const Adminevent = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      {loading && (
+        <LoaderContainer>
+          <BarLoader color="#3f51b5" loading={loading} />
+        </LoaderContainer>
+      )}
       <StyledContainer component="main" maxWidth="md">
         <StyledPaper elevation={3}>
-          <Typography variant='h4' align="center" gutterBottom>
+          <Typography variant="h4" align="center" gutterBottom>
             Create a New Event
           </Typography>
           <form onSubmit={handleSubmit}>

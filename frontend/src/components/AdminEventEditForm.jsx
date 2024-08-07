@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
-import './AdminEventEditForm.css'
+import './AdminEventEditForm.css';
 import {
   Box,
   Button,
@@ -14,6 +14,7 @@ import {
   createTheme,
 } from '@mui/material';
 import axios from 'axios';
+import { BarLoader } from 'react-spinners';
 
 const fadeIn = keyframes`
   from {
@@ -52,7 +53,7 @@ const StyledButton = styled(Button)`
 
 const theme = createTheme({
   typography: {
-    fontFamily:'Poppins',
+    fontFamily: 'Poppins',
     h4: {
       fontWeight: 600,
       color: '#333',
@@ -69,6 +70,19 @@ const theme = createTheme({
   },
 });
 
+const LoaderContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+`;
+
 const AdminEventEditForm = ({ event, onCancelEdit }) => {
   const [eventDetails, setEventDetails] = useState({
     eventName: '',
@@ -83,6 +97,7 @@ const AdminEventEditForm = ({ event, onCancelEdit }) => {
   });
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (event) {
@@ -118,12 +133,19 @@ const AdminEventEditForm = ({ event, onCancelEdit }) => {
     };
 
     try {
+      setLoading(true);
       const response = await axios.put(`http://localhost:4000/update-event/${event._id}`, eventPayload);
       setSnackbarMessage(response.data.message || 'Event updated successfully!');
       setOpenSnackbar(true);
+
+      setTimeout(() => {
+        setLoading(false);
+        window.location.reload();
+      }, 2000);
     } catch (error) {
       setSnackbarMessage('Error updating event');
       setOpenSnackbar(true);
+      setLoading(false);
       console.error('Error:', error);
     }
   };
@@ -134,6 +156,11 @@ const AdminEventEditForm = ({ event, onCancelEdit }) => {
 
   return (
     <ThemeProvider theme={theme}>
+      {loading && (
+        <LoaderContainer>
+          <BarLoader color="#3f51b5" loading={loading} />
+        </LoaderContainer>
+      )}
       <StyledContainer component="main" maxWidth="md">
         <StyledPaper elevation={3}>
           <Typography variant='h4' align="center" gutterBottom>

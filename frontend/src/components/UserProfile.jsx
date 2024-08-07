@@ -111,6 +111,7 @@ const Stat = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-left:50px;
 `;
 
 const StatNumber = styled.p`

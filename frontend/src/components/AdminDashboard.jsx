@@ -153,7 +153,7 @@ const ActionButton = styled.button`
 `;
 
 const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('users');
+  const [activeTab, setActiveTab] = useState('events');
   const [users, setUsers] = useState([]);
   const [events, setEvents] = useState([]);
   const [showAdminEvent, setShowAdminEvent] = useState(false);
