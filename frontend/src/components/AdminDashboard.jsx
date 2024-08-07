@@ -293,6 +293,16 @@ const AdminDashboard = () => {
     }
   };
 
+  const refresher = () => {
+    try {
+      const responder = axios.post(`http://localhost:4000/admin-force-clean`);
+    } catch (error) {
+      console.error('Error:- '+error);
+    }
+    
+
+  }
+
   return (
     <Container>
       <div className="Event-navbar">
@@ -320,7 +330,7 @@ const AdminDashboard = () => {
       <Main>
         <Header>
           <Title>Admin Dashboard</Title>
-          <button className='reload-btn'>Refresh DB</button>
+          <button className='reload-btn' onClick={refresher}>Refresh DB</button>
         </Header>
         <Content>
           {showAdminEvent && <Adminevent />}

@@ -169,7 +169,8 @@ const get_emails_of_registered = async (reg_users) => {
 app.post('/admin-force-clean', async (req, res) => {
   try {
     await cleanupExpiredEvents();
-    res.send("Expired events cleaned");
+    res.status(200).send("Expired events cleaned");
+    console.log("Expired has been cleared");
   } catch (error) {
     res.status(500).send("Error cleaning up expired events.");
   }
