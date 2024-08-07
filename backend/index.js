@@ -900,6 +900,10 @@ app.get(`/mail-to-registered-on-updates/:event_id`, async (req, res) => {
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       transition: background-color 0.3s ease, transform 0.3s ease;
     }
+      .eve-name{
+        color:red;
+        font-weight:bold;
+      }
 
     .view-more:hover {
       background-color: #ff5733;
@@ -932,7 +936,7 @@ app.get(`/mail-to-registered-on-updates/:event_id`, async (req, res) => {
 <body>
   <div class="container">
     <div class="header">
-      <h1>Hey Glever, There is a bit of a change to the event, ${event.eventName} you have registered</h1>
+      <h1>Hey Glever, There is a bit of a change to the event : <span class="eve-name">${event.eventName}</span> you have registered</h1>
       <p>Here are the changed details!</p>
     </div>
     <div class="content">

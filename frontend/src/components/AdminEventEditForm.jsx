@@ -137,6 +137,7 @@ const AdminEventEditForm = ({ event, onCancelEdit }) => {
       const response = await axios.put(`http://localhost:4000/update-event/${event._id}`, eventPayload);
       setSnackbarMessage(response.data.message || 'Event updated successfully!');
       setOpenSnackbar(true);
+      await axios.get(`http://localhost:4000/mail-to-registered-on-updates/${event._id}`);
 
       setTimeout(() => {
         setLoading(false);
