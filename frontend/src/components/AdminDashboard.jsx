@@ -15,24 +15,37 @@ const Container = styled.div`
 `;
 
 const Sidebar = styled.div`
-  width: 250px;
+  width: 170px;
   padding-top: 100px;
   padding-right: 20px;
   padding-left: 20px;
   padding-bottom: 20px;
   background-color: #fff;
   border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
 `;
 
 const SidebarItem = styled.div`
   display: flex;
   align-items: center;
-  padding: 10px 0;
+  padding: 10px 15px;
+  margin: 5px 0;
+  margin-right:20px;
   cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s;
 
   &:hover {
-    background-color: #f2f2f2;
+    background-color: #e9ecef;
+    transform: translateX(10px);
   }
+
+  ${props => props.active && `
+    background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
+    color: #fff;
+    border-radius: 4px;
+    transform: translateX(10px);
+  `}
 `;
 
 const Main = styled.div`
@@ -104,7 +117,7 @@ const ScheduleTime = styled.span`
 const StatusText = styled.span`
   font-size: 14px;
   font-weight: bold;
-  color: ${(props) => (props.status === 'active' ? '#28a745' : '#dc3545')};
+  color: ${props => (props.status === 'active' ? '#28a745' : '#dc3545')};
 `;
 
 const ScheduleActions = styled.div`
@@ -149,12 +162,12 @@ const Dropdown = styled.div`
 `;
 
 const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('users');
+  const [activeTab, setActiveTab] = useState('events');
   const [users, setUsers] = useState([]);
   const [events, setEvents] = useState([]);
   const [showAdminEvent, setShowAdminEvent] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [eventToEdit, setEventToEdit] = useState(null);
+  const [eventToEdit, setEventToEdit] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [deleteType, setDeleteType] = useState('');
   const [deleteId, setDeleteId] = useState('');
@@ -167,19 +180,19 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     axios.get('http://localhost:4000/users')
-      .then((response) => setUsers(response.data))
-      .catch((error) => console.error('Error fetching users:', error));
+      .then(response => setUsers(response.data))
+      .catch(error => console.error('Error fetching users:', error));
 
     axios.get('http://localhost:4000/events')
-      .then((response) => setEvents(response.data))
-      .catch((error) => console.error('Error fetching events:', error));
+      .then(response => setEvents(response.data))
+      .catch(error => console.error('Error fetching events:', error));
   }, []);
 
   const handleBlockUser = async (userId, currentStatus) => {
     try {
       const newStatus = currentStatus === 'active' ? 'suspend' : 'active';
       await axios.put(`http://localhost:4000/user-status-update/${userId}`, { status: newStatus });
-      setUsers(users.map((user) =>
+      setUsers(users.map(user =>
         user._id === userId ? { ...user, userStatus: newStatus } : user
       ));
     } catch (error) {
@@ -208,11 +221,11 @@ const AdminDashboard = () => {
     try {
       if (deleteType === 'user') {
         await axios.delete(`http://localhost:4000/userdeletion/${deleteId}`);
-        setUsers(users.filter((user) => user._id !== deleteId));
+        setUsers(users.filter(user => user._id !== deleteId));
         setSnackbarMessage('User deleted successfully!');
       } else if (deleteType === 'event') {
         await axios.delete(`http://localhost:4000/event-delete/${deleteId}`);
-        setEvents(events.filter((event) => event._id !== deleteId));
+        setEvents(events.filter(event => event._id !== deleteId));
         setSnackbarMessage('Event deleted successfully!');
       }
       setShowModal(false);
@@ -231,12 +244,12 @@ const AdminDashboard = () => {
   }, []);
 
   const handleLoginClick = () => {
-    window.location.href = '/login';
+    window.location.href='/login';
   };
 
   const route = () => {
-    window.location.href = '/home';
-  };
+    window.location.href='/home';
+  }
 
   const handleLogoutClick = async () => {
     try {
@@ -247,9 +260,9 @@ const AdminDashboard = () => {
       setLoggedIn(false);
       setUserName('');
       window.location.reload();
-      window.location.href = '/home';
+      window.location.href='/home';
       await axios.put(`http://localhost:4000/logout/${user_id}`);
-    } catch (error) {
+    } catch(error) {
       console.log(`Error logging out: `, error);
     }
   };
@@ -271,8 +284,8 @@ const AdminDashboard = () => {
       if (!registeredUsers[eventId]) {
         try {
           const response = await axios.get(`http://localhost:4000/register-who/${eventId}`);
-          console.log('hi 4')
-          setRegisteredUsers({ ...registeredUsers, [eventId]: response.data.users.userName });
+          console.log(response)
+          setRegisteredUsers({ ...registeredUsers, [eventId]: response.data });
         } catch (error) {
           console.error('Error fetching registered users:', error);
         }
@@ -287,7 +300,7 @@ const AdminDashboard = () => {
           <img src={logo} alt="cannot be displayed" className="nav-logo" />
           <p>Gleve</p>
         </label>
-        <input type="text" placeholder="search" name="eventName" />
+        {/* <input type="text" placeholder="search" name="eventName" /> */}
         <div className="btn-area">
           {loggedIn ? (
             <>
@@ -300,9 +313,9 @@ const AdminDashboard = () => {
         </div>
       </div>
       <Sidebar>
-        <SidebarItem onClick={() => { setActiveTab('users'); setShowAdminEvent(false); setIsEditMode(false); }}>Users</SidebarItem>
-        <SidebarItem onClick={() => { setActiveTab('events'); setShowAdminEvent(false); setIsEditMode(false); }}>Events</SidebarItem>
-        <SidebarItem onClick={() => { setShowAdminEvent(true); setIsEditMode(false); }}>Create Event</SidebarItem>
+      <SidebarItem active={activeTab === 'users'} onClick={() => { setActiveTab('users'); setShowAdminEvent(false); setIsEditMode(false); }}>Users</SidebarItem>
+<SidebarItem active={activeTab === 'events'} onClick={() => { setActiveTab('events'); setShowAdminEvent(false); setIsEditMode(false); }}>Events</SidebarItem>
+<SidebarItem active={showAdminEvent && activeTab === 'create-event'} onClick={() => { setActiveTab('create-event') ; setShowAdminEvent(true); setIsEditMode(false); }}>Create Event</SidebarItem>
       </Sidebar>
       <Main>
         <Header>
@@ -364,34 +377,34 @@ const AdminDashboard = () => {
               <div>
                 {events.map((event) => (
                   <div key={event._id}>
-                    <ScheduleItem>
-                      <ScheduleTitle>{event.eventName}</ScheduleTitle>
-                      <ScheduleTime>{new Date(event.eventDate).toLocaleDateString()}</ScheduleTime>
-                      <CountContainer>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <img src="https://img.icons8.com/ios/24/000000/like.png" alt="Likes" style={{ marginRight: '5px' }} />
-                          <span>{event.likes.length} Likes</span>
-                        </div>
-                      </CountContainer>
-                      <CountContainer>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                          <img src="https://img.icons8.com/ios/24/000000/comments.png" alt="Comments" style={{ marginRight: '5px' }} />
-                          <span>{event.comments.length} Comments</span>
-                        </div>
-                      </CountContainer>
-                      <ScheduleActions>
-                        <ActionButton
-                          onClick={() => handleEditEvent(event)}
-                        >
-                          Edit
-                        </ActionButton>
-                      </ScheduleActions>
-                      <ScheduleActions>
-                        <ActionButton
-                          onClick={() => handleDeleteEvent(event._id)}
-                        >
-                          Delete
-                        </ActionButton>
+                  <ScheduleItem>
+                    <ScheduleTitle>{event.eventName}</ScheduleTitle>
+                    <ScheduleTime>{new Date(event.eventDate).toLocaleDateString()}</ScheduleTime>
+                    <CountContainer>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <img src="https://img.icons8.com/ios/24/000000/like.png" alt="Likes" style={{ marginRight: '5px' }} />
+                        <span>{event.likes.length} Likes</span>
+                      </div>
+                    </CountContainer>
+                    <CountContainer>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <img src="https://img.icons8.com/ios/24/000000/comments.png" alt="Comments" style={{ marginRight: '5px' }} />
+                        <span>{event.comments.length} Comments</span>
+                      </div>
+                    </CountContainer>
+                    <ScheduleActions>
+                      <ActionButton
+                        onClick={() => handleEditEvent(event)}
+                      >
+                        Edit
+                      </ActionButton>
+                    </ScheduleActions>
+                    <ScheduleActions>
+                      <ActionButton
+                        onClick={() => handleDeleteEvent(event._id)}
+                      >
+                        Delete
+                      </ActionButton>
                       </ScheduleActions>
                       <ScheduleActions>
                         <ActionButton onClick={() => toggleDropdown(event._id)}>
@@ -412,11 +425,12 @@ const AdminDashboard = () => {
                             <div>No registered users</div>
                           )
                         ) : (
-                          <div>Loading...</div>
+                          <div>No Registered Users</div>
                         )}
                       </Dropdown>
                     )}
                   </div>
+                    
                 ))}
               </div>
             </>

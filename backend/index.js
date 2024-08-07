@@ -1176,6 +1176,7 @@ app.get('/register-who/:event_id', async (req, res) => {
       users.push(reg_users.users[i]);
     }
     console.log("Registered users for this event:- "+ users);
+    return res.status(200).json(users);
   } catch (error) {
     console.log("Error recovering the users who registered for the event!");
   }
