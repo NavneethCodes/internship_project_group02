@@ -125,7 +125,8 @@ const ContactCard = styled(motion.div)`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   transition: transform 0.3s ease-in-out;
-  width: 250px;
+  width: 400px;
+  height:200px;
   margin: 10px;
   animation: ${fadeIn} 1s ease-in-out, ${slideIn} 1.5s ease-in-out;
 
@@ -154,19 +155,15 @@ const ContactDescription = styled.p`
 const contactDetails = [
   {
     info: 'Phone Number',
-    description: '+1 (123) 456-7890',
+    description: '+918304864594  ,  +917593000305   ,  +918714438702   ,  +91987643245',
   },
   {
     info: 'Email',
-    description: 'contact@company.com',
+    description: 'gleve.event.managements@gmail.com',
   },
   {
     info: 'Address',
-    description: '123 Main St, City, Country',
-  },
-  {
-    info: 'Office Hours',
-    description: 'Monday - Friday: 9:00 AM - 5:00 PM',
+    description: 'Thiruvananthapuram,Kerala',
   },
 ];
 
