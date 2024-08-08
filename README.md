@@ -13,13 +13,20 @@ Navneeth Arun
 
 The packages that are used in frontend:
 
-react-router dom
+react-router-dom
+
 toastify
+
 axios
+
 material ui
+
 styled-components
+
 react-spinners
+
 react-icons
+
 framer-motion
 
 
