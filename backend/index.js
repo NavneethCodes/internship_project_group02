@@ -1294,21 +1294,23 @@ app.post("/login", async (req, res) => {
 
 // This would be used when a user requests a logout
 app.put('/logout/:id', async (req, res) => {
-  try{
+  try {
     let admin = await adminControl.findOne();
     if (admin) {
-      console.log("inside");
+      console.log("User ID:", req.params.id);
       if (admin.active_users.includes(req.params.id)) {
         let index = admin.active_users.indexOf(req.params.id);
         admin.active_users.splice(index, 1);
         await admin.save();
       }
     }
+    console.log("Logged out!");
     res.status(200).send("User logged out successfully!");
   } catch (error) {
+    console.error("Error logging out:", error);
     res.status(500).send("Error signing out!");
   }
-})
+});
 
 // This would be used when a new event is being created
 app.post("/eventnew", async (req, res) => {
@@ -1491,7 +1493,7 @@ app.put("/event-registration-status-change/:event_id", async (req, res) => {
   const record = await recordModel.findOne({event_id: event_id});
   var eventRegistration = record.registration;
   if (eventRegistration === 'open') {
-    record.registration = 'closeed';
+    record.registration = 'closed';
   } else {
     record.registration = 'open';
   }
