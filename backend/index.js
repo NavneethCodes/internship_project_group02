@@ -169,7 +169,8 @@ const get_emails_of_registered = async (reg_users) => {
 app.post('/admin-force-clean', async (req, res) => {
   try {
     await cleanupExpiredEvents();
-    res.send("Expired events cleaned");
+    res.status(200).send("Expired events cleaned");
+    console.log("Expired has been cleared");
   } catch (error) {
     res.status(500).send("Error cleaning up expired events.");
   }
@@ -781,6 +782,7 @@ app.get('/prior-remainder/:event_id', async (req, res) => {
   }
 });
 
+// This will send mail to all registered users about any info update of the event
 app.get(`/mail-to-registered-on-updates/:event_id`, async (req, res) => {
   const event_id = req.params.event_id;
   console.log("Event_id:- "+event_id);
@@ -962,7 +964,198 @@ app.get(`/mail-to-registered-on-updates/:event_id`, async (req, res) => {
 </html>
 
     `;
-    const subject = "A bit of change to the event you registered😅"
+    const subject = "A bit of change to the event you registered😅";
+    const value = await send_mails(subject, htmlTemplate, emails);
+    if (value === 1) {
+      res.status(200).send("Emails sent successfully!");
+    } else {
+      res.status(400).send("Error in sending the emails");
+    }
+  } catch (error) {
+    return res.status(500).json({message: "Authentication error"});
+  }
+});
+
+// This will send mail to all registered users if the event got cancelled
+app.get(`/mail-to-registered-on-delete/:event_id`, async (req, res) => {
+  const event_id = req.params.event_id;
+  const event = await userModel.findById(event_id);
+  try {
+    const reg_users  = await registered_users(event_id);
+    let emails = await get_emails_of_registered(reg_users);
+    const htmlTemplate = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Change in our Event!</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+
+    body {
+      font-family: 'Open Sans', Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 800px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .header {
+      text-align: center;
+      border-bottom: 1px solid #eeeeee;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      color: #333333;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #777777;
+      font-size: 16px;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      animation: slideIn 1s ease-in-out;
+    }
+
+    .event-img-container {
+      width: 100%;
+      position: relative;
+      margin-right:30px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-img-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .event-img-container img:hover {
+      transform: scale(1.05);
+    }
+
+    .content-left {
+      width: 100%;
+    }
+
+    .content-left h2 {
+      color: #333333;
+      font-size: 24px;
+      margin: 0 0 10px;
+    }
+
+    .content-left p {
+      color: #555555;
+      font-size: 16px;
+      margin: 5px 0;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px 10px;
+      background-color: #f7f7f7;
+      border-radius: 0 0 10px 10px;
+      border-top: 1px solid #eeeeee;
+    }
+
+    .view-more {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 30px;
+      background-color: #ff7f50;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 25px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .view-more:hover {
+      background-color: #ff5733;
+      transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .justified-text {
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Hey Glever, we are sorry to announce that...</h1>
+      <p class="justified-text">The event you have registered for, ${event.eventName} has been deleted by the admin, sorry for the inconvinence caused Glever...</p>
+    </div>
+    <div class="content">
+      <div class="event-img-container">
+        <img src="${event.eventImg}" alt="Event Image">
+      </div>
+      <div class="content-left">
+        <h2>${event.eventName}</h2>
+        <p><strong>Description:</strong> ${event.eventDescription}</p>
+        <p><strong>Location:</strong> ${event.eventLocation}</p>
+        <p><strong>Date:</strong> ${event.eventDate}</p>
+        <p><strong>Time:</strong> ${event.eventStartTime} - ${event.eventEndTime}</p>
+        <p><strong>Category:</strong> ${event.eventCategory}</p>
+        <p><strong>Organizer:</strong> ${event.eventOrganizer}</p>
+      </div>
+    </div>
+    <div class="footer">
+      <a href="http://localhost:5173/events" class="view-more">View More</a>
+      <p>Thank you for being a part of our community!</p>
+    </div>
+  </div>
+</body>
+</html>
+    `;
+    const subject = "Sometimes we can't predict what the next moment has in store for us...";
     const value = await send_mails(subject, htmlTemplate, emails);
     if (value === 1) {
       res.status(200).send("Emails sent successfully!");
@@ -984,6 +1177,7 @@ app.get('/register-who/:event_id', async (req, res) => {
       users.push(reg_users.users[i]);
     }
     console.log("Registered users for this event:- "+ users);
+    return res.status(200).json(users);
   } catch (error) {
     console.log("Error recovering the users who registered for the event!");
   }
@@ -1010,7 +1204,8 @@ app.get("/events", async (req, res) => {
         {
           $addFields: {
             likes: { $ifNull: ["$eventRecords.likes", []] },
-            comments: { $ifNull: ["$eventRecords.comments", []] }
+            comments: { $ifNull: ["$eventRecords.comments", []] },
+            registration: "$eventRecords.registration"
           }
         },
         {
@@ -1099,21 +1294,23 @@ app.post("/login", async (req, res) => {
 
 // This would be used when a user requests a logout
 app.put('/logout/:id', async (req, res) => {
-  try{
+  try {
     let admin = await adminControl.findOne();
     if (admin) {
-      console.log("inside");
+      console.log("User ID:", req.params.id);
       if (admin.active_users.includes(req.params.id)) {
         let index = admin.active_users.indexOf(req.params.id);
         admin.active_users.splice(index, 1);
         await admin.save();
       }
     }
+    console.log("Logged out!");
     res.status(200).send("User logged out successfully!");
   } catch (error) {
+    console.error("Error logging out:", error);
     res.status(500).send("Error signing out!");
   }
-})
+});
 
 // This would be used when a new event is being created
 app.post("/eventnew", async (req, res) => {
@@ -1122,9 +1319,10 @@ app.post("/eventnew", async (req, res) => {
     const datasave = new eventModel(data);
     const saved_event = await datasave.save();
     const recordsInit = new recordModel({
-      event_id  : saved_event._id,
-      likes     : [],
-      comments  : []
+      event_id      : saved_event._id,
+      likes         : [],
+      comments      : [],
+      registration  : "open"
     });
     await recordsInit.save();
 
@@ -1289,6 +1487,19 @@ app.put("/user-status-update/:id", async (req, res) => {
     res.json(data);
 });
 
+// This would be used to change the registered status of an event from registered to unregistered and vice-versa
+app.put("/event-registration-status-change/:event_id", async (req, res) => {
+  const event_id = req.params.event_id;
+  const record = await recordModel.findOne({event_id: event_id});
+  var eventRegistration = record.registration;
+  if (eventRegistration === 'open') {
+    record.registration = 'closed';
+  } else {
+    record.registration = 'open';
+  }
+  await record.save();
+  res.json(record);
+});
 // This function is used to like, unlike(revert like), comment and uncomment
 app.put("/action/:action", async (req, res) => {
   const { user_id, event_id } = req.body;

@@ -1,11 +1,57 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled,{keyframes} from 'styled-components';
 import axios from 'axios';
 import Adminevent from './Adminevent.jsx';
 import AdminEventEditForm from './AdminEventEditForm.jsx';
 import Modal from './Modal.jsx';
 import logo from '../Images/p-logo.png';
 import { Snackbar } from '@mui/material';
+
+
+// const borderAnimation = keyframes`
+//   0% {
+//     border-right: 2px solid red;
+//     border-left: 2px solid white;
+//     border-top: 2px solid white;
+//     border-bottom: 2px solid white;
+//   }
+//   25% {
+//     border-right: 2px solid white;
+//     border-left: 2px solid red;
+//     border-top: 2px solid white;
+//     border-bottom: 2px solid white;
+//   }
+//   50% {
+//     border-right: 2px solid white;
+//     border-left: 2px solid white;
+//     border-top: 2px solid red;
+//     border-bottom: 2px solid white;
+//   }
+//   75% {
+//     border-right: 2px solid white;
+//     border-left: 2px solid white;
+//     border-top: 2px solid white;
+//     border-bottom: 2px solid red;
+//   }
+//   100% {
+//     border-right: 2px solid red;
+//     border-left: 2px solid white;
+//     border-top: 2px solid white;
+//     border-bottom: 2px solid white;
+//   }
+// `;
+
+const borderAnimation = keyframes`
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+`;
 
 const Container = styled.div`
   display: flex;
@@ -81,16 +127,30 @@ const Content = styled.div`
 
 const ScheduleHeader = styled.div`
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
   padding: 10px;
   background-color: #e9ecef;
   border-radius: 5px;
   font-weight: bold;
+  margin-bottom:10px;
+`;
+
+const ScheduleHeader_reg = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr 1fr;
+  padding: 10px;
+  background:  rgba(48, 46, 46, 1);
+  border-radius: 5px;
+  font-weight: bolder;
+  color:white;
+  height:50px;
+  font-size:20px;
+  margin-bottom:10px;
 `;
 
 const ScheduleItem = styled.div`
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr 1fr 1fr;
   background-color: #fff;
   padding: 15px;
   border-radius: 5px;
@@ -105,6 +165,11 @@ const ScheduleItem = styled.div`
 `;
 
 const ScheduleTitle = styled.h3`
+  margin: 0;
+  font-size: 18px;
+`;
+
+const ScheduleTitle_reg = styled.h3`
   margin: 0;
   font-size: 18px;
 `;
@@ -152,9 +217,48 @@ const ActionButton = styled.button`
   }
 `;
 
+const Dropdown = styled.div`
+  grid-column: span 7;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 0;
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    left: -2px;
+    background: linear-gradient(90deg, rgba(255,0,0,0.5), rgba(255,165,0,0.5), rgba(255,0,0,0.5), rgba(255,165,0,0.5));
+    background-size: 200% 200%;
+    z-index: -1;
+    border-radius: 5px;
+    animation: ${borderAnimation} 5s linear infinite;
+  }
+`;
+
+const UserList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const UserItem = styled.div`
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+`;
+
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('events');
   const [users, setUsers] = useState([]);
+  const [registration, setRegistration] = useState([]);
   const [events, setEvents] = useState([]);
   const [showAdminEvent, setShowAdminEvent] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -166,6 +270,8 @@ const AdminDashboard = () => {
   const [userName, setUserName] = useState('');
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState('');
+  const [registeredUsers, setRegisteredUsers] = useState({});
 
   useEffect(() => {
     axios.get('http://localhost:4000/users')
@@ -186,6 +292,27 @@ const AdminDashboard = () => {
       ));
     } catch (error) {
       console.error('Error updating user status:', error);
+    }
+  };
+
+  const handleCloseRegistration = async (eventId) => {
+    try {
+      const response = await axios.put(`http://localhost:4000/event-registration-status-change/${eventId}`);
+  
+      const updatedRegistration = response.data.registration;
+  
+      setEvents(
+        events.map((event) =>
+          event._id === eventId ? { ...event, registration: updatedRegistration } : event
+        )
+      );
+  
+      const eventsResponse = await axios.get('http://localhost:4000/events');
+      setEvents(eventsResponse.data);
+    } catch (error) {
+      console.error('Error updating registration status:', error);
+      setSnackbarMessage('Error updating registration status');
+      setOpenSnackbar(true);
     }
   };
 
@@ -265,6 +392,22 @@ const AdminDashboard = () => {
     setOpenSnackbar(false);
   };
 
+  const toggleDropdown = async (eventId) => {
+    if (dropdownOpen === eventId) {
+      setDropdownOpen('');
+    } else {
+      setDropdownOpen(eventId);
+      if (!registeredUsers[eventId]) {
+        try {
+          const response = await axios.get(`http://localhost:4000/register-who/${eventId}`);
+          setRegisteredUsers({ ...registeredUsers, [eventId]: response.data });
+        } catch (error) {
+          console.error('Error fetching registered users:', error);
+        }
+      }
+    }
+  };
+
   return (
     <Container>
       <div className="Event-navbar">
@@ -272,7 +415,6 @@ const AdminDashboard = () => {
           <img src={logo} alt="cannot be displayed" className="nav-logo" />
           <p>Gleve</p>
         </label>
-        {/* <input type="text" placeholder="search" name="eventName" /> */}
         <div className="btn-area">
           {loggedIn ? (
             <>
@@ -285,9 +427,9 @@ const AdminDashboard = () => {
         </div>
       </div>
       <Sidebar>
-      <SidebarItem active={activeTab === 'users'} onClick={() => { setActiveTab('users'); setShowAdminEvent(false); setIsEditMode(false); }}>Users</SidebarItem>
-<SidebarItem active={activeTab === 'events'} onClick={() => { setActiveTab('events'); setShowAdminEvent(false); setIsEditMode(false); }}>Events</SidebarItem>
-<SidebarItem active={showAdminEvent && activeTab === 'create-event'} onClick={() => { setActiveTab('create-event') ; setShowAdminEvent(true); setIsEditMode(false); }}>Create Event</SidebarItem>
+        <SidebarItem active={activeTab === 'users'} onClick={() => { setActiveTab('users'); setShowAdminEvent(false); setIsEditMode(false); }}>Users</SidebarItem>
+        <SidebarItem active={activeTab === 'events'} onClick={() => { setActiveTab('events'); setShowAdminEvent(false); setIsEditMode(false); }}>Events</SidebarItem>
+        <SidebarItem active={showAdminEvent && activeTab === 'create-event'} onClick={() => { setActiveTab('create-event') ; setShowAdminEvent(true); setIsEditMode(false); }}>Create Event</SidebarItem>
       </Sidebar>
       <Main>
         <Header>
@@ -344,39 +486,84 @@ const AdminDashboard = () => {
                 <div>Comments</div>
                 <div>Edit</div>
                 <div>Delete</div>
+                <div>Close Registration</div>
+                <div>Registered Users</div>
               </ScheduleHeader>
               <div>
                 {events.map((event) => (
-                  <ScheduleItem key={event._id}>
-                    <ScheduleTitle>{event.eventName}</ScheduleTitle>
-                    <ScheduleTime>{new Date(event.eventDate).toLocaleDateString()}</ScheduleTime>
-                    <CountContainer>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <img src="https://img.icons8.com/ios/24/000000/like.png" alt="Likes" style={{ marginRight: '5px' }} />
-                        <span>{event.likes.length} Likes</span>
-                      </div>
-                    </CountContainer>
-                    <CountContainer>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <img src="https://img.icons8.com/ios/24/000000/comments.png" alt="Comments" style={{ marginRight: '5px' }} />
-                        <span>{event.comments.length} Comments</span>
-                      </div>
-                    </CountContainer>
-                    <ScheduleActions>
-                      <ActionButton
-                        onClick={() => handleEditEvent(event)}
+                  <div key={event._id}>
+                    <ScheduleItem>
+                      <ScheduleTitle>{event.eventName}</ScheduleTitle>
+                      <ScheduleTime>{new Date(event.eventDate).toLocaleDateString()}</ScheduleTime>
+                      <CountContainer>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <img src="https://img.icons8.com/ios/24/000000/like.png" alt="Likes" style={{ marginRight: '5px' }} />
+                          <span>{event.likes.length} Likes</span>
+                        </div>
+                      </CountContainer>
+                      <CountContainer>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <img src="https://img.icons8.com/ios/24/000000/comments.png" alt="Comments" style={{ marginRight: '5px' }} />
+                          <span>{event.comments.length} Comments</span>
+                        </div>
+                      </CountContainer>
+                      <ScheduleActions>
+                        <ActionButton
+                          onClick={() => handleEditEvent(event)}
+                        >
+                          Edit
+                        </ActionButton>
+                      </ScheduleActions>
+                      <ScheduleActions>
+                        <ActionButton
+                          onClick={() => handleDeleteEvent(event._id)}
+                        >
+                          Delete
+                        </ActionButton>
+                      </ScheduleActions>
+                      <ScheduleActions>
+                      <BlockButton
+                        onClick={() => handleCloseRegistration(event._id, event.registration)}
                       >
-                        Edit
-                      </ActionButton>
+                        {event.registration === 'open' ? 'Close Registration' : 'Open Registration'}
+                      </BlockButton>
                     </ScheduleActions>
-                    <ScheduleActions>
-                      <ActionButton
-                        onClick={() => handleDeleteEvent(event._id)}
-                      >
-                        Delete
-                      </ActionButton>
+                      <ScheduleActions>
+                        <ActionButton onClick={() => toggleDropdown(event._id)}>
+                          {dropdownOpen === event._id ? 'Hide Users' : 'Show Users'}
+                        </ActionButton>
                       </ScheduleActions>
                     </ScheduleItem>
+                    {dropdownOpen === event._id && (
+                      <Dropdown>
+                        <ScheduleHeader_reg>{event.eventName} (Registered)</ScheduleHeader_reg>
+                        <ScheduleHeader>
+                          <div>Username</div>
+                          <div>Email ID</div>
+                          <div>Status</div>
+                          <div>Block</div>
+                          <div>Delete</div>
+                        </ScheduleHeader>
+                        <div>
+                          <ScheduleItem>
+                          {registeredUsers[event._id] ? (
+                            registeredUsers[event._id].length > 0 ? (
+                              registeredUsers[event._id].map((user) => (
+                                <ScheduleTitle_reg key={user._id}>
+                                  {user.userName}
+                                </ScheduleTitle_reg>
+                              ))
+                            ) : (
+                              <UserItem>No registered users</UserItem>
+                            )
+                          ) : (
+                            <UserItem>Loading...</UserItem>
+                          )}
+                          </ScheduleItem>
+                        </div>
+                      </Dropdown>
+                    )}
+                  </div>
                 ))}
               </div>
             </>

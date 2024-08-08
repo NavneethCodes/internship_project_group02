@@ -18,7 +18,8 @@ const eventRecordsSchema = new db.Schema({
             db      : 'gleve_db'
         },
         comment : String
-    }]
+    }],
+    registration : String
 });
 
 const eventRecordsData = db.model('event_records', eventRecordsSchema);
