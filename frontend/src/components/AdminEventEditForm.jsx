@@ -31,7 +31,7 @@ const StyledContainer = styled(Container)`
   animation: ${fadeIn} 0.5s ease-in-out;
   padding: 2em;
   background-color: #f5f5f5;
-`;
+`
 
 const StyledPaper = styled(Paper)`
   padding: 2em;
