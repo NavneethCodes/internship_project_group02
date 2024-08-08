@@ -33,7 +33,7 @@ const Dummy = () => {
   }, []);
 
   useEffect(() => {
-    const id = setInterval(nextSlide, 4000); // Change slide every 5 seconds
+    const id = setInterval(nextSlide, 4000);
     setIntervalId(id);
     return () => clearInterval(id);
   }, [items]);

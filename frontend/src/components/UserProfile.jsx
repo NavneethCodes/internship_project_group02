@@ -19,12 +19,37 @@ const Container = styled.div`
 `;
 
 const Sidebar = styled.div`
-  flex: 0 0 200px;
-  background: #f8f8f8;
-  padding: 20px;
+  width: 170px;
+  padding-top: 100px;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  background-color: #fff;
+  border-right: 1px solid #ddd;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+`;
+
+const SidebarItem = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  margin: 5px 0;
+  margin-right:20px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, transform 0.3s;
+
+  &:hover {
+    background-color: #e9ecef;
+    transform: translateX(10px);
+  }
+
+  ${props => props.active && `
+    background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
+    color: #fff;
+    border-radius: 4px;
+    transform: translateX(10px);
+  `}
 `;
 
 const NavButton = styled(Button)`
@@ -161,6 +186,7 @@ const UserProfile = () => {
   });
 
   const [message, setMessage] = useState('');
+  const [activeTab, setActiveTab] = useState('Edit Profile');
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openPasswordDialog, setOpenPasswordDialog] = useState(false);
   let   [enteredPassword, setEnteredPassword] = useState('');
@@ -336,7 +362,7 @@ const UserProfile = () => {
         {/* <NavButton onClick={() => handleNavButtonClick('users')}>USERS</NavButton> */}
         {/* <NavButton onClick={() => handleNavButtonClick('events')}>EVENTS</NavButton> */}
         {/* <NavButton onClick={() => handleNavButtonClick('createEvent')}>CREATE EVENT</NavButton> */}
-        <NavButton onClick={handleEditClick}>{showEditProfile ? 'Close Edit' : 'Edit Profile'}</NavButton>
+        <SidebarItem active={showEditProfile ? 'Close Edit' : 'Edit Profile'} onClick={handleEditClick}>{showEditProfile ? 'Close Edit' : 'Edit Profile'}</SidebarItem>
       </Sidebar>
       <MainContent>
         <ProfileAndEditContainer>
@@ -346,7 +372,7 @@ const UserProfile = () => {
             transition={{ duration: 0.3 }}
           >
             <Avatar
-              src="https://via.placeholder.com/100"
+              src={logo}
               alt="Profile"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
@@ -368,9 +394,9 @@ const UserProfile = () => {
                 <StatLabel>Registered Events</StatLabel>
               </Stat>
             </Stats>
-            <Biography>
+            {/* <Biography>
               Hello, I'm John, a passionate web developer with a love for creating amazing user experiences. In my free time, I enjoy hiking and photography.
-            </Biography>
+            </Biography> */}
           </ProfileContainer>
           {showEditProfile && (
             <EditProfileContainer
