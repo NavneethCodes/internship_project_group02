@@ -388,58 +388,51 @@ const AdminDashboard = () => {
                 {events.map((event) => (
                   <div key={event._id}>
                   <ScheduleItem>
-                    <ScheduleTitle>{event.eventName}</ScheduleTitle>
-                    <ScheduleTime>{new Date(event.eventDate).toLocaleDateString()}</ScheduleTime>
-                    <CountContainer>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <img src="https://img.icons8.com/ios/24/000000/like.png" alt="Likes" style={{ marginRight: '5px' }} />
-                        <span>{event.likes.length} Likes</span>
-                      </div>
-                    </CountContainer>
-                    <CountContainer>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <img src="https://img.icons8.com/ios/24/000000/comments.png" alt="Comments" style={{ marginRight: '5px' }} />
-                        <span>{event.comments.length} Comments</span>
-                      </div>
-                    </CountContainer>
-                    <ScheduleActions>
-                      <ActionButton
-                        onClick={() => handleEditEvent(event)}
-                      >
-                        Edit
-                      </ActionButton>
-                    </ScheduleActions>
-                    <ScheduleActions>
-                      <ActionButton
-                        onClick={() => handleDeleteEvent(event._id)}
-                      >
-                        Delete
-                      </ActionButton>
+                      <ScheduleTitle>{event.eventName}</ScheduleTitle>
+                      <ScheduleTime>{new Date(event.eventDate).toLocaleDateString()}</ScheduleTime>
+                      <CountContainer>
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                              <img src="https://img.icons8.com/ios/24/000000/like.png" alt="Likes" style={{ marginRight: '5px' }} />
+                              <span>{event.likes.length} Likes</span>
+                          </div>
+                      </CountContainer>
+                      <CountContainer>
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                              <img src="https://img.icons8.com/ios/24/000000/comments.png" alt="Comments" style={{ marginRight: '5px' }} />
+                              <span>{event.comments.length} Comments</span>
+                          </div>
+                      </CountContainer>
+                      <ScheduleActions>
+                          <ActionButton onClick={() => handleEditEvent(event)}>Edit</ActionButton>
                       </ScheduleActions>
                       <ScheduleActions>
-                        <ActionButton onClick={() => toggleDropdown(event._id)}>
-                          {dropdownOpen === event._id ? 'Hide Users' : 'Show Users'}
-                        </ActionButton>
+                          <ActionButton onClick={() => handleDeleteEvent(event._id)}>Delete</ActionButton>
                       </ScheduleActions>
-                    </ScheduleItem>
-                    {dropdownOpen === event._id && (
+                      <ScheduleActions>
+                          <ActionButton onClick={() => toggleDropdown(event._id)}>
+                              {dropdownOpen === event._id ? 'Hide Users' : 'Show Users'}
+                          </ActionButton>
+                      </ScheduleActions>
+                  </ScheduleItem>
+                  {dropdownOpen === event._id && (
                       <Dropdown>
-                        {registeredUsers[event._id] ? (
-                          registeredUsers[event._id].length > 0 ? (
-                            registeredUsers[event._id].map((user) => (
-                              <div key={user._id}>
-                                {user.userName} ({user.userEmail})
-                              </div>
-                            ))
+                          {registeredUsers[event._id] ? (
+                              registeredUsers[event._id].length > 0 ? (
+                                  registeredUsers[event._id].map((user) => (
+                                      <div key={user._id} className="registered-user-container">
+                                          <p>{user.userName} ({user.userEmail})</p>
+                                      </div>
+                                  ))
+                              ) : (
+                                  <div>No registered users</div>
+                              )
                           ) : (
-                            <div>No registered users</div>
-                          )
-                        ) : (
-                          <div>No Registered Users</div>
-                        )}
+                              <div>No Registered Users</div>
+                          )}
                       </Dropdown>
-                    )}
-                  </div>
+                  )}
+              </div>
+              
                     
                 ))}
               </div>
