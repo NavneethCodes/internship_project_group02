@@ -87,7 +87,7 @@ const SidebarItem = styled.div`
   }
 
   ${props => props.active && `
-    background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
+background:black;
     color: #fff;
     border-radius: 4px;
     transform: translateX(10px);
@@ -137,14 +137,11 @@ const ScheduleHeader = styled.div`
 
 const ScheduleHeader_reg = styled.div`
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 2fr 1fr 1fr 1fr;
   padding: 10px;
-  background:  rgba(48, 46, 46, 1);
+  background-color: #e9ecef;
   border-radius: 5px;
-  font-weight: bolder;
-  color:white;
-  height:50px;
-  font-size:20px;
+  font-weight: bold;
   margin-bottom:10px;
 `;
 
@@ -163,6 +160,39 @@ const ScheduleItem = styled.div`
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 `;
+
+const ScheduleItem_user = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr 1fr 1fr;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  position: relative;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const ScheduleItem_reg = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  position: relative;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+`;
+
 
 const ScheduleTitle = styled.h3`
   margin: 0;
@@ -234,7 +264,9 @@ const Dropdown = styled.div`
     right: -2px;
     bottom: -2px;
     left: -2px;
-    background: linear-gradient(90deg, rgba(255,0,0,0.5), rgba(255,165,0,0.5), rgba(255,0,0,0.5), rgba(255,165,0,0.5));
+background: linear-gradient(90deg, rgba(0,0,0,1), rgba(255,255,255,1));
+
+
     background-size: 200% 200%;
     z-index: -1;
     border-radius: 5px;
@@ -322,6 +354,14 @@ const AdminDashboard = () => {
     setShowModal(true);
   };
 
+  const refresher = async  () => {
+    try {
+      await axios.post('http://localhost:4000/admin-force-clean');
+    } catch (error) {
+      console.error('Error:- '+error);
+    }
+  }
+
   const handleEditEvent = (event) => {
     setEventToEdit(event);
     setIsEditMode(true);
@@ -332,6 +372,8 @@ const AdminDashboard = () => {
     setDeleteId(eventId);
     setShowModal(true);
   };
+
+
 
   const confirmDelete = async () => {
     try {
@@ -434,7 +476,7 @@ const AdminDashboard = () => {
       <Main>
         <Header>
           <Title>Admin Dashboard</Title>
-          <button className='reload-btn'>Refresh DB</button>
+          <button className='reload-btn' onClick={refresher}>Refresh DB</button>
         </Header>
         <Content>
           {showAdminEvent && <Adminevent />}
@@ -443,16 +485,16 @@ const AdminDashboard = () => {
           )}
           {!showAdminEvent && !isEditMode && activeTab === 'users' && (
             <>
-              <ScheduleHeader>
+              <ScheduleHeader_reg>
                 <div>Username</div>
                 <div>Email ID</div>
                 <div>Status</div>
                 <div>Block</div>
                 <div>Delete</div>
-              </ScheduleHeader>
+              </ScheduleHeader_reg>
               <div>
                 {users.map((user) => (
-                  <ScheduleItem key={user._id}>
+                  <ScheduleItem_user key={user._id}>
                     <ScheduleTitle>{user.userName}</ScheduleTitle>
                     <ScheduleTime>{user.userEmail}</ScheduleTime>
                     <StatusText status={user.userStatus}>
@@ -472,7 +514,7 @@ const AdminDashboard = () => {
                         Delete User
                       </ActionButton>
                     </ScheduleActions>
-                  </ScheduleItem>
+                  </ScheduleItem_user>
                 ))}
               </div>
             </>
@@ -536,30 +578,30 @@ const AdminDashboard = () => {
                     </ScheduleItem>
                     {dropdownOpen === event._id && (
                       <Dropdown>
-                        <ScheduleHeader_reg>{event.eventName} (Registered)</ScheduleHeader_reg>
+                        {/* <ScheduleHeader_reg>{event.eventName} (Registered)</ScheduleHeader_reg> */}
                         <ScheduleHeader>
-                          <div>Username</div>
-                          <div>Email ID</div>
+                          <div>Usernames</div>
+                          {/* <div>Email ID</div>
                           <div>Status</div>
                           <div>Block</div>
-                          <div>Delete</div>
+                          <div>Delete</div> */}
                         </ScheduleHeader>
                         <div>
-                          <ScheduleItem>
+                          <ScheduleItem_reg>
                           {registeredUsers[event._id] ? (
                             registeredUsers[event._id].length > 0 ? (
                               registeredUsers[event._id].map((user) => (
                                 <ScheduleTitle_reg key={user._id}>
-                                  {user.userName}
+                                  <p>{user.userName}</p>
                                 </ScheduleTitle_reg>
                               ))
                             ) : (
                               <UserItem>No registered users</UserItem>
                             )
                           ) : (
-                            <UserItem>Loading...</UserItem>
+                            <UserItem>No registered users</UserItem>
                           )}
-                          </ScheduleItem>
+                          </ScheduleItem_reg>
                         </div>
                       </Dropdown>
                     )}

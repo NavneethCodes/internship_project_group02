@@ -42,7 +42,7 @@ const StyledPaper = styled(Paper)`
 `;
 
 const StyledButton = styled(Button)`
-  background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%);
+  background:black;
   border: 0;
   border-radius: 15px;
   color: white;
