@@ -6,7 +6,7 @@ import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import logo from '../Images/p-logo.png';
 import './EventComments.css';
-import Sidebarr from './Sidebarr'
+import Sidebarr from './Sidebarr';
 
 const EventComments = () => {
   const { eventId } = useParams();
@@ -162,9 +162,9 @@ const EventComments = () => {
     }
   };
 
-  const route =() =>{
-    window.location.href='/home';
-  }
+  const route = () => {
+    window.location.href = '/home';
+  };
 
   const handleLoginClick = () => {
     navigate('/login');
@@ -179,8 +179,8 @@ const EventComments = () => {
       setLoggedIn(false);
       setUserName('');
       window.location.reload();
-      await axios.put(`http://localhost:4000/logout/${user_id}`);      
-    } catch(error) {
+      await axios.put(`http://localhost:4000/logout/${user_id}`);
+    } catch (error) {
       console.log(`Error logging out: `, error);
     }
   };
@@ -193,7 +193,6 @@ const EventComments = () => {
           <img src={logo} alt="cannot be displayed" className="nav-logo" />
           <p>Gleve</p>
         </label>
-        {/* <input type="text" placeholder="search" name="eventName" /> */}
         <div className="btn-area">
           {loggedIn ? (
             <>
@@ -264,8 +263,9 @@ const EventComments = () => {
         <button
           className={`register-button ${isRegistered ? 'unregister' : ''}`}
           onClick={handleRegistration}
+          disabled={eventDetails && eventDetails.registration === 'closed'}
         >
-          {isRegistered ? 'Unregister' : 'Register Now'}
+          {eventDetails && eventDetails.registration === 'closed' ? 'Registration Closed' : isRegistered ? 'Unregister' : 'Register Now'}
         </button>
       </div>
       <div className="right-section comment-bg">
